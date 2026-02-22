@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terra Dashboard v1.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .card { background-color: #1e293b; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="p-6">
+
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-emerald-400">🚜 TERRA DASHBOARD</h1>
+            <p class="text-slate-400">Inteligência Operacional - Grupo Brunetta</p>
+        </div>
+        <div class="text-right">
+            <p class="text-sm text-slate-500">Atualizado em: <span id="date"></span></p>
+            <span class="bg-emerald-900 text-emerald-300 text-xs font-medium mr-2 px-2.5 py-0.5 rounded">ONLINE</span>
+        </div>
+    </header>
+
+    <!-- KPIs Row -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="card border-l-4 border-emerald-500">
+            <h3 class="text-slate-400 text-sm font-medium">Custo Total Soja (24/25)</h3>
+            <p class="text-2xl font-bold text-white mt-1">R$ 5.55 Mi</p>
+            <p class="text-emerald-400 text-sm mt-2">🔻 -19.7% vs Safra Anterior</p>
+        </div>
+        <div class="card border-l-4 border-yellow-500">
+            <h3 class="text-slate-400 text-sm font-medium">Custo Total Milho (2025)</h3>
+            <p class="text-2xl font-bold text-white mt-1">R$ 2.69 Mi</p>
+            <p class="text-red-400 text-sm mt-2">🔺 +23.0% vs Safra Anterior</p>
+        </div>
+        <div class="card border-l-4 border-blue-500">
+            <h3 class="text-slate-400 text-sm font-medium">Eficiência Mão de Obra (Soja)</h3>
+            <p class="text-2xl font-bold text-white mt-1">R$ 2.45 Mi</p>
+            <p class="text-emerald-400 text-sm mt-2">📉 Redução de 25% no custo</p>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Soja Chart -->
+        <div class="card">
+            <h2 class="text-xl font-semibold mb-4 text-emerald-100">🌱 Evolução de Custos: SOJA</h2>
+            <canvas id="chartSoja"></canvas>
+        </div>
+        <!-- Milho Chart -->
+        <div class="card">
+            <h2 class="text-xl font-semibold mb-4 text-yellow-100">🌽 Evolução de Custos: MILHO</h2>
+            <canvas id="chartMilho"></canvas>
+        </div>
+    </div>
+
+    <!-- Data Logic -->
+    <script>
+        document.getElementById('date').innerText = new Date().toLocaleDateString();
+        
+        const RAW_DATA = {"SOJA": {"labels": ["2023/2024", "2024/2025"], "manutencao": [3635805.5699999994, 3104214.32], "mao_obra": [3280959.74, 2452279.4], "total": [6916765.31, 5556493.72]}, "MILHO": {"labels": ["2024", "2025"], "manutencao": [953648.0900000001, 1480276.8599999994], "mao_obra": [1232768.2400000002, 1209584.5099999998], "total": [2186416.33, 2689861.369999999]}};
+
+        // Configuração Comum
+        const commonOptions = {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: '#cbd5e1' } }
+            },
+            scales: {
+                y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+                x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+            }
+        };
+
+        // Gráfico Soja
+        new Chart(document.getElementById('chartSoja'), {
+            type: 'bar',
+            data: {
+                labels: RAW_DATA.SOJA.labels,
+                datasets: [
+                    { label: 'Manutenção', data: RAW_DATA.SOJA.manutencao, backgroundColor: '#34d399' },
+                    { label: 'Mão de Obra', data: RAW_DATA.SOJA.mao_obra, backgroundColor: '#0ea5e9' }
+                ]
+            },
+            options: commonOptions
+        });
+
+        // Gráfico Milho
+        new Chart(document.getElementById('chartMilho'), {
+            type: 'bar',
+            data: {
+                labels: RAW_DATA.MILHO.labels,
+                datasets: [
+                    { label: 'Manutenção', data: RAW_DATA.MILHO.manutencao, backgroundColor: '#facc15' },
+                    { label: 'Mão de Obra', data: RAW_DATA.MILHO.mao_obra, backgroundColor: '#f97316' }
+                ]
+            },
+            options: commonOptions
+        });
+    </script>
+</body>
+</html>
+    
