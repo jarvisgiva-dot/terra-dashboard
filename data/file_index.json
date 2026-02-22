@@ -1,0 +1,120 @@
+{
+  "metadata": {
+    "generated_at": "2026-02-22T14:05:21.700848",
+    "root_path": "/home/jarvis/.openclaw/workspace/fazenda"
+  },
+  "files": [
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf",
+      "filename": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf",
+      "cultura": "SOJA",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CUSTO",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/PRODUTIVIDADE MILHO SAFRINHA 2025.pdf",
+      "filename": "PRODUTIVIDADE MILHO SAFRINHA 2025.pdf",
+      "cultura": "MILHO",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "PRODUTIVIDADE",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CUSTO POR APLICAÇÃO MILHO SAFRA 2025.pdf",
+      "filename": "CUSTO POR APLICAÇÃO MILHO SAFRA 2025.pdf",
+      "cultura": "MILHO",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CUSTO",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CUSTO POR APLICAÇÃO MILHO SAFRA 2024.pdf",
+      "filename": "CUSTO POR APLICAÇÃO MILHO SAFRA 2024.pdf",
+      "cultura": "MILHO",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CUSTO",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf",
+      "filename": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf",
+      "cultura": "MILHO",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CUSTO",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CUSTO POR APLICAÇÃO SOJA SAFRA 2023.2025.pdf",
+      "filename": "CUSTO POR APLICAÇÃO SOJA SAFRA 2023.2025.pdf",
+      "cultura": "SOJA",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CUSTO",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CUSTO POR APLICAÇÃO SOJA SAFRA 2024.2025.pdf",
+      "filename": "CUSTO POR APLICAÇÃO SOJA SAFRA 2024.2025.pdf",
+      "cultura": "SOJA",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CUSTO",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CONTRATO VENDA DE SOJA - SAFRA 2024.2025.pdf",
+      "filename": "CONTRATO VENDA DE SOJA - SAFRA 2024.2025.pdf",
+      "cultura": "SOJA",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CONTRATO",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CONTRATO VENDA DE MILHO - SAFRINHA 2025.pdf",
+      "filename": "CONTRATO VENDA DE MILHO - SAFRINHA 2025.pdf",
+      "cultura": "MILHO",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CONTRATO",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf",
+      "filename": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf",
+      "cultura": "SOJA",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CUSTO",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/ESTOQUE INSUMO.pdf",
+      "filename": "ESTOQUE INSUMO.pdf",
+      "cultura": "DESCONHECIDO",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "ESTOQUE",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/PRODUTIVIDADE SOJA SAFRA 2024.2025.pdf",
+      "filename": "PRODUTIVIDADE SOJA SAFRA 2024.2025.pdf",
+      "cultura": "SOJA",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "PRODUTIVIDADE",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CUSTO SOJA.pdf",
+      "filename": "CUSTO SOJA.pdf",
+      "cultura": "SOJA",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CUSTO",
+      "status": "PENDENTE_OCR"
+    },
+    {
+      "path": "/home/jarvis/.openclaw/workspace/fazenda/CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf",
+      "filename": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf",
+      "cultura": "MILHO",
+      "ano_safra": "DESCONHECIDO",
+      "tipo": "CUSTO",
+      "status": "PENDENTE_OCR"
+    }
+  ]
+}

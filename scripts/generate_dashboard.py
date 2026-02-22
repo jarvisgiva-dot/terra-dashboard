@@ -1,4 +1,49 @@
+import csv
+import json
+import os
+from collections import defaultdict
 
+# Config
+DATA_FILE = "/home/jarvis/.openclaw/workspace/projects/terra-dashboard/data/custos_operacionais.csv"
+OUTPUT_HTML = "/home/jarvis/.openclaw/workspace/projects/terra-dashboard/dashboard.html"
+
+def generate_dashboard():
+    # 1. Processar Dados
+    data_structure = {
+        "SOJA": {"labels": [], "manutencao": [], "mao_obra": [], "total": []},
+        "MILHO": {"labels": [], "manutencao": [], "mao_obra": [], "total": []}
+    }
+    
+    raw_data = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
+    
+    try:
+        with open(DATA_FILE, 'r') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                cultura = row['cultura']
+                safra = row['safra']
+                cat = row['categoria_macro']
+                val = float(row['valor_total_brl'])
+                raw_data[cultura][safra][cat] += val
+    except Exception as e:
+        print(f"Erro ao ler dados: {e}")
+        return
+
+    # Formatar para Chart.js
+    for cultura in ["SOJA", "MILHO"]:
+        safras = sorted(raw_data[cultura].keys())
+        data_structure[cultura]["labels"] = safras
+        for s in safras:
+            man = raw_data[cultura][s]["MANUTENÇÃO"]
+            mob = raw_data[cultura][s]["MÃO DE OBRA"]
+            data_structure[cultura]["manutencao"].append(man)
+            data_structure[cultura]["mao_obra"].append(mob)
+            data_structure[cultura]["total"].append(man + mob)
+
+    json_data = json.dumps(data_structure)
+
+    # 2. Template HTML (Modern Dark Theme + Security Gate)
+    html_content = f"""
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,8 +53,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
-        .card { background-color: #1e293b; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        body {{ background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; }}
+        .card {{ background-color: #1e293b; border-radius: 0.75rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }}
     </style>
 </head>
 <body class="p-6">
@@ -74,58 +119,66 @@
 
     <!-- Data Logic -->
     <script>
-        function checkPass() {
+        function checkPass() {{
             const pass = document.getElementById('pass-input').value;
-            if (pass === 'jarvis4.0') {
+            if (pass === 'jarvis4.0') {{
                 document.getElementById('login-gate').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
-            } else {
+            }} else {{
                 document.getElementById('error-msg').classList.remove('hidden');
-            }
-        }
+            }}
+        }}
 
         document.getElementById('date').innerText = new Date().toLocaleDateString();
         
-        const RAW_DATA = {"SOJA": {"labels": ["2023/2024", "2024/2025"], "manutencao": [3635805.5699999994, 3104214.32], "mao_obra": [3280959.74, 2452279.4], "total": [6916765.31, 5556493.72]}, "MILHO": {"labels": ["2024", "2025"], "manutencao": [953648.0900000001, 1480276.8599999994], "mao_obra": [1232768.2400000002, 1209584.5099999998], "total": [2186416.33, 2689861.369999999]}};
+        const RAW_DATA = {json_data};
 
         // Configuração Comum
-        const commonOptions = {
+        const commonOptions = {{
             responsive: true,
-            plugins: {
-                legend: { position: 'bottom', labels: { color: '#cbd5e1' } }
-            },
-            scales: {
-                y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-                x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
-            }
-        };
+            plugins: {{
+                legend: {{ position: 'bottom', labels: {{ color: '#cbd5e1' }} }}
+            }},
+            scales: {{
+                y: {{ ticks: {{ color: '#94a3b8' }}, grid: {{ color: '#334155' }} }},
+                x: {{ ticks: {{ color: '#94a3b8' }}, grid: {{ display: false }} }}
+            }}
+        }};
 
         // Gráfico Soja
-        new Chart(document.getElementById('chartSoja'), {
+        new Chart(document.getElementById('chartSoja'), {{
             type: 'bar',
-            data: {
+            data: {{
                 labels: RAW_DATA.SOJA.labels,
                 datasets: [
-                    { label: 'Manutenção', data: RAW_DATA.SOJA.manutencao, backgroundColor: '#34d399' },
-                    { label: 'Mão de Obra', data: RAW_DATA.SOJA.mao_obra, backgroundColor: '#0ea5e9' }
+                    {{ label: 'Manutenção', data: RAW_DATA.SOJA.manutencao, backgroundColor: '#34d399' }},
+                    {{ label: 'Mão de Obra', data: RAW_DATA.SOJA.mao_obra, backgroundColor: '#0ea5e9' }}
                 ]
-            },
+            }},
             options: commonOptions
-        });
+        }});
 
         // Gráfico Milho
-        new Chart(document.getElementById('chartMilho'), {
+        new Chart(document.getElementById('chartMilho'), {{
             type: 'bar',
-            data: {
+            data: {{
                 labels: RAW_DATA.MILHO.labels,
                 datasets: [
-                    { label: 'Manutenção', data: RAW_DATA.MILHO.manutencao, backgroundColor: '#facc15' },
-                    { label: 'Mão de Obra', data: RAW_DATA.MILHO.mao_obra, backgroundColor: '#f97316' }
+                    {{ label: 'Manutenção', data: RAW_DATA.MILHO.manutencao, backgroundColor: '#facc15' }},
+                    {{ label: 'Mão de Obra', data: RAW_DATA.MILHO.mao_obra, backgroundColor: '#f97316' }}
                 ]
-            },
+            }},
             options: commonOptions
-        });
+        }});
     </script>
 </body>
 </html>
+    """
+
+    with open(OUTPUT_HTML, "w") as f:
+        f.write(html_content)
     
+    print(f"✅ Dashboard gerado: {OUTPUT_HTML}")
+
+if __name__ == "__main__":
+    generate_dashboard()
