@@ -41,22 +41,29 @@
     <div x-show="authenticated" x-cloak class="max-w-[1600px] mx-auto space-y-6">
         
         <!-- Header & Filters -->
-        <header class="flex flex-col xl:flex-row justify-between items-start xl:items-center bg-slate-900/50 p-6 rounded-2xl border border-slate-800 backdrop-blur-sm sticky top-0 z-40 shadow-xl">
-            <div>
-                <h1 class="text-3xl font-bold text-white flex items-center gap-3">
-                    🚜 TERRA BI <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded">v4.0</span>
-                </h1>
-                <p class="text-slate-400 text-sm mt-1">Deep Insight Operational Dashboard</p>
+        <header class="bg-slate-900/50 rounded-2xl border border-slate-800 backdrop-blur-sm sticky top-0 z-40 shadow-xl transition-all duration-300">
+            <!-- Top Row: Title + Toggle -->
+            <div class="flex justify-between items-center p-4">
+                <div class="flex items-center gap-3">
+                    <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
+                        🚜 TERRA BI <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded">v4.1</span>
+                    </h1>
+                </div>
+                
+                <button @click="showFilters = !showFilters" class="text-slate-400 hover:text-white transition p-2 bg-slate-800/50 rounded-lg">
+                    <span x-text="showFilters ? '🔼 Ocultar Filtros' : '🔽 Filtros'"></span>
+                </button>
             </div>
             
-            <div class="flex flex-wrap gap-4 mt-4 xl:mt-0">
+            <!-- Collapsible Filters Area -->
+            <div x-show="showFilters" x-collapse class="px-6 pb-6 border-t border-slate-800 pt-4 flex flex-wrap gap-4 items-center">
                 <!-- Simulador de Preço -->
                 <div class="flex items-center gap-2 bg-slate-800 p-2 rounded-lg border border-slate-700">
                     <span class="text-xs text-slate-400 uppercase font-bold px-2">Simulador (R$/sc)</span>
                     <input type="number" x-model="simulacao.precoSaca" @input.debounce.500ms="updateSimulacao()" class="w-24 bg-slate-900 border border-slate-600 rounded p-1 text-right text-emerald-400 font-bold outline-none">
                 </div>
 
-                <div class="h-10 w-px bg-slate-700 mx-2 hidden md:block"></div>
+                <div class="h-8 w-px bg-slate-700 mx-2 hidden md:block"></div>
 
                 <!-- Filters -->
                 <select x-model="filters.safra" class="bg-slate-800 border border-slate-600 text-white rounded-lg p-2.5 text-sm hover:border-emerald-500 transition cursor-pointer">
@@ -214,6 +221,7 @@
                 authenticated: false,
                 password: '',
                 authError: false,
+                showFilters: true, // Controle de visibilidade dos filtros
                 db: null,
                 filters: { safra: 'ALL', cultura: 'ALL' },
                 simulacao: { precoSaca: 120 }, // Default price
