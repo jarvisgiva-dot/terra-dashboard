@@ -17,23 +17,29 @@ def clean_decimal(val):
     return val
 
 def normalize_safra(val, cultura):
-    """Padroniza safras para cruzar dados de Custo e Produtividade"""
+    """Padroniza safras para YY/YY"""
     val = str(val).strip()
     
-    # Caso 1: "2024.2025" ou "2024/2025" -> "24/25"
-    if "." in val or "/" in val:
-        parts = val.replace(".", "/").split("/")
-        if len(parts) == 2:
+    # Caso: 2024/2025 -> 24/25
+    if "/" in val:
+        parts = val.split("/")
+        if len(parts[0]) == 4:
             return f"{parts[0][-2:]}/{parts[1][-2:]}"
-            
-    # Caso 2: Ano único "2025"
-    # Se for SOJA e ano único, geralmente é o ano da colheita. 2025 -> 24/25
+    
+    # Caso: 2023.2024 -> 23/24
+    if "." in val:
+        parts = val.split(".")
+        if len(parts[0]) == 4:
+            return f"{parts[0][-2:]}/{parts[1][-2:]}"
+
+    # Caso: 2025 (Ano único)
     if len(val) == 4 and val.isdigit():
         if cultura == "SOJA":
-            # Assume que "2025" na pasta significa safra 24/25
+            # Soja 2025 = Safra 24/25
             ano = int(val)
             return f"{str(ano-1)[-2:]}/{str(ano)[-2:]}"
-        return val # Milho 2025 fica 2025
+        # Milho 2025 = 2025
+        return val 
         
     return val
 
