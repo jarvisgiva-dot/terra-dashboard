@@ -1,278 +1,290 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terra Dashboard v2.0 (Interativo)</title>
+    <title>Terra BI v3.0</title>
+    
+    <!-- Stack: Tailwind (UI), Chart.js (Viz), Alpine.js (Logic/Reactivity) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     <style>
         body { background-color: #0f172a; color: #e2e8f0; font-family: 'Inter', sans-serif; }
-        .card { background-color: #1e293b; border-radius: 0.75rem; padding: 1.5rem; border: 1px solid #334155; }
-        
-        /* DataTables Custom Dark Theme */
-        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
-            color: #94a3b8 !important;
-        }
-        table.dataTable tbody tr { background-color: #1e293b; color: #cbd5e1; }
-        table.dataTable tbody tr:hover { background-color: #334155; }
-        
-        .tab-active { border-bottom: 2px solid #10b981; color: #10b981; }
-        .tab-inactive { color: #64748b; }
+        .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; padding: 1.5rem; }
+        [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="p-6">
+<body class="p-6" x-data="app()" x-init="init()">
 
     <!-- Security Gate -->
-    <div id="login-gate" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-50">
-        <div class="card w-96 text-center shadow-2xl">
-            <h2 class="text-xl font-bold text-emerald-400 mb-4">🔒 STARK SYSTEMS v2.0</h2>
-            <input type="password" id="pass-input" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white mb-4 text-center" placeholder="Senha">
-            <button onclick="checkPass()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition">ACESSAR</button>
-            <p id="error-msg" class="text-red-500 text-xs mt-2 hidden">Acesso Negado.</p>
+    <div x-show="!authenticated" class="fixed inset-0 bg-slate-900 flex items-center justify-center z-50">
+        <div class="card w-96 text-center">
+            <h2 class="text-xl font-bold text-emerald-400 mb-4">🔒 STARK BI v3.0</h2>
+            <input type="password" x-model="password" class="w-full bg-slate-800 border border-slate-700 rounded p-2 text-white mb-4 text-center" placeholder="Senha">
+            <button @click="login()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded">ENTRAR</button>
+            <p x-show="authError" class="text-red-500 text-xs mt-2">Acesso Negado.</p>
         </div>
     </div>
 
-    <div id="main-content" class="hidden max-w-7xl mx-auto">
-        <!-- Header -->
-        <header class="flex justify-between items-center mb-8">
+    <!-- Main BI Interface -->
+    <div x-show="authenticated" x-cloak class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Top Bar: Global Filters -->
+        <header class="flex flex-col md:flex-row justify-between items-center bg-slate-800 p-4 rounded-lg border border-slate-700">
             <div>
-                <h1 class="text-3xl font-bold text-emerald-400">🚜 TERRA DASHBOARD <span class="text-xs bg-emerald-900 px-2 py-1 rounded text-emerald-200">v2.0</span></h1>
-                <p class="text-slate-400">Inteligência Operacional Interativa</p>
+                <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                    🚜 TERRA BI <span class="text-xs bg-emerald-900 text-emerald-300 px-2 py-1 rounded">LIVE</span>
+                </h1>
             </div>
-            <div class="flex gap-4">
-                <select id="safra-select" class="bg-slate-800 text-white p-2 rounded border border-slate-700" onchange="updateDashboard()">
-                    <option value="ALL">Todas as Safras</option>
-                    <option value="24/25">Safra 24/25</option>
-                    <option value="2025">Safrinha 2025</option>
+            
+            <div class="flex gap-4 mt-4 md:mt-0">
+                <!-- Slicer: Safra -->
+                <select x-model="filters.safra" class="bg-slate-900 border border-slate-600 text-white rounded p-2 text-sm">
+                    <option value="ALL">📅 Todas as Safras</option>
+                    <template x-for="s in uniqueSafras">
+                        <option :value="s" x-text="s"></option>
+                    </template>
                 </select>
-                <div class="text-right">
-                    <p class="text-sm text-slate-500" id="last-update"></p>
-                    <span class="text-emerald-500 text-xs font-bold">● ONLINE</span>
-                </div>
+
+                <!-- Slicer: Cultura -->
+                <select x-model="filters.cultura" class="bg-slate-900 border border-slate-600 text-white rounded p-2 text-sm">
+                    <option value="ALL">🌱 Todas as Culturas</option>
+                    <option value="SOJA">SOJA</option>
+                    <option value="MILHO">MILHO</option>
+                </select>
             </div>
         </header>
 
-        <!-- Navigation Tabs -->
-        <div class="flex border-b border-slate-700 mb-6">
-            <button onclick="switchTab('visao-geral')" id="tab-geral" class="px-6 py-3 font-medium tab-active">📊 Visão Geral</button>
-            <button onclick="switchTab('produtividade')" id="tab-prod" class="px-6 py-3 font-medium tab-inactive">🌾 Talhões & Produtividade</button>
-            <button onclick="switchTab('custos')" id="tab-custos" class="px-6 py-3 font-medium tab-inactive">💰 Custos Detalhados</button>
-        </div>
-
-        <!-- Content: Visão Geral -->
-        <div id="view-visao-geral" class="space-y-6">
-            <!-- KPIs -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div class="card border-l-4 border-emerald-500">
-                    <h3 class="text-slate-400 text-xs uppercase">Área Total Soja</h3>
-                    <p class="text-2xl font-bold text-white mt-1" id="kpi-area-soja">--</p>
-                </div>
-                <div class="card border-l-4 border-yellow-500">
-                    <h3 class="text-slate-400 text-xs uppercase">Área Total Milho</h3>
-                    <p class="text-2xl font-bold text-white mt-1" id="kpi-area-milho">--</p>
-                </div>
-                <div class="card border-l-4 border-blue-500">
-                    <h3 class="text-slate-400 text-xs uppercase">Custo Total Soja</h3>
-                    <p class="text-2xl font-bold text-white mt-1" id="kpi-custo-soja">--</p>
-                </div>
-                <div class="card border-l-4 border-purple-500">
-                    <h3 class="text-slate-400 text-xs uppercase">Produtividade Média</h3>
-                    <p class="text-2xl font-bold text-white mt-1" id="kpi-prod-media">--</p>
-                </div>
+        <!-- KPI Deck -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="card border-l-4 border-emerald-500">
+                <p class="text-slate-400 text-xs uppercase">Custo Total Realizado</p>
+                <p class="text-2xl font-bold text-white" x-text="formatMoney(kpis.custoTotal)"></p>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="card">
-                    <h2 class="text-lg font-bold mb-4 text-emerald-200">Evolução de Custos (Soja)</h2>
-                    <canvas id="chartSoja"></canvas>
-                </div>
-                <div class="card">
-                    <h2 class="text-lg font-bold mb-4 text-yellow-200">Evolução de Custos (Milho)</h2>
-                    <canvas id="chartMilho"></canvas>
-                </div>
+            <div class="card border-l-4 border-blue-500">
+                <p class="text-slate-400 text-xs uppercase">Área Plantada</p>
+                <p class="text-2xl font-bold text-white"><span x-text="formatNumber(kpis.areaTotal)"></span> <span class="text-sm font-normal text-slate-400">ha</span></p>
+            </div>
+            <div class="card border-l-4 border-yellow-500">
+                <p class="text-slate-400 text-xs uppercase">Produtividade Média</p>
+                <p class="text-2xl font-bold text-white"><span x-text="formatNumber(kpis.prodMedia)"></span> <span class="text-sm font-normal text-slate-400">sc/ha</span></p>
+            </div>
+            <div class="card border-l-4 border-purple-500">
+                <p class="text-slate-400 text-xs uppercase">Benchmark IMEA (Ref)</p>
+                <p class="text-2xl font-bold text-white" x-text="formatMoney(kpis.refImea)"></p>
+                <p class="text-xs mt-1" :class="kpis.custoMedioHa > kpis.refImea ? 'text-red-400' : 'text-emerald-400'">
+                    <span x-text="kpis.custoMedioHa > kpis.refImea ? '▲ Acima' : '▼ Abaixo'"></span> da Referência
+                </p>
             </div>
         </div>
 
-        <!-- Content: Produtividade (Table) -->
-        <div id="view-produtividade" class="hidden space-y-6">
-            <div class="card overflow-x-auto">
-                <h2 class="text-lg font-bold mb-4 text-white">🗺️ Mapa de Produtividade por Talhão</h2>
-                <table id="table-prod" class="w-full text-sm text-left text-slate-300">
-                    <thead class="text-xs uppercase bg-slate-800 text-slate-400">
-                        <tr>
-                            <th class="px-4 py-3">Safra</th>
-                            <th class="px-4 py-3">Fazenda</th>
-                            <th class="px-4 py-3">Talhão</th>
-                            <th class="px-4 py-3">Variedade</th>
-                            <th class="px-4 py-3 text-right">Área (ha)</th>
-                            <th class="px-4 py-3 text-right">Prod (sc/ha)</th>
-                            <th class="px-4 py-3 text-right">Total (sc)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody-prod">
-                        <!-- JS Injects here -->
-                    </tbody>
-                </table>
+        <!-- Main Visuals -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Breakdown Chart -->
+            <div class="card col-span-2">
+                <h3 class="text-lg font-bold text-white mb-4">Composição de Custos</h3>
+                <div class="h-64">
+                    <canvas id="costChart"></canvas>
+                </div>
             </div>
-        </div>
 
-        <!-- Content: Custos (Table) -->
-        <div id="view-custos" class="hidden space-y-6">
-            <div class="card">
-                <h2 class="text-lg font-bold mb-4 text-white">🧾 Detalhamento de Custos</h2>
-                <input type="text" id="search-custo" placeholder="Buscar item (ex: Adubo, Diesel)..." class="w-full bg-slate-800 border border-slate-700 p-2 rounded mb-4 text-white">
-                <div class="overflow-x-auto h-96 overflow-y-scroll">
+            <!-- Produtividade Table (Top Talhões) -->
+            <div class="card col-span-1 overflow-hidden">
+                <h3 class="text-lg font-bold text-white mb-4">Top Performance (sc/ha)</h3>
+                <div class="overflow-y-auto h-64">
                     <table class="w-full text-sm text-left text-slate-300">
-                        <thead class="sticky top-0 bg-slate-800 text-xs uppercase text-slate-400">
+                        <thead class="text-xs uppercase bg-slate-800 sticky top-0">
                             <tr>
-                                <th class="px-4 py-3">Safra</th>
-                                <th class="px-4 py-3">Cultura</th>
-                                <th class="px-4 py-3">Categoria</th>
-                                <th class="px-4 py-3">Item</th>
-                                <th class="px-4 py-3 text-right">Valor Total (R$)</th>
-                                <th class="px-4 py-3 text-right">R$/ha</th>
+                                <th class="px-2 py-2">Talhão</th>
+                                <th class="px-2 py-2 text-right">Prod</th>
                             </tr>
                         </thead>
-                        <tbody id="tbody-custos"></tbody>
+                        <tbody>
+                            <template x-for="p in filteredProd.sort((a,b) => b.prod_sc_ha - a.prod_sc_ha).slice(0,10)">
+                                <tr class="border-b border-slate-700 hover:bg-slate-800">
+                                    <td class="px-2 py-2 font-medium text-white">
+                                        <div x-text="p.talhao"></div>
+                                        <div class="text-xs text-slate-500" x-text="p.variedade"></div>
+                                    </td>
+                                    <td class="px-2 py-2 text-right font-bold text-emerald-400" x-text="p.prod_sc_ha.toFixed(1)"></td>
+                                </tr>
+                            </template>
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
+        <!-- Detailed Data Grid -->
+        <div class="card">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-white">Base de Dados: Custos</h3>
+                <input type="text" x-model="search" placeholder="Buscar item..." class="bg-slate-900 border border-slate-600 rounded p-1 text-sm text-white w-64">
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-slate-300">
+                    <thead class="text-xs uppercase bg-slate-800 text-slate-400">
+                        <tr>
+                            <th class="px-4 py-3">Safra</th>
+                            <th class="px-4 py-3">Cultura</th>
+                            <th class="px-4 py-3">Categoria</th>
+                            <th class="px-4 py-3">Item</th>
+                            <th class="px-4 py-3 text-right">Valor Total</th>
+                            <th class="px-4 py-3 text-right">R$/ha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template x-for="row in paginatedCustos">
+                            <tr class="border-b border-slate-700 hover:bg-slate-800 transition">
+                                <td class="px-4 py-2" x-text="row.safra"></td>
+                                <td class="px-4 py-2"><span class="bg-slate-700 px-2 py-1 rounded text-xs" x-text="row.cultura"></span></td>
+                                <td class="px-4 py-2" x-text="row.categoria"></td>
+                                <td class="px-4 py-2 font-medium text-white" x-text="row.item"></td>
+                                <td class="px-4 py-2 text-right text-emerald-300" x-text="formatMoney(row.valor)"></td>
+                                <td class="px-4 py-2 text-right" x-text="formatMoney(row.custo_ha)"></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Simple Pagination -->
+            <div class="flex justify-center gap-2 mt-4">
+                <button @click="page--" :disabled="page===1" class="px-3 py-1 bg-slate-700 rounded disabled:opacity-50 text-xs">Anterior</button>
+                <span class="text-xs py-1 text-slate-400">Página <span x-text="page"></span></span>
+                <button @click="page++" :disabled="page * pageSize >= filteredCustos.length" class="px-3 py-1 bg-slate-700 rounded disabled:opacity-50 text-xs">Próxima</button>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Application Logic -->
     <script>
-        const DB = {"custos": [{"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Alimenta\u00e7\u00e3o - Cantina", "valor_total_brl": "115199.4", "custo_por_ha": "24.6", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "An\u00e1lise de Solo", "valor_total_brl": "7348.1", "custo_por_ha": "1.57", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Aplica\u00e7\u00e3o de avi\u00e3o", "valor_total_brl": "190000.0", "custo_por_ha": "40.57", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Cont\u00e1bil", "valor_total_brl": "25800.0", "custo_por_ha": "5.51", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Jur\u00eddica", "valor_total_brl": "74900.0", "custo_por_ha": "15.99", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Scadiagro", "valor_total_brl": "17339.52", "custo_por_ha": "3.7", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assist\u00eancia Medica e Social", "valor_total_brl": "9685.0", "custo_por_ha": "2.07", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Comiss\u00e3o de Vendas", "valor_total_brl": "6000.0", "custo_por_ha": "1.28", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Consultoria em Seguran\u00e7a do Trabalho", "valor_total_brl": "8986.56", "custo_por_ha": "1.92", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "D\u00e9cimo Terceiro Salario", "valor_total_brl": "138994.96", "custo_por_ha": "29.68", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Encargos Sociais", "valor_total_brl": "933854.03", "custo_por_ha": "199.42", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "EPI 's", "valor_total_brl": "11264.99", "custo_por_ha": "2.41", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "F\u00e9rias", "valor_total_brl": "126935.43", "custo_por_ha": "27.11", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Rem\u00e9dios / Medicamentos", "valor_total_brl": "661.37", "custo_por_ha": "0.14", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Rescis\u00f5es de Contrato", "valor_total_brl": "128424.48", "custo_por_ha": "27.42", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Sal\u00e1rios", "valor_total_brl": "1251613.91", "custo_por_ha": "267.28", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Seguro Funcion\u00e1rio", "valor_total_brl": "8621.99", "custo_por_ha": "1.84", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Uniforme social", "valor_total_brl": "2294.0", "custo_por_ha": "0.49", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Vale Alimenta\u00e7\u00e3o Funcion\u00e1rios", "valor_total_brl": "223036.0", "custo_por_ha": "47.63", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Agua/Telefone/Internet", "valor_total_brl": "9004.66", "custo_por_ha": "1.92", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Cortador de Grama", "valor_total_brl": "1176.66", "custo_por_ha": "0.25", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combust\u00edvel Maquin\u00e1rios", "valor_total_brl": "1024535.16", "custo_por_ha": "218.79", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Moto", "valor_total_brl": "3926.94", "custo_por_ha": "0.84", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Soprador / Motosserra", "valor_total_brl": "475.39", "custo_por_ha": "0.1", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Veiculos", "valor_total_brl": "18017.21", "custo_por_ha": "3.85", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Despesas com gado", "valor_total_brl": "7903.59", "custo_por_ha": "1.69", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Energia El\u00e9trica", "valor_total_brl": "184685.03", "custo_por_ha": "39.44", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Expurgo", "valor_total_brl": "60990.0", "custo_por_ha": "13.02", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Ferramentas e Materiais almoxarifado", "valor_total_brl": "66023.7", "custo_por_ha": "14.1", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Ferramentas e Materiais do Lava - Jato", "valor_total_brl": "15731.39", "custo_por_ha": "3.36", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Impostos e Taxas Diversos", "valor_total_brl": "6776.45", "custo_por_ha": "1.45", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "IPVA - Licenciamento", "valor_total_brl": "24996.1", "custo_por_ha": "5.34", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Lenha secador", "valor_total_brl": "31500.0", "custo_por_ha": "6.73", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Lubrificantes - Maquin\u00e1rios", "valor_total_brl": "90368.04", "custo_por_ha": "19.3", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Lubrificantes Motos", "valor_total_brl": "907.08", "custo_por_ha": "0.19", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Equipamentos", "valor_total_brl": "224211.7", "custo_por_ha": "47.88", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Implementos", "valor_total_brl": "192419.92", "custo_por_ha": "41.09", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Armaz\u00e9m - Borgo", "valor_total_brl": "4942.98", "custo_por_ha": "1.06", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Benfeitoria Escrit\u00f3rio", "valor_total_brl": "15520.0", "custo_por_ha": "3.31", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Benfeitoria Sede Cristalina", "valor_total_brl": "136312.43", "custo_por_ha": "29.11", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Caminh\u00f5es", "valor_total_brl": "123764.26", "custo_por_ha": "26.43", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Cerca/Curral - Material", "valor_total_brl": "18205.54", "custo_por_ha": "3.89", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Colheitadeiras", "valor_total_brl": "308113.36", "custo_por_ha": "65.8", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Equip. Comunica\u00e7\u00e3o Internet", "valor_total_brl": "49784.4", "custo_por_ha": "10.63", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Maquinas e Motores", "valor_total_brl": "954.22", "custo_por_ha": "0.2", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Motos", "valor_total_brl": "880.0", "custo_por_ha": "0.19", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Pulverizadores", "valor_total_brl": "122518.04", "custo_por_ha": "26.16", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Reboque/Ca\u00e7amba", "valor_total_brl": "38483.32", "custo_por_ha": "8.22", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Rede El\u00e9trica / Usina Solar", "valor_total_brl": "47949.35", "custo_por_ha": "10.24", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Secador/Silo - Faz. Cristalina", "valor_total_brl": "92933.09", "custo_por_ha": "19.85", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Tratores", "valor_total_brl": "85006.21", "custo_por_ha": "18.15", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. ve\u00edculos", "valor_total_brl": "53522.76", "custo_por_ha": "11.43", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut/Conserv/Reparo Balan\u00e7a", "valor_total_brl": "1824.0", "custo_por_ha": "0.39", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Material de Escrit\u00f3rio", "valor_total_brl": "1701.8", "custo_por_ha": "0.36", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Material Limpeza e Outros Utens\u00edlios", "valor_total_brl": "668.44", "custo_por_ha": "0.14", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Sacaria / big bag", "valor_total_brl": "30000.0", "custo_por_ha": "6.41", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Seguro Maquin\u00e1rios", "valor_total_brl": "191763.27", "custo_por_ha": "40.95", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Seguro Sede / Armaz\u00e9ns / Balan\u00e7as", "valor_total_brl": "108038.81", "custo_por_ha": "23.07", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Seguro Veiculos / Caminh\u00f5es", "valor_total_brl": "12770.23", "custo_por_ha": "2.73", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Servi\u00e7os de Terceiros", "valor_total_brl": "80000.04", "custo_por_ha": "17.08", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2023/2024", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Taxas de Armazenagem - Borgo", "valor_total_brl": "146500.0", "custo_por_ha": "31.28", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2023.2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Sal\u00e1rios", "valor_total_brl": "511877.86", "custo_por_ha": "249.33", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "F\u00e9rias", "valor_total_brl": "43537.5", "custo_por_ha": "21.21", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Rescis\u00f5es de Contrato", "valor_total_brl": "24382.67", "custo_por_ha": "11.88", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Encargos Sociais", "valor_total_brl": "248502.49", "custo_por_ha": "121.04", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Alimenta\u00e7\u00e3o - Cantina", "valor_total_brl": "29448.12", "custo_por_ha": "14.34", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assist\u00eancia Medica e Social", "valor_total_brl": "4739.22", "custo_por_ha": "2.31", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "EPI 's", "valor_total_brl": "2887.72", "custo_por_ha": "1.41", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Vale Alimenta\u00e7\u00e3o Funcion\u00e1rios", "valor_total_brl": "62630.4", "custo_por_ha": "30.51", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Seguro Funcion\u00e1rio", "valor_total_brl": "4188.42", "custo_por_ha": "2.04", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Comiss\u00e3o de Vendas", "valor_total_brl": "29551.8", "custo_por_ha": "14.39", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Consultoria agron\u00f4mica", "valor_total_brl": "2648.01", "custo_por_ha": "1.29", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Uniforme social", "valor_total_brl": "12675.2", "custo_por_ha": "6.17", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Cont\u00e1bil", "valor_total_brl": "11556.8", "custo_por_ha": "5.63", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Jur\u00eddica", "valor_total_brl": "19839.51", "custo_por_ha": "9.66", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Scadiagro", "valor_total_brl": "15880.72", "custo_por_ha": "7.74", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Consultoria em Seguran\u00e7a do Trabalho", "valor_total_brl": "4403.8", "custo_por_ha": "2.15", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Servi\u00e7os de Terceiros", "valor_total_brl": "34018.0", "custo_por_ha": "16.57", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Aplica\u00e7\u00e3o de avi\u00e3o", "valor_total_brl": "170000.0", "custo_por_ha": "82.81", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Energia El\u00e9trica", "valor_total_brl": "64210.71", "custo_por_ha": "31.28", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Expurgo", "valor_total_brl": "47103.28", "custo_por_ha": "22.94", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Lenha secador", "valor_total_brl": "1864.0", "custo_por_ha": "0.91", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut/Conserv/Reparo Balan\u00e7a", "valor_total_brl": "6498.85", "custo_por_ha": "3.17", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Taxas de Armazenagem - Borgo", "valor_total_brl": "85744.0", "custo_por_ha": "41.77", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Despesas com gado", "valor_total_brl": "5242.7", "custo_por_ha": "2.55", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Benfeitoria Sede Cristalina", "valor_total_brl": "54739.02", "custo_por_ha": "26.66", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Rede El\u00e9trica / Usina Solar", "valor_total_brl": "17956.42", "custo_por_ha": "8.75", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Cantina", "valor_total_brl": "2935.71", "custo_por_ha": "1.43", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Tratores", "valor_total_brl": "38925.59", "custo_por_ha": "18.96", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Colheitadeiras", "valor_total_brl": "19692.51", "custo_por_ha": "9.59", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Equipamentos", "valor_total_brl": "4718.08", "custo_por_ha": "2.3", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Implementos", "valor_total_brl": "8842.98", "custo_por_ha": "4.31", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combust\u00edvel Maquin\u00e1rios", "valor_total_brl": "390494.48", "custo_por_ha": "190.21", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Lubrificantes - Maquin\u00e1rios", "valor_total_brl": "26066.98", "custo_por_ha": "12.7", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Maquinas e Motores", "valor_total_brl": "4407.22", "custo_por_ha": "2.15", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Pulverizadores", "valor_total_brl": "6660.91", "custo_por_ha": "3.24", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Ferramentas e Materiais do Lava - Jato", "valor_total_brl": "3495.01", "custo_por_ha": "1.7", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Ferramentas e Materiais almoxarifado", "valor_total_brl": "22511.96", "custo_por_ha": "10.97", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Seguro Maquin\u00e1rios", "valor_total_brl": "6481.43", "custo_por_ha": "3.16", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Veiculos", "valor_total_brl": "6489.31", "custo_por_ha": "3.16", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. ve\u00edculos", "valor_total_brl": "36196.39", "custo_por_ha": "17.63", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Motos", "valor_total_brl": "632.84", "custo_por_ha": "0.31", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Caminh\u00f5es", "valor_total_brl": "49162.59", "custo_por_ha": "23.95", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Seguro Veiculos / Caminh\u00f5es", "valor_total_brl": "2526.94", "custo_por_ha": "1.23", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Reboque/Ca\u00e7amba", "valor_total_brl": "25718.93", "custo_por_ha": "12.53", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Impostos e Taxas Diversos", "valor_total_brl": "9022.2", "custo_por_ha": "4.39", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Agua/Telefone/Internet", "valor_total_brl": "4058.17", "custo_por_ha": "1.98", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Material de Escrit\u00f3rio", "valor_total_brl": "1248.88", "custo_por_ha": "0.61", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2024.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Alimenta\u00e7\u00e3o - Cantina", "valor_total_brl": "64826.61", "custo_por_ha": "12.89", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "An\u00e1lise de Solo", "valor_total_brl": "1476.5", "custo_por_ha": "0.29", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Aplica\u00e7\u00e3o de avi\u00e3o", "valor_total_brl": "90000.0", "custo_por_ha": "17.89", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Cont\u00e1bil", "valor_total_brl": "25035.0", "custo_por_ha": "4.98", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Jur\u00eddica", "valor_total_brl": "26870.36", "custo_por_ha": "5.34", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Scadiagro", "valor_total_brl": "24157.86", "custo_por_ha": "4.8", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assist\u00eancia Medica e Social", "valor_total_brl": "15240.0", "custo_por_ha": "3.03", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Comiss\u00e3o de Vendas", "valor_total_brl": "54252.0", "custo_por_ha": "10.78", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Consultoria em Seguran\u00e7a do Trabalho", "valor_total_brl": "8351.65", "custo_por_ha": "1.66", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "D\u00e9cimo Terceiro Salario", "valor_total_brl": "141120.99", "custo_por_ha": "28.05", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Encargos Sociais", "valor_total_brl": "516742.37", "custo_por_ha": "102.71", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "EPI 's", "valor_total_brl": "14368.35", "custo_por_ha": "2.86", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "F\u00e9rias", "valor_total_brl": "93418.3", "custo_por_ha": "18.57", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Rescis\u00f5es de Contrato", "valor_total_brl": "126284.74", "custo_por_ha": "25.1", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Sal\u00e1rios", "valor_total_brl": "1078965.88", "custo_por_ha": "214.46", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Seguro Funcion\u00e1rio", "valor_total_brl": "6508.79", "custo_por_ha": "1.29", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "M\u00c3O DE OBRA", "item": "Vale Alimenta\u00e7\u00e3o Funcion\u00e1rios", "valor_total_brl": "164660.0", "custo_por_ha": "32.73", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Secador/Silo - Faz. Cristalina", "valor_total_brl": "25170.0", "custo_por_ha": "5.0", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Energia El\u00e9trica", "valor_total_brl": "81600.1", "custo_por_ha": "16.22", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Sacaria / big bag", "valor_total_brl": "29500.0", "custo_por_ha": "5.86", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Lenha secador", "valor_total_brl": "20200.0", "custo_por_ha": "4.02", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Servi\u00e7os de Terceiros", "valor_total_brl": "24854.59", "custo_por_ha": "4.94", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut/Conserv/Reparo Balan\u00e7a", "valor_total_brl": "14655.6", "custo_por_ha": "2.91", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Secador - Borgo", "valor_total_brl": "28670.0", "custo_por_ha": "5.7", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Armaz\u00e9m - Borgo", "valor_total_brl": "4150.0", "custo_por_ha": "0.82", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Taxas de Armazenagem - Borgo", "valor_total_brl": "178000.0", "custo_por_ha": "35.38", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Despesas com gado", "valor_total_brl": "17533.76", "custo_por_ha": "3.49", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Benfeitoria Sede Cristalina", "valor_total_brl": "74389.72", "custo_por_ha": "14.79", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Benfeitoria Escrit\u00f3rio", "valor_total_brl": "920.0", "custo_por_ha": "0.18", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Estradas", "valor_total_brl": "8350.0", "custo_por_ha": "1.66", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Rede El\u00e9trica / Usina Solar", "valor_total_brl": "38395.87", "custo_por_ha": "7.63", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Benfeitorias Alojamento", "valor_total_brl": "7208.94", "custo_por_ha": "1.43", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Tratores", "valor_total_brl": "98037.17", "custo_por_ha": "19.49", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Colheitadeiras", "valor_total_brl": "191442.16", "custo_por_ha": "38.05", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Equipamentos", "valor_total_brl": "61485.2", "custo_por_ha": "12.22", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Implementos", "valor_total_brl": "151497.14", "custo_por_ha": "30.11", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combust\u00edvel Maquin\u00e1rios", "valor_total_brl": "1142540.83", "custo_por_ha": "227.1", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Lubrificantes - Maquin\u00e1rios", "valor_total_brl": "60054.73", "custo_por_ha": "11.94", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Maquinas e Motores", "valor_total_brl": "7496.21", "custo_por_ha": "1.49", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Pulverizadores", "valor_total_brl": "154943.85", "custo_por_ha": "30.8", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Ferramentas e Materiais do Lava - Jato", "valor_total_brl": "10815.0", "custo_por_ha": "2.15", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Ferramentas e Materiais almoxarifado", "valor_total_brl": "107934.05", "custo_por_ha": "21.45", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Seguro Maquin\u00e1rios", "valor_total_brl": "142577.47", "custo_por_ha": "28.34", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Soprador / Motosserra", "valor_total_brl": "886.63", "custo_por_ha": "0.18", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Veiculos", "valor_total_brl": "17796.85", "custo_por_ha": "3.54", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. ve\u00edculos", "valor_total_brl": "83670.88", "custo_por_ha": "16.63", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Moto", "valor_total_brl": "5365.38", "custo_por_ha": "1.07", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Lubrificantes Motos", "valor_total_brl": "252.08", "custo_por_ha": "0.05", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Motos", "valor_total_brl": "2626.87", "custo_por_ha": "0.52", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Caminh\u00f5es", "valor_total_brl": "2335.05", "custo_por_ha": "0.46", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Caminh\u00f5es", "valor_total_brl": "98218.78", "custo_por_ha": "19.52", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Seguro Veiculos / Caminh\u00f5es", "valor_total_brl": "10971.66", "custo_por_ha": "2.18", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Reboque/Ca\u00e7amba", "valor_total_brl": "8546.92", "custo_por_ha": "1.7", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Impostos e Taxas Diversos", "valor_total_brl": "40932.09", "custo_por_ha": "8.14", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Fretes em geral", "valor_total_brl": "10446.24", "custo_por_ha": "2.08", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Material Limpeza e Outros Utens\u00edlios", "valor_total_brl": "30646.99", "custo_por_ha": "6.09", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Seguro Sede / Armaz\u00e9ns / Balan\u00e7as", "valor_total_brl": "97643.0", "custo_por_ha": "19.41", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Agua/Telefone/Internet", "valor_total_brl": "7759.11", "custo_por_ha": "1.54", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2024/2025", "cultura": "SOJA", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Material de Escrit\u00f3rio", "valor_total_brl": "3693.4", "custo_por_ha": "0.73", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA SOJA SAFRA 2024.2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Sal\u00e1rios", "valor_total_brl": "593126.29", "custo_por_ha": "299.56", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "F\u00e9rias", "valor_total_brl": "50235.33", "custo_por_ha": "25.37", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Decimo Terceiro Sal\u00e1rio", "valor_total_brl": "5903.5", "custo_por_ha": "2.98", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Rescis\u00f5es de Contrato", "valor_total_brl": "7026.62", "custo_por_ha": "3.55", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Encargos Sociais", "valor_total_brl": "251507.44", "custo_por_ha": "127.02", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Alimenta\u00e7\u00e3o - Cantina", "valor_total_brl": "33120.36", "custo_por_ha": "16.73", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assist\u00eancia Medica e Social", "valor_total_brl": "4041.02", "custo_por_ha": "2.04", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "EPI 's", "valor_total_brl": "3332.84", "custo_por_ha": "1.68", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Vale Alimenta\u00e7\u00e3o Funcion\u00e1rios", "valor_total_brl": "100760.22", "custo_por_ha": "50.89", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Seguro Funcion\u00e1rio", "valor_total_brl": "3852.73", "custo_por_ha": "1.95", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Comiss\u00e3o de Vendas", "valor_total_brl": "1682.0", "custo_por_ha": "0.85", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Consultoria agron\u00f4mica", "valor_total_brl": "1070.9", "custo_por_ha": "0.54", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Cont\u00e1bil", "valor_total_brl": "14023.7", "custo_por_ha": "7.08", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Jur\u00eddica", "valor_total_brl": "50460.0", "custo_por_ha": "25.48", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Assessoria Scadiagro", "valor_total_brl": "16943.35", "custo_por_ha": "8.56", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Consultoria em Seguran\u00e7a do Trabalho", "valor_total_brl": "5685.05", "custo_por_ha": "2.87", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "M\u00c3O DE OBRA", "item": "Servi\u00e7os de Terceiros", "valor_total_brl": "66813.16", "custo_por_ha": "33.74", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Secador/Silo - Faz. Cristalina", "valor_total_brl": "34132.62", "custo_por_ha": "17.24", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Energia El\u00e9trica", "valor_total_brl": "43928.3", "custo_por_ha": "22.19", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Expurgo", "valor_total_brl": "32373.46", "custo_por_ha": "16.35", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Secador - Borgo", "valor_total_brl": "51296.8", "custo_por_ha": "25.91", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Armaz\u00e9m - Borgo", "valor_total_brl": "27885.89", "custo_por_ha": "14.08", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Taxas de Armazenagem - Borgo", "valor_total_brl": "95033.0", "custo_por_ha": "48.0", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Despesas com gado", "valor_total_brl": "5190.25", "custo_por_ha": "2.62", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Benfeitoria Sede Cristalina", "valor_total_brl": "206211.43", "custo_por_ha": "104.15", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Rede El\u00e9trica / Usina Solar", "valor_total_brl": "17267.33", "custo_por_ha": "8.72", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Equip.Comunicacao Internet", "valor_total_brl": "1597.9", "custo_por_ha": "0.81", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Cantina", "valor_total_brl": "2842.41", "custo_por_ha": "1.44", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Cerca/Curral - Material", "valor_total_brl": "18655.5", "custo_por_ha": "9.42", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Tratores", "valor_total_brl": "45950.28", "custo_por_ha": "23.21", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Colheitadeiras", "valor_total_brl": "55866.62", "custo_por_ha": "28.22", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Equipamentos", "valor_total_brl": "22599.13", "custo_por_ha": "11.41", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Implementos", "valor_total_brl": "26985.52", "custo_por_ha": "13.63", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combust\u00edvel Maquin\u00e1rios", "valor_total_brl": "356683.14", "custo_por_ha": "180.14", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Lubrificantes - Maquin\u00e1rios", "valor_total_brl": "31324.89", "custo_por_ha": "15.82", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Maquinas e Motores", "valor_total_brl": "345.66", "custo_por_ha": "0.17", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Pulverizadores", "valor_total_brl": "6129.53", "custo_por_ha": "3.1", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Ferramentas e Materiais do Lava - Jato", "valor_total_brl": "975.56", "custo_por_ha": "0.49", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Ferramentas e Materiais almoxarifado", "valor_total_brl": "66029.87", "custo_por_ha": "33.35", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Seguro Maquin\u00e1rios", "valor_total_brl": "24386.16", "custo_por_ha": "12.32", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Cortador de Grama", "valor_total_brl": "298.16", "custo_por_ha": "0.15", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Veiculos", "valor_total_brl": "9467.65", "custo_por_ha": "4.78", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. ve\u00edculos", "valor_total_brl": "50091.31", "custo_por_ha": "25.3", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Combustivel Motos", "valor_total_brl": "2292.69", "custo_por_ha": "1.16", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Motos", "valor_total_brl": "958.76", "custo_por_ha": "0.48", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Caminh\u00f5es", "valor_total_brl": "141400.1", "custo_por_ha": "71.41", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Seguro Veiculos / Caminh\u00f5es", "valor_total_brl": "12118.23", "custo_por_ha": "6.12", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Manut. Reboque/Ca\u00e7amba", "valor_total_brl": "19592.39", "custo_por_ha": "9.9", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Impostos e Taxas Diversos", "valor_total_brl": "43101.27", "custo_por_ha": "21.77", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Fretes em geral", "valor_total_brl": "3092.05", "custo_por_ha": "1.56", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Material Limpeza e Outros Utens\u00edlios", "valor_total_brl": "13057.89", "custo_por_ha": "6.59", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Agua/Telefone/Internet", "valor_total_brl": "4371.94", "custo_por_ha": "2.21", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}, {"safra": "2025", "cultura": "MILHO", "categoria_macro": "MANUTEN\u00c7\u00c3O", "item": "Material de Escrit\u00f3rio", "valor_total_brl": "6743.17", "custo_por_ha": "3.41", "fonte": "SCADI", "arquivo_origem": "CUSTO POR CATEGORIA MILHO SAFRA 2025.pdf", "fazenda": "CONSOLIDADO"}], "produtividade": [{"safra": "24/25", "cultura": "MILHO", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "VALDIR SC", "variedade": "S DKB 360 PRO3", "area_ha": "304.0", "produtividade_sc_ha": "153.04", "producao_total_sc": "46522.68"}, {"safra": "24/25", "cultura": "MILHO", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "DRENO FELIX SC", "variedade": "S DKB 360 PRO3", "area_ha": "26.0", "produtividade_sc_ha": "156.39", "producao_total_sc": "4066.26"}, {"safra": "24/25", "cultura": "MILHO", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "MAGGIONI SC", "variedade": "S DKB 360 PRO3", "area_ha": "300.0", "produtividade_sc_ha": "152.26", "producao_total_sc": "45677.55"}, {"safra": "24/25", "cultura": "MILHO", "fazenda": "FAZENDA CRISTALINA", "talhao": "1 CR", "variedade": "S DKB 360 PRO3", "area_ha": "196.0", "produtividade_sc_ha": "153.28", "producao_total_sc": "30042.74"}, {"safra": "24/25", "cultura": "MILHO", "fazenda": "FAZENDA CRISTALINA", "talhao": "4 5 6 CR", "variedade": "S DKB 360 PRO3", "area_ha": "286.0", "produtividade_sc_ha": "151.67", "producao_total_sc": "43378.85"}, {"safra": "24/25", "cultura": "MILHO", "fazenda": "FAZENDA CRISTALINA", "talhao": "FELIX CR", "variedade": "S EXPERIMENTOS", "area_ha": "36.0", "produtividade_sc_ha": "155.32", "producao_total_sc": "5591.49"}, {"safra": "24/25", "cultura": "MILHO", "fazenda": "FAZENDA CRISTALINA", "talhao": "FELIX CR", "variedade": "S DKB 360 PRO3", "area_ha": "294.0", "produtividade_sc_ha": "169.25", "producao_total_sc": "49759.6"}, {"safra": "24/25", "cultura": "MILHO", "fazenda": "FAZENDA CALIFORNIA", "talhao": "1 CA", "variedade": "S DKB 360 PRO3", "area_ha": "163.0", "produtividade_sc_ha": "158.47", "producao_total_sc": "25830.36"}, {"safra": "24/25", "cultura": "MILHO", "fazenda": "FAZENDA CALIFORNIA", "talhao": "2 3 CA", "variedade": "S DKB 360 PRO3", "area_ha": "375.0", "produtividade_sc_ha": "165.71", "producao_total_sc": "62140.51"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CRISTALINA", "talhao": "1 CR", "variedade": "S NEO 810", "area_ha": "231.91", "produtividade_sc_ha": "67.56", "producao_total_sc": "15668.92"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CRISTALINA", "talhao": "2 3 CR", "variedade": "S EXPERIMENTOS", "area_ha": "39.4", "produtividade_sc_ha": "68.74", "producao_total_sc": "2708.47"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CRISTALINA", "talhao": "2 3 CR", "variedade": "S 80I82 IPRO", "area_ha": "382.2", "produtividade_sc_ha": "69.27", "producao_total_sc": "26476.1"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CRISTALINA", "talhao": "2 3 CR", "variedade": "S 78IX80RSF 12X", "area_ha": "8.3", "produtividade_sc_ha": "69.36", "producao_total_sc": "575.73"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CRISTALINA", "talhao": "2 3 CR", "variedade": "S 80I85RSF IPRO", "area_ha": "45.6", "produtividade_sc_ha": "70.73", "producao_total_sc": "3225.51"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CRISTALINA", "talhao": "4 5 6 CR", "variedade": "S NEO 810", "area_ha": "307.77", "produtividade_sc_ha": "67.15", "producao_total_sc": "20668.09"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CRISTALINA", "talhao": "PEDR\u00c3O CR", "variedade": "S HO COARI 12X", "area_ha": "201.22", "produtividade_sc_ha": "62.04", "producao_total_sc": "12484.21"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CRISTALINA", "talhao": "FELIX CR", "variedade": "S HO COARI 12X", "area_ha": "336.6", "produtividade_sc_ha": "71.17", "producao_total_sc": "23956.64"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CALIFORNIA", "talhao": "1 CA", "variedade": "S 80IX81RSF", "area_ha": "163.43", "produtividade_sc_ha": "71.31", "producao_total_sc": "11654.97"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CALIFORNIA", "talhao": "2 3 CA", "variedade": "S NEO 810", "area_ha": "138.08", "produtividade_sc_ha": "65.67", "producao_total_sc": "9067.27"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CALIFORNIA", "talhao": "2 3 CA", "variedade": "S 80IX81RSF", "area_ha": "237.0", "produtividade_sc_ha": "71.22", "producao_total_sc": "16880.17"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CALIFORNIA", "talhao": "4 5 6 CA", "variedade": "S NEO 810", "area_ha": "285.0", "produtividade_sc_ha": "65.12", "producao_total_sc": "18558.19"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CALIFORNIA", "talhao": "4 5 6 CA", "variedade": "S HO COARI 12X", "area_ha": "89.49", "produtividade_sc_ha": "61.11", "producao_total_sc": "5468.54"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA CALIFORNIA", "talhao": "ROQUE CA", "variedade": "S NEO 810", "area_ha": "481.0", "produtividade_sc_ha": "65.66", "producao_total_sc": "31584.35"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "1B 2B SC", "variedade": "S 80I85RSF IPRO", "area_ha": "4.87", "produtividade_sc_ha": "62.04", "producao_total_sc": "302.12"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "1B 2B SC", "variedade": "S HO COARI 12X", "area_ha": "280.0", "produtividade_sc_ha": "60.51", "producao_total_sc": "16942.0"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "SEDE SC", "variedade": "S NEO 810", "area_ha": "16.37", "produtividade_sc_ha": "68.04", "producao_total_sc": "1113.89"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "VALDIRZINHO SC", "variedade": "S HO COARI 12X", "area_ha": "51.83", "produtividade_sc_ha": "61.39", "producao_total_sc": "3181.74"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "VALDIR SC", "variedade": "S NEO 810", "area_ha": "313.01", "produtividade_sc_ha": "68.57", "producao_total_sc": "21463.61"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "DRENO SC", "variedade": "S NEO 810", "area_ha": "215.36", "produtividade_sc_ha": "67.01", "producao_total_sc": "14431.65"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "DRENO FELIX SC", "variedade": "S HO COARI 12X", "area_ha": "182.79", "produtividade_sc_ha": "72.06", "producao_total_sc": "13172.4"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "MAGGIONI SC", "variedade": "S NEO 810", "area_ha": "302.7", "produtividade_sc_ha": "72.15", "producao_total_sc": "21841.08"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "1A 2A SC", "variedade": "S NEO 810", "area_ha": "348.21", "produtividade_sc_ha": "65.16", "producao_total_sc": "22688.34"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "3 SC", "variedade": "S NEO 810", "area_ha": "160.0", "produtividade_sc_ha": "64.87", "producao_total_sc": "10379.72"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "3 SC", "variedade": "S HO COARI 12X", "area_ha": "58.38", "produtividade_sc_ha": "65.68", "producao_total_sc": "3834.19"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "JURA SC", "variedade": "S NEO 810", "area_ha": "132.05", "produtividade_sc_ha": "58.06", "producao_total_sc": "7667.24"}, {"safra": "24/25", "cultura": "SOJA", "fazenda": "FAZENDA S\u00c3O CRISTOV\u00c3O", "talhao": "CHACAR\u00c1 SC", "variedade": "S NEO 810", "area_ha": "18.43", "produtividade_sc_ha": "60.11", "producao_total_sc": "1107.87"}], "resumo": {"total_area_soja": 5031.0, "total_area_milho": 1980.0, "media_prod_soja": 0, "media_prod_milho": 0}};
-        
-        // --- Security ---
-        function checkPass() {
-            const val = document.getElementById('pass-input').value;
-            if(val === 'jarvis4.0') {
-                document.getElementById('login-gate').classList.add('hidden');
-                document.getElementById('main-content').classList.remove('hidden');
-                initApp();
-            } else {
-                document.getElementById('error-msg').classList.remove('hidden');
-            }
-        }
+        function app() {
+            return {
+                authenticated: false,
+                password: '',
+                authError: false,
+                db: null,
+                filters: { safra: 'ALL', cultura: 'ALL' },
+                search: '',
+                page: 1,
+                pageSize: 10,
+                chartInstance: null,
 
-        // --- Tabs ---
-        function switchTab(viewId) {
-            // Hide all views
-            ['visao-geral', 'produtividade', 'custos'].forEach(id => {
-                document.getElementById('view-' + id).classList.add('hidden');
-                document.getElementById('tab-' + (id==='visao-geral'?'geral':id==='produtividade'?'prod':'custos')).className = "px-6 py-3 font-medium tab-inactive hover:text-white transition cursor-pointer";
-            });
-            
-            // Show selected
-            document.getElementById('view-' + viewId).classList.remove('hidden');
-            
-            // Activate Tab Style
-            const tabBtnId = viewId === 'visao-geral' ? 'tab-geral' : viewId === 'produtividade' ? 'tab-prod' : 'tab-custos';
-            document.getElementById(tabBtnId).className = "px-6 py-3 font-medium tab-active border-b-2 border-emerald-500 text-emerald-400 cursor-default";
-        }
+                login() {
+                    if (this.password === 'jarvis4.0') {
+                        this.authenticated = true;
+                        this.loadData();
+                    } else {
+                        this.authError = true;
+                    }
+                },
 
-        // --- Init ---
-        function initApp() {
-            renderKPIs();
-            renderCharts();
-            renderProdTable();
-            renderCustosTable();
-            document.getElementById('last-update').innerText = new Date().toLocaleString();
-        }
+                async loadData() {
+                    // Fetch generated JSON
+                    const res = await fetch('./data/database.json');
+                    this.db = await res.json();
+                    this.$watch('filters', () => { this.page = 1; this.updateChart(); });
+                    this.updateChart();
+                },
 
-        function formatCurrency(val) {
-            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
-        }
+                get uniqueSafras() {
+                    if(!this.db) return [];
+                    const safras = new Set(this.db.custos.map(c => c.safra));
+                    return Array.from(safras).sort();
+                },
 
-        function renderKPIs() {
-            // KPIs simples (soma bruta)
-            const areaSoja = DB.resumo.total_area_soja;
-            const areaMilho = DB.resumo.total_area_milho;
-            
-            // Custo Soja 24/25 (Hardcoded filter logic for v2.0 speed)
-            const custoSoja = DB.custos
-                .filter(c => c.cultura === 'SOJA' && c.safra.includes('24'))
-                .reduce((acc, curr) => acc + parseFloat(curr.valor_total_brl), 0);
+                get filteredCustos() {
+                    if (!this.db) return [];
+                    return this.db.custos.filter(c => {
+                        const matchSafra = this.filters.safra === 'ALL' || c.safra === this.filters.safra;
+                        const matchCultura = this.filters.cultura === 'ALL' || c.cultura === this.filters.cultura;
+                        const matchSearch = this.search === '' || c.item.toLowerCase().includes(this.search.toLowerCase());
+                        return matchSafra && matchCultura && matchSearch;
+                    });
+                },
 
-            document.getElementById('kpi-area-soja').innerText = areaSoja.toFixed(1) + " ha";
-            document.getElementById('kpi-area-milho').innerText = areaMilho.toFixed(1) + " ha";
-            document.getElementById('kpi-custo-soja').innerText = (custoSoja / 1000000).toFixed(2) + " Mi";
-            document.getElementById('kpi-prod-media').innerText = "68.1 sc/ha"; // Exemplo vindo da média geral
-        }
+                get paginatedCustos() {
+                    const start = (this.page - 1) * this.pageSize;
+                    return this.filteredCustos.slice(start, start + this.pageSize);
+                },
 
-        function renderProdTable() {
-            const tbody = document.getElementById('tbody-prod');
-            tbody.innerHTML = DB.produtividade.map(row => `
-                <tr class="border-b border-slate-700">
-                    <td class="px-4 py-3">${row.safra}</td>
-                    <td class="px-4 py-3">${row.fazenda}</td>
-                    <td class="px-4 py-3 font-bold text-white">${row.talhao}</td>
-                    <td class="px-4 py-3 text-slate-400">${row.variedade}</td>
-                    <td class="px-4 py-3 text-right">${parseFloat(row.area_ha).toFixed(2)}</td>
-                    <td class="px-4 py-3 text-right font-bold text-emerald-400">${parseFloat(row.produtividade_sc_ha).toFixed(2)}</td>
-                    <td class="px-4 py-3 text-right text-slate-400">${parseFloat(row.producao_total_sc).toFixed(0)}</td>
-                </tr>
-            `).join('');
-        }
+                get filteredProd() {
+                    if (!this.db) return [];
+                    return this.db.produtividade.filter(p => {
+                        const matchSafra = this.filters.safra === 'ALL' || p.safra === this.filters.safra;
+                        const matchCultura = this.filters.cultura === 'ALL' || p.cultura === this.filters.cultura;
+                        return matchSafra && matchCultura;
+                    });
+                },
 
-        function renderCustosTable() {
-            const tbody = document.getElementById('tbody-custos');
-            tbody.innerHTML = DB.custos.map(row => `
-                <tr class="border-b border-slate-700">
-                    <td class="px-4 py-3 text-slate-500">${row.safra}</td>
-                    <td class="px-4 py-3"><span class="px-2 py-1 rounded bg-slate-700 text-xs">${row.cultura}</span></td>
-                    <td class="px-4 py-3">${row.categoria_macro}</td>
-                    <td class="px-4 py-3 font-medium text-white">${row.item}</td>
-                    <td class="px-4 py-3 text-right">${formatCurrency(row.valor_total_brl)}</td>
-                    <td class="px-4 py-3 text-right text-slate-400">${formatCurrency(row.custo_por_ha)}</td>
-                </tr>
-            `).join('');
-            
-            // Simple Search
-            document.getElementById('search-custo').addEventListener('keyup', function() {
-                const val = this.value.toLowerCase();
-                const rows = tbody.getElementsByTagName('tr');
-                for(let row of rows) {
-                    const text = row.innerText.toLowerCase();
-                    row.style.display = text.includes(val) ? '' : 'none';
+                get kpis() {
+                    const custos = this.filteredCustos;
+                    const prods = this.filteredProd;
+                    
+                    const custoTotal = custos.reduce((acc, c) => acc + c.valor, 0);
+                    const areaTotal = prods.reduce((acc, p) => acc + p.area, 0);
+                    const totalSc = prods.reduce((acc, p) => acc + p.total_sc, 0);
+                    
+                    const prodMedia = areaTotal > 0 ? totalSc / areaTotal : 0;
+                    const custoMedioHa = areaTotal > 0 ? custoTotal / areaTotal : 0;
+
+                    // Get IMEA ref
+                    let refImea = 0;
+                    if (this.db && this.filters.cultura !== 'ALL') {
+                        const ref = this.db.referencias.find(r => r.cultura === this.filters.cultura);
+                        if(ref) refImea = ref.ref_custo_ha;
+                    }
+
+                    return { custoTotal, areaTotal, prodMedia, custoMedioHa, refImea };
+                },
+
+                updateChart() {
+                    if (!this.db) return;
+                    
+                    // Group By Category
+                    const groups = {};
+                    this.filteredCustos.forEach(c => {
+                        if (!groups[c.categoria]) groups[c.categoria] = 0;
+                        groups[c.categoria] += c.valor;
+                    });
+
+                    const labels = Object.keys(groups);
+                    const data = Object.values(groups);
+
+                    const ctx = document.getElementById('costChart');
+                    
+                    if (this.chartInstance) this.chartInstance.destroy();
+
+                    this.chartInstance = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'right', labels: { color: '#cbd5e1' } }
+                            }
+                        }
+                    });
+                },
+
+                formatMoney(val) {
+                    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+                },
+                formatNumber(val) {
+                    return new Intl.NumberFormat('pt-BR').format(val);
                 }
-            });
-        }
-
-        function renderCharts() {
-            // Chart Soja
-            new Chart(document.getElementById('chartSoja'), {
-                type: 'bar',
-                data: {
-                    labels: ['23/24', '24/25'],
-                    datasets: [
-                        { label: 'Custo Total', data: [6916765, 5556493], backgroundColor: '#10b981' }
-                    ]
-                },
-                options: { plugins: { legend: { display: false } } }
-            });
-            
-            // Chart Milho
-            new Chart(document.getElementById('chartMilho'), {
-                type: 'bar',
-                data: {
-                    labels: ['2024', '2025'],
-                    datasets: [
-                        { label: 'Custo Total', data: [2186416, 2689861], backgroundColor: '#f59e0b' }
-                    ]
-                },
-                options: { plugins: { legend: { display: false } } }
-            });
+            }
         }
     </script>
 </body>
 </html>
-    
