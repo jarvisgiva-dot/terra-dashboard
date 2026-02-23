@@ -100,19 +100,32 @@
                     <span class="text-emerald-500 text-lg">🌾</span>
                 </div>
                 <p class="text-3xl font-bold text-white"><span x-text="formatNumber(kpis.prodMedia)"></span> <span class="text-lg text-slate-400">sc/ha</span></p>
-                <p class="text-xs mt-2" :class="kpis.prodMedia > kpis.refImeaProd ? 'text-emerald-400' : 'text-yellow-400'">
-                    <span x-text="kpis.prodMedia > kpis.refImeaProd ? '▲ Acima' : '▼ Abaixo'"></span> da ref. IMEA (<span x-text="kpis.refImeaProd"></span>)
+                <p class="text-xs mt-2" x-show="kpis.refImea" :class="kpis.prodMedia > kpis.refImea?.ref_prod_sc_ha ? 'text-emerald-400' : 'text-yellow-400'">
+                    <span x-text="kpis.prodMedia > kpis.refImea?.ref_prod_sc_ha ? '▲ Acima' : '▼ Abaixo'"></span> da ref. IMEA (<span x-text="kpis.refImea?.ref_prod_sc_ha"></span>)
                 </p>
             </div>
 
-            <!-- Margem (Simulada) -->
-            <div class="card border-l-4 border-blue-500 hover:bg-slate-800/50 transition">
+            <!-- Radar Competitivo (Benchmark Detalhado) -->
+            <div class="card border-l-4 border-orange-500 hover:bg-slate-800/50 transition col-span-1 md:col-span-2 lg:col-span-1">
                 <div class="card-header">
-                    <p class="text-slate-400 text-xs uppercase tracking-wider font-bold">Margem Líquida (Est.)</p>
-                    <span class="text-blue-500 text-lg">📈</span>
+                    <p class="text-slate-400 text-xs uppercase tracking-wider font-bold">Radar de Custos (R$/ha)</p>
+                    <span class="text-orange-500 text-lg">🎯</span>
                 </div>
-                <p class="text-3xl font-bold" :class="kpis.margem > 0 ? 'text-blue-400' : 'text-red-400'" x-text="formatMoney(kpis.margem)"></p>
-                <p class="text-xs mt-2 text-slate-500">por hectare (Cenário R$ <span x-text="simulacao.precoSaca"></span>)</p>
+                <div class="space-y-3 mt-2" x-show="kpis.refImea">
+                    <template x-for="(refVal, key) in kpis.refImea?.detalhes">
+                        <div class="flex justify-between items-center text-sm border-b border-slate-800 pb-1">
+                            <span class="text-slate-300" x-text="key"></span>
+                            <div class="text-right">
+                                <!-- Cálculo aproximado do custo real por categoria -->
+                                <span class="font-bold text-white" x-text="formatMoney(kpis.custoPorCategoria[key]?.total / kpis.areaTotal || 0)"></span>
+                                <span class="text-xs ml-1" :class="(kpis.custoPorCategoria[key]?.total / kpis.areaTotal) > refVal ? 'text-red-400' : 'text-emerald-400'">
+                                    vs <span x-text="formatNumber(refVal)"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div x-show="!kpis.refImea" class="text-xs text-slate-500 mt-2">Selecione uma cultura para ver o benchmark.</div>
             </div>
 
             <!-- Melhor Variedade -->
@@ -281,9 +294,25 @@
                     
                     const areaTotal = prods.reduce((acc, p) => acc + p.area, 0);
                     const totalSc = prods.reduce((acc, p) => acc + p.total_sc, 0);
+                    
+                    // Custo Total (Soma tudo)
                     const custoTotal = custos.reduce((acc, c) => acc + c.valor, 0);
                     
+                    // Custo Médio Ponderado por Categoria (para benchmark)
+                    const custoPorCategoria = {};
+                    custos.forEach(c => {
+                        // Agrupa itens em categorias chave
+                        let cat = c.item; 
+                        if(c.item.includes("HERBICIDA") || c.item.includes("FUNGICIDA") || c.item.includes("INSETICIDA")) cat = "DEFENSIVOS";
+                        
+                        if(!custoPorCategoria[cat]) custoPorCategoria[cat] = { total: 0, count: 0 };
+                        custoPorCategoria[cat].total += c.valor;
+                    });
+
                     const prodMedia = areaTotal > 0 ? totalSc / areaTotal : 0;
+                    
+                    // Custo Médio Ha = Custo Total / Area Plantada (aproximado, pois areaTotal vem de produtividade que pode ser parcial)
+                    // Melhor usar a média dos custos unitários se disponível, ou divisão bruta
                     const custoMedioHa = areaTotal > 0 ? custoTotal / areaTotal : 0;
                     
                     // Margem Estimada
@@ -291,13 +320,12 @@
                     const margem = areaTotal > 0 ? (receitaEstimada - custoTotal) / areaTotal : 0;
 
                     // Reference
-                    let refImeaProd = 0;
+                    let refImea = null;
                     if(this.db && this.filters.cultura !== 'ALL') {
-                        const ref = this.db.referencias.find(r => r.cultura === this.filters.cultura);
-                        if(ref) refImeaProd = ref.ref_prod_sc_ha;
+                        refImea = this.db.referencias.find(r => r.cultura === this.filters.cultura);
                     }
 
-                    // Best Variety Logic
+                    // Best Variety
                     const vars = {};
                     prods.forEach(p => {
                         if(!vars[p.variedade]) vars[p.variedade] = { totalSc: 0, totalArea: 0 };
@@ -311,7 +339,7 @@
                         if(avg > bestVar.val) bestVar = { name: k, val: avg };
                     });
 
-                    return { areaTotal, prodMedia, custoMedioHa, margem, bestVar, refImeaProd };
+                    return { areaTotal, prodMedia, custoMedioHa, margem, bestVar, refImea, custoPorCategoria };
                 },
 
                 get paretoCustos() {
