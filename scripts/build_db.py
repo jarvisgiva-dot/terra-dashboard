@@ -85,11 +85,18 @@ def build_bi_database():
     except Exception as e:
         print(f"Erro produtividade: {e}")
 
-    # 3. Consolidar IMEA (Referencia Estática por enquanto)
-    # Futuramente isso virá de um CSV separado
+    # 3. Consolidar IMEA (Referencia Detalhada)
     imea_refs = [
-        {"safra": "24/25", "cultura": "SOJA", "ref_custo_ha": 4156.03, "ref_prod_sc_ha": 62.0},
-        {"safra": "2025", "cultura": "MILHO", "ref_custo_ha": 3558.08, "ref_prod_sc_ha": 110.0},
+        {"safra": "24/25", "cultura": "SOJA", "ref_custo_ha": 4156.03, "ref_prod_sc_ha": 62.0, "detalhes": {
+            "FERTILIZANTE": 1582.92,
+            "SEMENTE": 498.11,
+            "DEFENSIVOS": 1309.64
+        }},
+        {"safra": "2025", "cultura": "MILHO", "ref_custo_ha": 3558.08, "ref_prod_sc_ha": 110.0, "detalhes": {
+            "SEMENTE": 826.94,
+            "DEFENSIVOS": 875.29,
+            "MÃO DE OBRA": 235.70
+        }},
     ]
 
     # Estrutura Final
