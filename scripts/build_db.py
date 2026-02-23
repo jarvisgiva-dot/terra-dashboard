@@ -16,6 +16,27 @@ def clean_decimal(val):
         return float(val.replace(".", "").replace(",", ".").strip())
     return val
 
+def normalize_safra(val, cultura):
+    """Padroniza safras para cruzar dados de Custo e Produtividade"""
+    val = str(val).strip()
+    
+    # Caso 1: "2024.2025" ou "2024/2025" -> "24/25"
+    if "." in val or "/" in val:
+        parts = val.replace(".", "/").split("/")
+        if len(parts) == 2:
+            return f"{parts[0][-2:]}/{parts[1][-2:]}"
+            
+    # Caso 2: Ano único "2025"
+    # Se for SOJA e ano único, geralmente é o ano da colheita. 2025 -> 24/25
+    if len(val) == 4 and val.isdigit():
+        if cultura == "SOJA":
+            # Assume que "2025" na pasta significa safra 24/25
+            ano = int(val)
+            return f"{str(ano-1)[-2:]}/{str(ano)[-2:]}"
+        return val # Milho 2025 fica 2025
+        
+    return val
+
 def build_bi_database():
     print("🏗️ Construindo AgroDB (JSON Relacional)...")
     
@@ -25,9 +46,7 @@ def build_bi_database():
         with open(os.path.join(DATA_DIR, "custos_operacionais.csv"), 'r') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                # Normalização
-                safra = row['safra'].replace(".", "/") # 2024.2025 -> 2024/2025
-                if len(safra) == 4: safra = f"{safra}/{int(safra)+1}" # 2025 -> 2025/2026 (aprox)
+                safra = normalize_safra(row['safra'], row['cultura'])
                 
                 custos.append({
                     "safra": safra,
@@ -46,8 +65,9 @@ def build_bi_database():
         with open(os.path.join(DATA_DIR, "produtividade.csv"), 'r') as f:
             reader = csv.DictReader(f)
             for row in reader:
+                safra = normalize_safra(row['safra'], row['cultura'])
                 produtividade.append({
-                    "safra": row['safra'],
+                    "safra": safra,
                     "cultura": row['cultura'],
                     "fazenda": row['fazenda'],
                     "talhao": row['talhao'],
