@@ -342,7 +342,7 @@
                         if(avg > bestVar.val) bestVar = { name: k, val: avg };
                     });
 
-                    return { areaTotal, prodMedia, custoMedioHa, margem, bestVar, refImea, custoPorCategoria };
+                    return { areaTotal, prodMedia, custoMedioHa, margem, bestVariety: bestVar, refImea, custoPorCategoria };
                 },
 
                 get paretoCustos() {
