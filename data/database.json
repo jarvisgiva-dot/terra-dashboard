@@ -3,3210 +3,974 @@
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Alimenta\u00e7\u00e3o - Cantina",
-      "valor": 115199.4,
-      "custo_ha": 24.6
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "An\u00e1lise de Solo",
-      "valor": 7348.1,
-      "custo_ha": 1.57
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Aplica\u00e7\u00e3o de avi\u00e3o",
-      "valor": 190000.0,
-      "custo_ha": 40.57
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Cont\u00e1bil",
-      "valor": 25800.0,
-      "custo_ha": 5.51
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Jur\u00eddica",
-      "valor": 74900.0,
-      "custo_ha": 15.99
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Scadiagro",
-      "valor": 17339.52,
-      "custo_ha": 3.7
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assist\u00eancia Medica e Social",
-      "valor": 9685.0,
-      "custo_ha": 2.07
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Comiss\u00e3o de Vendas",
-      "valor": 6000.0,
-      "custo_ha": 1.28
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Consultoria em Seguran\u00e7a do Trabalho",
-      "valor": 8986.56,
-      "custo_ha": 1.92
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "D\u00e9cimo Terceiro Salario",
-      "valor": 138994.96,
-      "custo_ha": 29.68
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Encargos Sociais",
-      "valor": 933854.03,
-      "custo_ha": 199.42
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "EPI 's",
-      "valor": 11264.99,
-      "custo_ha": 2.41
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "F\u00e9rias",
-      "valor": 126935.43,
-      "custo_ha": 27.11
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Rem\u00e9dios / Medicamentos",
-      "valor": 661.37,
-      "custo_ha": 0.14
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Rescis\u00f5es de Contrato",
-      "valor": 128424.48,
-      "custo_ha": 27.42
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Sal\u00e1rios",
-      "valor": 1251613.91,
-      "custo_ha": 267.28
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Seguro Funcion\u00e1rio",
-      "valor": 8621.99,
-      "custo_ha": 1.84
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Uniforme social",
-      "valor": 2294.0,
-      "custo_ha": 0.49
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Vale Alimenta\u00e7\u00e3o Funcion\u00e1rios",
-      "valor": 223036.0,
-      "custo_ha": 47.63
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Agua/Telefone/Internet",
-      "valor": 9004.66,
-      "custo_ha": 1.92
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Cortador de Grama",
-      "valor": 1176.66,
-      "custo_ha": 0.25
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combust\u00edvel Maquin\u00e1rios",
-      "valor": 1024535.16,
-      "custo_ha": 218.79
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Moto",
-      "valor": 3926.94,
-      "custo_ha": 0.84
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Soprador / Motosserra",
-      "valor": 475.39,
-      "custo_ha": 0.1
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Veiculos",
-      "valor": 18017.21,
-      "custo_ha": 3.85
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Despesas com gado",
-      "valor": 7903.59,
-      "custo_ha": 1.69
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Energia El\u00e9trica",
-      "valor": 184685.03,
-      "custo_ha": 39.44
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Expurgo",
-      "valor": 60990.0,
-      "custo_ha": 13.02
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Ferramentas e Materiais almoxarifado",
-      "valor": 66023.7,
-      "custo_ha": 14.1
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Ferramentas e Materiais do Lava - Jato",
-      "valor": 15731.39,
-      "custo_ha": 3.36
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Impostos e Taxas Diversos",
-      "valor": 6776.45,
-      "custo_ha": 1.45
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "IPVA - Licenciamento",
-      "valor": 24996.1,
-      "custo_ha": 5.34
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Lenha secador",
-      "valor": 31500.0,
-      "custo_ha": 6.73
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Lubrificantes - Maquin\u00e1rios",
-      "valor": 90368.04,
-      "custo_ha": 19.3
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Lubrificantes Motos",
-      "valor": 907.08,
-      "custo_ha": 0.19
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Equipamentos",
-      "valor": 224211.7,
-      "custo_ha": 47.88
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Implementos",
-      "valor": 192419.92,
-      "custo_ha": 41.09
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Armaz\u00e9m - Borgo",
-      "valor": 4942.98,
-      "custo_ha": 1.06
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Benfeitoria Escrit\u00f3rio",
-      "valor": 15520.0,
-      "custo_ha": 3.31
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Benfeitoria Sede Cristalina",
-      "valor": 136312.43,
-      "custo_ha": 29.11
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Caminh\u00f5es",
-      "valor": 123764.26,
-      "custo_ha": 26.43
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Cerca/Curral - Material",
-      "valor": 18205.54,
-      "custo_ha": 3.89
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Colheitadeiras",
-      "valor": 308113.36,
-      "custo_ha": 65.8
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Equip. Comunica\u00e7\u00e3o Internet",
-      "valor": 49784.4,
-      "custo_ha": 10.63
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Maquinas e Motores",
-      "valor": 954.22,
-      "custo_ha": 0.2
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Motos",
-      "valor": 880.0,
-      "custo_ha": 0.19
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Pulverizadores",
-      "valor": 122518.04,
-      "custo_ha": 26.16
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Reboque/Ca\u00e7amba",
-      "valor": 38483.32,
-      "custo_ha": 8.22
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Rede El\u00e9trica / Usina Solar",
-      "valor": 47949.35,
-      "custo_ha": 10.24
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Secador/Silo - Faz. Cristalina",
-      "valor": 92933.09,
-      "custo_ha": 19.85
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Tratores",
-      "valor": 85006.21,
-      "custo_ha": 18.15
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. ve\u00edculos",
-      "valor": 53522.76,
-      "custo_ha": 11.43
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut/Conserv/Reparo Balan\u00e7a",
-      "valor": 1824.0,
-      "custo_ha": 0.39
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Material de Escrit\u00f3rio",
-      "valor": 1701.8,
-      "custo_ha": 0.36
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Material Limpeza e Outros Utens\u00edlios",
-      "valor": 668.44,
-      "custo_ha": 0.14
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Sacaria / big bag",
-      "valor": 30000.0,
-      "custo_ha": 6.41
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Seguro Maquin\u00e1rios",
-      "valor": 191763.27,
-      "custo_ha": 40.95
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Seguro Sede / Armaz\u00e9ns / Balan\u00e7as",
-      "valor": 108038.81,
-      "custo_ha": 23.07
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Seguro Veiculos / Caminh\u00f5es",
-      "valor": 12770.23,
-      "custo_ha": 2.73
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Servi\u00e7os de Terceiros",
-      "valor": 80000.04,
-      "custo_ha": 17.08
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Taxas de Armazenagem - Borgo",
-      "valor": 146500.0,
-      "custo_ha": 31.28
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Sal\u00e1rios",
-      "valor": 511877.86,
-      "custo_ha": 249.33
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "F\u00e9rias",
-      "valor": 43537.5,
-      "custo_ha": 21.21
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Rescis\u00f5es de Contrato",
-      "valor": 24382.67,
-      "custo_ha": 11.88
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Encargos Sociais",
-      "valor": 248502.49,
-      "custo_ha": 121.04
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Alimenta\u00e7\u00e3o - Cantina",
-      "valor": 29448.12,
-      "custo_ha": 14.34
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assist\u00eancia Medica e Social",
-      "valor": 4739.22,
-      "custo_ha": 2.31
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "EPI 's",
-      "valor": 2887.72,
-      "custo_ha": 1.41
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Vale Alimenta\u00e7\u00e3o Funcion\u00e1rios",
-      "valor": 62630.4,
-      "custo_ha": 30.51
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Seguro Funcion\u00e1rio",
-      "valor": 4188.42,
-      "custo_ha": 2.04
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Comiss\u00e3o de Vendas",
-      "valor": 29551.8,
-      "custo_ha": 14.39
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Consultoria agron\u00f4mica",
-      "valor": 2648.01,
-      "custo_ha": 1.29
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Uniforme social",
-      "valor": 12675.2,
-      "custo_ha": 6.17
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Cont\u00e1bil",
-      "valor": 11556.8,
-      "custo_ha": 5.63
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Jur\u00eddica",
-      "valor": 19839.51,
-      "custo_ha": 9.66
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Scadiagro",
-      "valor": 15880.72,
-      "custo_ha": 7.74
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Consultoria em Seguran\u00e7a do Trabalho",
-      "valor": 4403.8,
-      "custo_ha": 2.15
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Servi\u00e7os de Terceiros",
-      "valor": 34018.0,
-      "custo_ha": 16.57
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Aplica\u00e7\u00e3o de avi\u00e3o",
-      "valor": 170000.0,
-      "custo_ha": 82.81
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Energia El\u00e9trica",
-      "valor": 64210.71,
-      "custo_ha": 31.28
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Expurgo",
-      "valor": 47103.28,
-      "custo_ha": 22.94
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Lenha secador",
-      "valor": 1864.0,
-      "custo_ha": 0.91
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut/Conserv/Reparo Balan\u00e7a",
-      "valor": 6498.85,
-      "custo_ha": 3.17
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Taxas de Armazenagem - Borgo",
-      "valor": 85744.0,
-      "custo_ha": 41.77
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Despesas com gado",
-      "valor": 5242.7,
-      "custo_ha": 2.55
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Benfeitoria Sede Cristalina",
-      "valor": 54739.02,
-      "custo_ha": 26.66
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Rede El\u00e9trica / Usina Solar",
-      "valor": 17956.42,
-      "custo_ha": 8.75
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Cantina",
-      "valor": 2935.71,
-      "custo_ha": 1.43
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Tratores",
-      "valor": 38925.59,
-      "custo_ha": 18.96
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Colheitadeiras",
-      "valor": 19692.51,
-      "custo_ha": 9.59
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Equipamentos",
-      "valor": 4718.08,
-      "custo_ha": 2.3
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Implementos",
-      "valor": 8842.98,
-      "custo_ha": 4.31
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combust\u00edvel Maquin\u00e1rios",
-      "valor": 390494.48,
-      "custo_ha": 190.21
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Lubrificantes - Maquin\u00e1rios",
-      "valor": 26066.98,
-      "custo_ha": 12.7
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Maquinas e Motores",
-      "valor": 4407.22,
-      "custo_ha": 2.15
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Pulverizadores",
-      "valor": 6660.91,
-      "custo_ha": 3.24
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Ferramentas e Materiais do Lava - Jato",
-      "valor": 3495.01,
-      "custo_ha": 1.7
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Ferramentas e Materiais almoxarifado",
-      "valor": 22511.96,
-      "custo_ha": 10.97
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Seguro Maquin\u00e1rios",
-      "valor": 6481.43,
-      "custo_ha": 3.16
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Veiculos",
-      "valor": 6489.31,
-      "custo_ha": 3.16
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. ve\u00edculos",
-      "valor": 36196.39,
-      "custo_ha": 17.63
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Motos",
-      "valor": 632.84,
-      "custo_ha": 0.31
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Caminh\u00f5es",
-      "valor": 49162.59,
-      "custo_ha": 23.95
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Seguro Veiculos / Caminh\u00f5es",
-      "valor": 2526.94,
-      "custo_ha": 1.23
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Reboque/Ca\u00e7amba",
-      "valor": 25718.93,
-      "custo_ha": 12.53
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Impostos e Taxas Diversos",
-      "valor": 9022.2,
-      "custo_ha": 4.39
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Agua/Telefone/Internet",
-      "valor": 4058.17,
-      "custo_ha": 1.98
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Material de Escrit\u00f3rio",
-      "valor": 1248.88,
-      "custo_ha": 0.61
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Alimenta\u00e7\u00e3o - Cantina",
-      "valor": 64826.61,
-      "custo_ha": 12.89
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "An\u00e1lise de Solo",
-      "valor": 1476.5,
-      "custo_ha": 0.29
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Aplica\u00e7\u00e3o de avi\u00e3o",
-      "valor": 90000.0,
-      "custo_ha": 17.89
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Cont\u00e1bil",
-      "valor": 25035.0,
-      "custo_ha": 4.98
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Jur\u00eddica",
-      "valor": 26870.36,
-      "custo_ha": 5.34
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Scadiagro",
-      "valor": 24157.86,
-      "custo_ha": 4.8
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assist\u00eancia Medica e Social",
-      "valor": 15240.0,
-      "custo_ha": 3.03
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Comiss\u00e3o de Vendas",
-      "valor": 54252.0,
-      "custo_ha": 10.78
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Consultoria em Seguran\u00e7a do Trabalho",
-      "valor": 8351.65,
-      "custo_ha": 1.66
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "D\u00e9cimo Terceiro Salario",
-      "valor": 141120.99,
-      "custo_ha": 28.05
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Encargos Sociais",
-      "valor": 516742.37,
-      "custo_ha": 102.71
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "EPI 's",
-      "valor": 14368.35,
-      "custo_ha": 2.86
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "F\u00e9rias",
-      "valor": 93418.3,
-      "custo_ha": 18.57
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Rescis\u00f5es de Contrato",
-      "valor": 126284.74,
-      "custo_ha": 25.1
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Sal\u00e1rios",
-      "valor": 1078965.88,
-      "custo_ha": 214.46
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Seguro Funcion\u00e1rio",
-      "valor": 6508.79,
-      "custo_ha": 1.29
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Vale Alimenta\u00e7\u00e3o Funcion\u00e1rios",
-      "valor": 164660.0,
-      "custo_ha": 32.73
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Secador/Silo - Faz. Cristalina",
-      "valor": 25170.0,
-      "custo_ha": 5.0
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Energia El\u00e9trica",
-      "valor": 81600.1,
-      "custo_ha": 16.22
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Sacaria / big bag",
-      "valor": 29500.0,
-      "custo_ha": 5.86
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Lenha secador",
-      "valor": 20200.0,
-      "custo_ha": 4.02
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Servi\u00e7os de Terceiros",
-      "valor": 24854.59,
-      "custo_ha": 4.94
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut/Conserv/Reparo Balan\u00e7a",
-      "valor": 14655.6,
-      "custo_ha": 2.91
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Secador - Borgo",
-      "valor": 28670.0,
-      "custo_ha": 5.7
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Armaz\u00e9m - Borgo",
-      "valor": 4150.0,
-      "custo_ha": 0.82
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Taxas de Armazenagem - Borgo",
-      "valor": 178000.0,
-      "custo_ha": 35.38
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Despesas com gado",
-      "valor": 17533.76,
-      "custo_ha": 3.49
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Benfeitoria Sede Cristalina",
-      "valor": 74389.72,
-      "custo_ha": 14.79
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Benfeitoria Escrit\u00f3rio",
-      "valor": 920.0,
-      "custo_ha": 0.18
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Estradas",
-      "valor": 8350.0,
-      "custo_ha": 1.66
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Rede El\u00e9trica / Usina Solar",
-      "valor": 38395.87,
-      "custo_ha": 7.63
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Benfeitorias Alojamento",
-      "valor": 7208.94,
-      "custo_ha": 1.43
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Tratores",
-      "valor": 98037.17,
-      "custo_ha": 19.49
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Colheitadeiras",
-      "valor": 191442.16,
-      "custo_ha": 38.05
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Equipamentos",
-      "valor": 61485.2,
-      "custo_ha": 12.22
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Implementos",
-      "valor": 151497.14,
-      "custo_ha": 30.11
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combust\u00edvel Maquin\u00e1rios",
-      "valor": 1142540.83,
-      "custo_ha": 227.1
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Lubrificantes - Maquin\u00e1rios",
-      "valor": 60054.73,
-      "custo_ha": 11.94
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Maquinas e Motores",
-      "valor": 7496.21,
-      "custo_ha": 1.49
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Pulverizadores",
-      "valor": 154943.85,
-      "custo_ha": 30.8
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Ferramentas e Materiais do Lava - Jato",
-      "valor": 10815.0,
-      "custo_ha": 2.15
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Ferramentas e Materiais almoxarifado",
-      "valor": 107934.05,
-      "custo_ha": 21.45
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Seguro Maquin\u00e1rios",
-      "valor": 142577.47,
-      "custo_ha": 28.34
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Soprador / Motosserra",
-      "valor": 886.63,
-      "custo_ha": 0.18
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Veiculos",
-      "valor": 17796.85,
-      "custo_ha": 3.54
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. ve\u00edculos",
-      "valor": 83670.88,
-      "custo_ha": 16.63
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Moto",
-      "valor": 5365.38,
-      "custo_ha": 1.07
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Lubrificantes Motos",
-      "valor": 252.08,
-      "custo_ha": 0.05
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Motos",
-      "valor": 2626.87,
-      "custo_ha": 0.52
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Caminh\u00f5es",
-      "valor": 2335.05,
-      "custo_ha": 0.46
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Caminh\u00f5es",
-      "valor": 98218.78,
-      "custo_ha": 19.52
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Seguro Veiculos / Caminh\u00f5es",
-      "valor": 10971.66,
-      "custo_ha": 2.18
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Reboque/Ca\u00e7amba",
-      "valor": 8546.92,
-      "custo_ha": 1.7
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Impostos e Taxas Diversos",
-      "valor": 40932.09,
-      "custo_ha": 8.14
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Fretes em geral",
-      "valor": 10446.24,
-      "custo_ha": 2.08
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Material Limpeza e Outros Utens\u00edlios",
-      "valor": 30646.99,
-      "custo_ha": 6.09
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Seguro Sede / Armaz\u00e9ns / Balan\u00e7as",
-      "valor": 97643.0,
-      "custo_ha": 19.41
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Agua/Telefone/Internet",
-      "valor": 7759.11,
-      "custo_ha": 1.54
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Material de Escrit\u00f3rio",
-      "valor": 3693.4,
-      "custo_ha": 0.73
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Sal\u00e1rios",
-      "valor": 593126.29,
-      "custo_ha": 299.56
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "F\u00e9rias",
-      "valor": 50235.33,
-      "custo_ha": 25.37
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Decimo Terceiro Sal\u00e1rio",
-      "valor": 5903.5,
-      "custo_ha": 2.98
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Rescis\u00f5es de Contrato",
-      "valor": 7026.62,
-      "custo_ha": 3.55
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Encargos Sociais",
-      "valor": 251507.44,
-      "custo_ha": 127.02
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Alimenta\u00e7\u00e3o - Cantina",
-      "valor": 33120.36,
-      "custo_ha": 16.73
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assist\u00eancia Medica e Social",
-      "valor": 4041.02,
-      "custo_ha": 2.04
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "EPI 's",
-      "valor": 3332.84,
-      "custo_ha": 1.68
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Vale Alimenta\u00e7\u00e3o Funcion\u00e1rios",
-      "valor": 100760.22,
-      "custo_ha": 50.89
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Seguro Funcion\u00e1rio",
-      "valor": 3852.73,
-      "custo_ha": 1.95
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Comiss\u00e3o de Vendas",
-      "valor": 1682.0,
-      "custo_ha": 0.85
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Consultoria agron\u00f4mica",
-      "valor": 1070.9,
-      "custo_ha": 0.54
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Cont\u00e1bil",
-      "valor": 14023.7,
-      "custo_ha": 7.08
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Jur\u00eddica",
-      "valor": 50460.0,
-      "custo_ha": 25.48
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Assessoria Scadiagro",
-      "valor": 16943.35,
-      "custo_ha": 8.56
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Consultoria em Seguran\u00e7a do Trabalho",
-      "valor": 5685.05,
-      "custo_ha": 2.87
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "M\u00c3O DE OBRA",
-      "item": "Servi\u00e7os de Terceiros",
-      "valor": 66813.16,
-      "custo_ha": 33.74
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Secador/Silo - Faz. Cristalina",
-      "valor": 34132.62,
-      "custo_ha": 17.24
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Energia El\u00e9trica",
-      "valor": 43928.3,
-      "custo_ha": 22.19
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Expurgo",
-      "valor": 32373.46,
-      "custo_ha": 16.35
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Secador - Borgo",
-      "valor": 51296.8,
-      "custo_ha": 25.91
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Armaz\u00e9m - Borgo",
-      "valor": 27885.89,
-      "custo_ha": 14.08
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Taxas de Armazenagem - Borgo",
-      "valor": 95033.0,
-      "custo_ha": 48.0
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Despesas com gado",
-      "valor": 5190.25,
-      "custo_ha": 2.62
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Benfeitoria Sede Cristalina",
-      "valor": 206211.43,
-      "custo_ha": 104.15
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Rede El\u00e9trica / Usina Solar",
-      "valor": 17267.33,
-      "custo_ha": 8.72
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Equip.Comunicacao Internet",
-      "valor": 1597.9,
-      "custo_ha": 0.81
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Cantina",
-      "valor": 2842.41,
-      "custo_ha": 1.44
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Cerca/Curral - Material",
-      "valor": 18655.5,
-      "custo_ha": 9.42
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Tratores",
-      "valor": 45950.28,
-      "custo_ha": 23.21
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Colheitadeiras",
-      "valor": 55866.62,
-      "custo_ha": 28.22
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Equipamentos",
-      "valor": 22599.13,
-      "custo_ha": 11.41
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Implementos",
-      "valor": 26985.52,
-      "custo_ha": 13.63
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combust\u00edvel Maquin\u00e1rios",
-      "valor": 356683.14,
-      "custo_ha": 180.14
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Lubrificantes - Maquin\u00e1rios",
-      "valor": 31324.89,
-      "custo_ha": 15.82
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Maquinas e Motores",
-      "valor": 345.66,
-      "custo_ha": 0.17
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Pulverizadores",
-      "valor": 6129.53,
-      "custo_ha": 3.1
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Ferramentas e Materiais do Lava - Jato",
-      "valor": 975.56,
-      "custo_ha": 0.49
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Ferramentas e Materiais almoxarifado",
-      "valor": 66029.87,
-      "custo_ha": 33.35
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Seguro Maquin\u00e1rios",
-      "valor": 24386.16,
-      "custo_ha": 12.32
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Cortador de Grama",
-      "valor": 298.16,
-      "custo_ha": 0.15
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Veiculos",
-      "valor": 9467.65,
-      "custo_ha": 4.78
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. ve\u00edculos",
-      "valor": 50091.31,
-      "custo_ha": 25.3
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Combustivel Motos",
-      "valor": 2292.69,
-      "custo_ha": 1.16
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Motos",
-      "valor": 958.76,
-      "custo_ha": 0.48
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Caminh\u00f5es",
-      "valor": 141400.1,
-      "custo_ha": 71.41
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Seguro Veiculos / Caminh\u00f5es",
-      "valor": 12118.23,
-      "custo_ha": 6.12
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Manut. Reboque/Ca\u00e7amba",
-      "valor": 19592.39,
-      "custo_ha": 9.9
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Impostos e Taxas Diversos",
-      "valor": 43101.27,
-      "custo_ha": 21.77
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Fretes em geral",
-      "valor": 3092.05,
-      "custo_ha": 1.56
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Material Limpeza e Outros Utens\u00edlios",
-      "valor": 13057.89,
-      "custo_ha": 6.59
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Agua/Telefone/Internet",
-      "valor": 4371.94,
-      "custo_ha": 2.21
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "MANUTEN\u00c7\u00c3O",
-      "item": "Material de Escrit\u00f3rio",
-      "valor": 6743.17,
-      "custo_ha": 3.41
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
-      "custo_ha": 310.82
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
-      "custo_ha": 502.25
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "HERBICIDA",
-      "valor": 0.0,
-      "custo_ha": 78.33
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FUNGICIDA",
-      "valor": 0.0,
-      "custo_ha": 91.53
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "INSETICIDA",
-      "valor": 0.0,
-      "custo_ha": 144.56
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ADJUVANTE",
-      "valor": 0.0,
-      "custo_ha": 11.76
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ARRENDAMENTO",
-      "valor": 0.0,
-      "custo_ha": 435.68
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
-      "custo_ha": 185.74
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
-      "custo_ha": 348.25
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "HERBICIDA",
-      "valor": 0.0,
-      "custo_ha": 73.49
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FUNGICIDA",
-      "valor": 0.0,
-      "custo_ha": 65.41
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "INSETICIDA",
-      "valor": 0.0,
-      "custo_ha": 103.44
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ADJUVANTE",
-      "valor": 0.0,
-      "custo_ha": 8.52
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ARRENDAMENTO",
-      "valor": 0.0,
-      "custo_ha": 288.65
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
-      "custo_ha": 237.14
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
-      "custo_ha": 374.02
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "HERBICIDA",
-      "valor": 0.0,
-      "custo_ha": 57.15
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FUNGICIDA",
-      "valor": 0.0,
-      "custo_ha": 72.11
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "INSETICIDA",
-      "valor": 0.0,
-      "custo_ha": 107.14
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ADJUVANTE",
-      "valor": 0.0,
-      "custo_ha": 8.99
-    },
-    {
-      "safra": "2025",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ARRENDAMENTO",
-      "valor": 0.0,
-      "custo_ha": 338.05
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
-      "custo_ha": 783.05
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
-      "custo_ha": 650.59
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "HERBICIDA",
-      "valor": 0.0,
-      "custo_ha": 155.09
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FUNGICIDA",
-      "valor": 0.0,
-      "custo_ha": 116.46
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "INSETICIDA",
-      "valor": 0.0,
-      "custo_ha": 282.15
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ADJUVANTE",
-      "valor": 0.0,
-      "custo_ha": 55.18
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ARRENDAMENTO",
-      "valor": 0.0,
-      "custo_ha": 633.22
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
-      "custo_ha": 65.73
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
-      "custo_ha": 66.83
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "HERBICIDA",
-      "valor": 0.0,
-      "custo_ha": 23.49
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FUNGICIDA",
-      "valor": 0.0,
-      "custo_ha": 3.33
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "INSETICIDA",
-      "valor": 0.0,
-      "custo_ha": 51.77
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ADJUVANTE",
-      "valor": 0.0,
-      "custo_ha": 9.29
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ARRENDAMENTO",
-      "valor": 0.0,
-      "custo_ha": 119.11
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
-      "custo_ha": 426.98
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
-      "custo_ha": 110.73
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "HERBICIDA",
-      "valor": 0.0,
-      "custo_ha": 93.44
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "FUNGICIDA",
-      "valor": 0.0,
-      "custo_ha": 33.17
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "INSETICIDA",
-      "valor": 0.0,
-      "custo_ha": 159.74
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ADJUVANTE",
-      "valor": 0.0,
-      "custo_ha": 24.13
-    },
-    {
-      "safra": "2024",
-      "cultura": "MILHO",
-      "categoria": "INSUMOS",
-      "item": "ARRENDAMENTO",
-      "valor": 0.0,
-      "custo_ha": 188.33
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "CRISTALINA",
+      "valor": 2734852.55,
       "custo_ha": 584.02
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "CRISTALINA",
+      "valor": 513174.0,
       "custo_ha": 109.59
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "HERBICIDA",
       "item": "HERBICIDA",
-      "valor": 0.0,
+      "fazenda": "CRISTALINA",
+      "valor": 419372.47,
       "custo_ha": 89.56
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "FUNGICIDA",
       "item": "FUNGICIDA",
-      "valor": 0.0,
+      "fazenda": "CRISTALINA",
+      "valor": 628280.51,
       "custo_ha": 134.17
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "INSETICIDA",
       "item": "INSETICIDA",
-      "valor": 0.0,
+      "fazenda": "CRISTALINA",
+      "valor": 965206.54,
       "custo_ha": 206.12
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "ADJUVANTE",
       "item": "ADJUVANTE",
-      "valor": 0.0,
+      "fazenda": "CRISTALINA",
+      "valor": 113719.38,
       "custo_ha": 24.28
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "CRISTALINA",
+      "valor": 1087966.84,
+      "custo_ha": 232.33
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "CRISTALINA",
+      "valor": 1205721.5,
+      "custo_ha": 257.48
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
       "item": "ARRENDAMENTO",
-      "valor": 0.0,
+      "fazenda": "CRISTALINA",
+      "valor": 1211655.05,
       "custo_ha": 258.75
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "CALIFORNIA",
+      "valor": 2324034.77,
       "custo_ha": 496.29
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "CALIFORNIA",
+      "valor": 804851.07,
       "custo_ha": 171.87
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "HERBICIDA",
       "item": "HERBICIDA",
-      "valor": 0.0,
+      "fazenda": "CALIFORNIA",
+      "valor": 370266.11,
       "custo_ha": 79.07
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "FUNGICIDA",
       "item": "FUNGICIDA",
-      "valor": 0.0,
+      "fazenda": "CALIFORNIA",
+      "valor": 630475.93,
       "custo_ha": 134.64
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "INSETICIDA",
       "item": "INSETICIDA",
-      "valor": 0.0,
+      "fazenda": "CALIFORNIA",
+      "valor": 745433.59,
       "custo_ha": 159.19
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "ADJUVANTE",
       "item": "ADJUVANTE",
-      "valor": 0.0,
+      "fazenda": "CALIFORNIA",
+      "valor": 104921.62,
       "custo_ha": 22.41
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "CALIFORNIA",
+      "valor": 976741.91,
+      "custo_ha": 208.58
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "CALIFORNIA",
+      "valor": 1082459.46,
+      "custo_ha": 231.16
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
       "item": "ARRENDAMENTO",
-      "valor": 0.0,
+      "fazenda": "CALIFORNIA",
+      "valor": 1101504.59,
       "custo_ha": 235.22
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 2462205.05,
       "custo_ha": 525.8
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 886804.97,
       "custo_ha": 189.38
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "HERBICIDA",
       "item": "HERBICIDA",
-      "valor": 0.0,
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 912189.9,
       "custo_ha": 194.8
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "FUNGICIDA",
       "item": "FUNGICIDA",
-      "valor": 0.0,
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 938823.01,
       "custo_ha": 200.48
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "INSETICIDA",
       "item": "INSETICIDA",
-      "valor": 0.0,
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 845026.51,
       "custo_ha": 180.45
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "ADJUVANTE",
       "item": "ADJUVANTE",
-      "valor": 0.0,
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 216263.95,
       "custo_ha": 46.18
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 1216250.99,
+      "custo_ha": 259.73
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 1347888.51,
+      "custo_ha": 287.84
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
       "item": "ARRENDAMENTO",
-      "valor": 0.0,
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 1358522.33,
       "custo_ha": 290.11
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "CRISTALINA",
+      "valor": 2490583.47,
       "custo_ha": 495.05
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "CRISTALINA",
+      "valor": 634740.03,
       "custo_ha": 126.17
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "HERBICIDA",
       "item": "HERBICIDA",
-      "valor": 0.0,
+      "fazenda": "CRISTALINA",
+      "valor": 488257.74,
       "custo_ha": 97.05
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "FUNGICIDA",
       "item": "FUNGICIDA",
-      "valor": 0.0,
+      "fazenda": "CRISTALINA",
+      "valor": 705466.52,
       "custo_ha": 140.22
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "INSETICIDA",
       "item": "INSETICIDA",
-      "valor": 0.0,
+      "fazenda": "CRISTALINA",
+      "valor": 762838.1,
       "custo_ha": 151.63
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "ADJUVANTE",
       "item": "ADJUVANTE",
-      "valor": 0.0,
+      "fazenda": "CRISTALINA",
+      "valor": 61956.87,
       "custo_ha": 12.32
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "ARRENDAMENTO",
-      "valor": 0.0,
-      "custo_ha": 229.58
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "CRISTALINA",
+      "valor": 757019.01,
+      "custo_ha": 150.47
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "CRISTALINA",
+      "valor": 958272.57,
+      "custo_ha": 190.47
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "ARRENDAMENTO",
+      "fazenda": "CRISTALINA",
+      "valor": 1149706.44,
+      "custo_ha": 228.52
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "CALIFORNIA",
+      "valor": 1968810.7,
       "custo_ha": 391.34
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "CALIFORNIA",
+      "valor": 714653.17,
       "custo_ha": 142.05
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "HERBICIDA",
       "item": "HERBICIDA",
-      "valor": 0.0,
+      "fazenda": "CALIFORNIA",
+      "valor": 503099.83,
       "custo_ha": 100.0
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "FUNGICIDA",
       "item": "FUNGICIDA",
-      "valor": 0.0,
+      "fazenda": "CALIFORNIA",
+      "valor": 555022.4,
       "custo_ha": 110.32
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "INSETICIDA",
       "item": "INSETICIDA",
-      "valor": 0.0,
+      "fazenda": "CALIFORNIA",
+      "valor": 591364.06,
       "custo_ha": 117.54
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "ADJUVANTE",
       "item": "ADJUVANTE",
-      "valor": 0.0,
+      "fazenda": "CALIFORNIA",
+      "valor": 58255.23,
       "custo_ha": 11.58
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "ARRENDAMENTO",
-      "valor": 0.0,
-      "custo_ha": 206.08
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "CALIFORNIA",
+      "valor": 679526.85,
+      "custo_ha": 135.07
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "FERTILIZANTE",
-      "valor": 0.0,
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "CALIFORNIA",
+      "valor": 860179.19,
+      "custo_ha": 170.98
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "ARRENDAMENTO",
+      "fazenda": "CALIFORNIA",
+      "valor": 1032017.02,
+      "custo_ha": 205.13
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 2812157.44,
       "custo_ha": 558.97
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "SEMENTE",
-      "valor": 0.0,
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 936273.34,
       "custo_ha": 186.1
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "HERBICIDA",
       "item": "HERBICIDA",
-      "valor": 0.0,
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 829486.56,
       "custo_ha": 164.88
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "FUNGICIDA",
       "item": "FUNGICIDA",
-      "valor": 0.0,
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 851634.94,
       "custo_ha": 169.28
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "INSETICIDA",
       "item": "INSETICIDA",
-      "valor": 0.0,
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 805981.19,
       "custo_ha": 160.2
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
+      "categoria": "ADJUVANTE",
       "item": "ADJUVANTE",
-      "valor": 0.0,
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 83449.57,
       "custo_ha": 16.59
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "INSUMOS",
-      "item": "ARRENDAMENTO",
-      "valor": 0.0,
-      "custo_ha": 308.04
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 2734852.55,
-      "custo_ha": 2734852.55
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 513174.0,
-      "custo_ha": 513174.0
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 419372.47,
-      "custo_ha": 419372.47
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 628280.51,
-      "custo_ha": 628280.51
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 965206.54,
-      "custo_ha": 965206.54
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 113719.38,
-      "custo_ha": 113719.38
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1087966.84,
-      "custo_ha": 1087966.84
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1205721.5,
-      "custo_ha": 1205721.5
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1211655.05,
-      "custo_ha": 1211655.05
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 2324034.77,
-      "custo_ha": 2324034.77
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 804851.07,
-      "custo_ha": 804851.07
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 370266.11,
-      "custo_ha": 370266.11
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 630475.93,
-      "custo_ha": 630475.93
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 745433.59,
-      "custo_ha": 745433.59
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 104921.62,
-      "custo_ha": 104921.62
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 976741.91,
-      "custo_ha": 976741.91
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1082459.46,
-      "custo_ha": 1082459.46
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1101504.59,
-      "custo_ha": 1101504.59
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 2462205.05,
-      "custo_ha": 2462205.05
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 886804.97,
-      "custo_ha": 886804.97
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 912189.9,
-      "custo_ha": 912189.9
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 938823.01,
-      "custo_ha": 938823.01
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 845026.51,
-      "custo_ha": 845026.51
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 216263.95,
-      "custo_ha": 216263.95
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1216250.99,
-      "custo_ha": 1216250.99
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1347888.51,
-      "custo_ha": 1347888.51
-    },
-    {
-      "safra": "23/24",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1358522.33,
-      "custo_ha": 1358522.33
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 2490583.47,
-      "custo_ha": 2490583.47
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 634740.03,
-      "custo_ha": 634740.03
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 488257.74,
-      "custo_ha": 488257.74
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 705466.52,
-      "custo_ha": 705466.52
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 762838.1,
-      "custo_ha": 762838.1
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 757019.01,
-      "custo_ha": 757019.01
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 958272.57,
-      "custo_ha": 958272.57
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1149706.44,
-      "custo_ha": 1149706.44
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1968810.7,
-      "custo_ha": 1968810.7
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 714653.17,
-      "custo_ha": 714653.17
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 503099.83,
-      "custo_ha": 503099.83
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 555022.4,
-      "custo_ha": 555022.4
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 591364.06,
-      "custo_ha": 591364.06
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 679526.85,
-      "custo_ha": 679526.85
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 860179.19,
-      "custo_ha": 860179.19
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 1032017.02,
-      "custo_ha": 1032017.02
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 2812157.44,
-      "custo_ha": 2812157.44
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 936273.34,
-      "custo_ha": 936273.34
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 829486.56,
-      "custo_ha": 829486.56
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 851634.94,
-      "custo_ha": 851634.94
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
-      "valor": 805981.19,
-      "custo_ha": 805981.19
-    },
-    {
-      "safra": "24/25",
-      "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 1015733.54,
-      "custo_ha": 1015733.54
+      "custo_ha": 201.89
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 1285762.56,
-      "custo_ha": 1285762.56
+      "custo_ha": 255.57
     },
     {
       "safra": "24/25",
       "cultura": "SOJA",
       "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "item": "ARRENDAMENTO",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 1542625.22,
-      "custo_ha": 1542625.22
+      "custo_ha": 306.62
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "CRISTALINA",
       "valor": 1607594.33,
-      "custo_ha": 1607594.33
+      "custo_ha": 783.05
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "CRISTALINA",
       "valor": 1335661.42,
-      "custo_ha": 1335661.42
+      "custo_ha": 650.59
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "HERBICIDA",
+      "item": "HERBICIDA",
+      "fazenda": "CRISTALINA",
       "valor": 318400.58,
-      "custo_ha": 318400.58
+      "custo_ha": 155.09
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FUNGICIDA",
+      "item": "FUNGICIDA",
+      "fazenda": "CRISTALINA",
       "valor": 239091.36,
-      "custo_ha": 239091.36
+      "custo_ha": 116.46
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "INSETICIDA",
+      "item": "INSETICIDA",
+      "fazenda": "CRISTALINA",
       "valor": 579245.07,
-      "custo_ha": 579245.07
+      "custo_ha": 282.15
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "ADJUVANTE",
+      "item": "ADJUVANTE",
+      "fazenda": "CRISTALINA",
       "valor": 113281.56,
-      "custo_ha": 113281.56
+      "custo_ha": 55.18
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "CRISTALINA",
       "valor": 894839.61,
-      "custo_ha": 894839.61
+      "custo_ha": 435.87
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "CRISTALINA",
       "valor": 689757.2,
-      "custo_ha": 689757.2
+      "custo_ha": 335.98
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
       "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "item": "ARRENDAMENTO",
+      "fazenda": "CRISTALINA",
       "valor": 1300000.0,
-      "custo_ha": 1300000.0
+      "custo_ha": 633.22
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "CALIFORNIA",
       "valor": 134953.42,
-      "custo_ha": 134953.42
+      "custo_ha": 65.73
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "CALIFORNIA",
       "valor": 137204.9,
-      "custo_ha": 137204.9
+      "custo_ha": 66.83
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "HERBICIDA",
+      "item": "HERBICIDA",
+      "fazenda": "CALIFORNIA",
+      "valor": 48231.9,
+      "custo_ha": 23.49
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "FUNGICIDA",
+      "item": "FUNGICIDA",
+      "fazenda": "CALIFORNIA",
+      "valor": 6829.99,
+      "custo_ha": 3.33
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "INSETICIDA",
+      "item": "INSETICIDA",
+      "fazenda": "CALIFORNIA",
       "valor": 106288.19,
-      "custo_ha": 106288.19
+      "custo_ha": 51.77
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "ADJUVANTE",
+      "item": "ADJUVANTE",
+      "fazenda": "CALIFORNIA",
+      "valor": 19062.45,
+      "custo_ha": 9.29
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "CALIFORNIA",
       "valor": 130900.22,
-      "custo_ha": 130900.22
+      "custo_ha": 63.76
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "CALIFORNIA",
       "valor": 102220.84,
-      "custo_ha": 102220.84
+      "custo_ha": 49.79
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
       "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "item": "ARRENDAMENTO",
+      "fazenda": "CALIFORNIA",
       "valor": 244533.24,
-      "custo_ha": 244533.24
+      "custo_ha": 119.11
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 876596.83,
-      "custo_ha": 876596.83
+      "custo_ha": 426.98
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 227325.13,
-      "custo_ha": 227325.13
+      "custo_ha": 110.73
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "HERBICIDA",
+      "item": "HERBICIDA",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 191837.22,
-      "custo_ha": 191837.22
+      "custo_ha": 93.44
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FUNGICIDA",
+      "item": "FUNGICIDA",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 68097.79,
+      "custo_ha": 33.17
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "INSETICIDA",
+      "item": "INSETICIDA",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 327939.06,
-      "custo_ha": 327939.06
+      "custo_ha": 159.74
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "ADJUVANTE",
+      "item": "ADJUVANTE",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 49534.61,
+      "custo_ha": 24.13
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 207028.41,
-      "custo_ha": 207028.41
+      "custo_ha": 100.84
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 161670.05,
-      "custo_ha": 161670.05
+      "custo_ha": 78.75
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
       "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "item": "ARRENDAMENTO",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 386645.37,
-      "custo_ha": 386645.37
+      "custo_ha": 188.33
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "CRISTALINA",
       "valor": 615424.41,
-      "custo_ha": 615424.41
+      "custo_ha": 310.82
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "CRISTALINA",
       "valor": 994457.65,
-      "custo_ha": 994457.65
+      "custo_ha": 502.25
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "HERBICIDA",
+      "item": "HERBICIDA",
+      "fazenda": "CRISTALINA",
       "valor": 155090.78,
-      "custo_ha": 155090.78
+      "custo_ha": 78.33
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FUNGICIDA",
+      "item": "FUNGICIDA",
+      "fazenda": "CRISTALINA",
       "valor": 181222.72,
-      "custo_ha": 181222.72
+      "custo_ha": 91.53
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "INSETICIDA",
+      "item": "INSETICIDA",
+      "fazenda": "CRISTALINA",
       "valor": 286225.31,
-      "custo_ha": 286225.31
+      "custo_ha": 144.56
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "ADJUVANTE",
+      "item": "ADJUVANTE",
+      "fazenda": "CRISTALINA",
+      "valor": 23285.23,
+      "custo_ha": 11.76
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "CRISTALINA",
       "valor": 517354.76,
-      "custo_ha": 517354.76
+      "custo_ha": 261.29
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "CRISTALINA",
       "valor": 586095.71,
-      "custo_ha": 586095.71
+      "custo_ha": 296.01
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
       "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "item": "ARRENDAMENTO",
+      "fazenda": "CRISTALINA",
       "valor": 862646.19,
-      "custo_ha": 862646.19
+      "custo_ha": 435.68
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "CALIFORNIA",
       "valor": 367772.76,
-      "custo_ha": 367772.76
+      "custo_ha": 185.74
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "CALIFORNIA",
       "valor": 689529.77,
-      "custo_ha": 689529.77
+      "custo_ha": 348.25
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "HERBICIDA",
+      "item": "HERBICIDA",
+      "fazenda": "CALIFORNIA",
       "valor": 145513.73,
-      "custo_ha": 145513.73
+      "custo_ha": 73.49
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FUNGICIDA",
+      "item": "FUNGICIDA",
+      "fazenda": "CALIFORNIA",
       "valor": 129516.24,
-      "custo_ha": 129516.24
+      "custo_ha": 65.41
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "INSETICIDA",
+      "item": "INSETICIDA",
+      "fazenda": "CALIFORNIA",
       "valor": 204809.01,
-      "custo_ha": 204809.01
+      "custo_ha": 103.44
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "ADJUVANTE",
+      "item": "ADJUVANTE",
+      "fazenda": "CALIFORNIA",
+      "valor": 16871.2,
+      "custo_ha": 8.52
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "CALIFORNIA",
       "valor": 318900.09,
-      "custo_ha": 318900.09
+      "custo_ha": 161.06
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "CALIFORNIA",
       "valor": 411936.25,
-      "custo_ha": 411936.25
+      "custo_ha": 208.05
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
       "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "item": "ARRENDAMENTO",
+      "fazenda": "CALIFORNIA",
       "valor": 571521.51,
-      "custo_ha": 571521.51
+      "custo_ha": 288.65
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FERTILIZANTES",
+      "item": "FERTILIZANTES",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 469545.4,
-      "custo_ha": 469545.4
+      "custo_ha": 237.14
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "SEMENTES",
+      "item": "SEMENTES",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 740560.37,
-      "custo_ha": 740560.37
+      "custo_ha": 374.02
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "HERBICIDA",
+      "item": "HERBICIDA",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 113160.62,
-      "custo_ha": 113160.62
+      "custo_ha": 57.15
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "FUNGICIDA",
+      "item": "FUNGICIDA",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 142768.82,
-      "custo_ha": 142768.82
+      "custo_ha": 72.11
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "INSETICIDA",
+      "item": "INSETICIDA",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 212145.58,
-      "custo_ha": 212145.58
+      "custo_ha": 107.14
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "ADJUVANTE",
+      "item": "ADJUVANTE",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
+      "valor": 17807.94,
+      "custo_ha": 8.99
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "M\u00c3O DE OBRA",
+      "item": "M\u00c3O DE OBRA",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 373329.66,
-      "custo_ha": 373329.66
+      "custo_ha": 188.55
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
-      "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "categoria": "MANUTEN\u00c7\u00c3O",
+      "item": "MANUTEN\u00c7\u00c3O",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 482244.9,
-      "custo_ha": 482244.9
+      "custo_ha": 243.56
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
       "categoria": "ARRENDAMENTO",
-      "item": "R$",
+      "item": "ARRENDAMENTO",
+      "fazenda": "S\u00c3O CRISTOV\u00c3O",
       "valor": 669334.35,
-      "custo_ha": 669334.35
+      "custo_ha": 338.05
     }
   ],
   "produtividade": [
@@ -3577,48 +1341,32 @@
       "cultura": "SOJA",
       "ref_custo_ha": 4156.03,
       "ref_prod_sc_ha": 62.0,
-      "detalhes": {
-        "FERTILIZANTE": 1582.92,
-        "SEMENTE": 498.11,
-        "DEFENSIVOS": 1309.64
-      }
+      "detalhes": {}
     },
     {
       "safra": "23/24",
       "cultura": "SOJA",
       "ref_custo_ha": 3800.0,
       "ref_prod_sc_ha": 60.0,
-      "detalhes": {
-        "FERTILIZANTE": 1450.0,
-        "SEMENTE": 450.0,
-        "DEFENSIVOS": 1200.0
-      }
+      "detalhes": {}
     },
     {
       "safra": "2025",
       "cultura": "MILHO",
       "ref_custo_ha": 3558.08,
       "ref_prod_sc_ha": 110.0,
-      "detalhes": {
-        "SEMENTE": 826.94,
-        "DEFENSIVOS": 875.29,
-        "M\u00c3O DE OBRA": 235.7
-      }
+      "detalhes": {}
     },
     {
       "safra": "2024",
       "cultura": "MILHO",
       "ref_custo_ha": 3300.0,
       "ref_prod_sc_ha": 105.0,
-      "detalhes": {
-        "SEMENTE": 750.0,
-        "DEFENSIVOS": 800.0,
-        "M\u00c3O DE OBRA": 200.0
-      }
+      "detalhes": {}
     }
   ],
   "metadata": {
     "updated_at": "2026-02-24",
-    "version": "3.1"
+    "version": "4.0"
   }
 }

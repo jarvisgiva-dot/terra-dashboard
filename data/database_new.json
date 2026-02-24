@@ -1,0 +1,780 @@
+{
+  "custos": [
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 2734852.55,
+      "custo_ha": 2734852.55
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 513174.0,
+      "custo_ha": 513174.0
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 419372.47,
+      "custo_ha": 419372.47
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 628280.51,
+      "custo_ha": 628280.51
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 965206.54,
+      "custo_ha": 965206.54
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 113719.38,
+      "custo_ha": 113719.38
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1087966.84,
+      "custo_ha": 1087966.84
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1205721.5,
+      "custo_ha": 1205721.5
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1211655.05,
+      "custo_ha": 1211655.05
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 2324034.77,
+      "custo_ha": 2324034.77
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 804851.07,
+      "custo_ha": 804851.07
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 370266.11,
+      "custo_ha": 370266.11
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 630475.93,
+      "custo_ha": 630475.93
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 745433.59,
+      "custo_ha": 745433.59
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 104921.62,
+      "custo_ha": 104921.62
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 976741.91,
+      "custo_ha": 976741.91
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1082459.46,
+      "custo_ha": 1082459.46
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1101504.59,
+      "custo_ha": 1101504.59
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 2462205.05,
+      "custo_ha": 2462205.05
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 886804.97,
+      "custo_ha": 886804.97
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 912189.9,
+      "custo_ha": 912189.9
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 938823.01,
+      "custo_ha": 938823.01
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 845026.51,
+      "custo_ha": 845026.51
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 216263.95,
+      "custo_ha": 216263.95
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1216250.99,
+      "custo_ha": 1216250.99
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1347888.51,
+      "custo_ha": 1347888.51
+    },
+    {
+      "safra": "23/24",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1358522.33,
+      "custo_ha": 1358522.33
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 2490583.47,
+      "custo_ha": 2490583.47
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 634740.03,
+      "custo_ha": 634740.03
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 488257.74,
+      "custo_ha": 488257.74
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 705466.52,
+      "custo_ha": 705466.52
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 762838.1,
+      "custo_ha": 762838.1
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 757019.01,
+      "custo_ha": 757019.01
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 958272.57,
+      "custo_ha": 958272.57
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1149706.44,
+      "custo_ha": 1149706.44
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1968810.7,
+      "custo_ha": 1968810.7
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 714653.17,
+      "custo_ha": 714653.17
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 503099.83,
+      "custo_ha": 503099.83
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 555022.4,
+      "custo_ha": 555022.4
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 591364.06,
+      "custo_ha": 591364.06
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 679526.85,
+      "custo_ha": 679526.85
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 860179.19,
+      "custo_ha": 860179.19
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1032017.02,
+      "custo_ha": 1032017.02
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 2812157.44,
+      "custo_ha": 2812157.44
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 936273.34,
+      "custo_ha": 936273.34
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 829486.56,
+      "custo_ha": 829486.56
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 851634.94,
+      "custo_ha": 851634.94
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 805981.19,
+      "custo_ha": 805981.19
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1015733.54,
+      "custo_ha": 1015733.54
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1285762.56,
+      "custo_ha": 1285762.56
+    },
+    {
+      "safra": "24/25",
+      "cultura": "SOJA",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1542625.22,
+      "custo_ha": 1542625.22
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1607594.33,
+      "custo_ha": 1607594.33
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1335661.42,
+      "custo_ha": 1335661.42
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 318400.58,
+      "custo_ha": 318400.58
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 239091.36,
+      "custo_ha": 239091.36
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 579245.07,
+      "custo_ha": 579245.07
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 113281.56,
+      "custo_ha": 113281.56
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 894839.61,
+      "custo_ha": 894839.61
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 689757.2,
+      "custo_ha": 689757.2
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 1300000.0,
+      "custo_ha": 1300000.0
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 134953.42,
+      "custo_ha": 134953.42
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 137204.9,
+      "custo_ha": 137204.9
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 106288.19,
+      "custo_ha": 106288.19
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 130900.22,
+      "custo_ha": 130900.22
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 102220.84,
+      "custo_ha": 102220.84
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 244533.24,
+      "custo_ha": 244533.24
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 876596.83,
+      "custo_ha": 876596.83
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 227325.13,
+      "custo_ha": 227325.13
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 191837.22,
+      "custo_ha": 191837.22
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 327939.06,
+      "custo_ha": 327939.06
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 207028.41,
+      "custo_ha": 207028.41
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 161670.05,
+      "custo_ha": 161670.05
+    },
+    {
+      "safra": "2024",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 386645.37,
+      "custo_ha": 386645.37
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 615424.41,
+      "custo_ha": 615424.41
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 994457.65,
+      "custo_ha": 994457.65
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 155090.78,
+      "custo_ha": 155090.78
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 181222.72,
+      "custo_ha": 181222.72
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 286225.31,
+      "custo_ha": 286225.31
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 517354.76,
+      "custo_ha": 517354.76
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 586095.71,
+      "custo_ha": 586095.71
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 862646.19,
+      "custo_ha": 862646.19
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 367772.76,
+      "custo_ha": 367772.76
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 689529.77,
+      "custo_ha": 689529.77
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 145513.73,
+      "custo_ha": 145513.73
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 129516.24,
+      "custo_ha": 129516.24
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 204809.01,
+      "custo_ha": 204809.01
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 318900.09,
+      "custo_ha": 318900.09
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 411936.25,
+      "custo_ha": 411936.25
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 571521.51,
+      "custo_ha": 571521.51
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 469545.4,
+      "custo_ha": 469545.4
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 740560.37,
+      "custo_ha": 740560.37
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 113160.62,
+      "custo_ha": 113160.62
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 142768.82,
+      "custo_ha": 142768.82
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 212145.58,
+      "custo_ha": 212145.58
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 373329.66,
+      "custo_ha": 373329.66
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 482244.9,
+      "custo_ha": 482244.9
+    },
+    {
+      "safra": "2025",
+      "cultura": "MILHO",
+      "categoria": "ARRENDAMENTO",
+      "item": "R$",
+      "valor": 669334.35,
+      "custo_ha": 669334.35
+    }
+  ]
+}
