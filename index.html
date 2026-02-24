@@ -111,12 +111,11 @@
                     <p class="text-slate-400 text-xs uppercase tracking-wider font-bold">Radar de Custos (R$/ha)</p>
                     <span class="text-orange-500 text-lg">🎯</span>
                 </div>
-                <div class="space-y-3 mt-2" x-show="kpis.refImea">
+                <div class="space-y-3 mt-2" x-show="kpis.refImea && Object.keys(kpis.refImea?.detalhes || {}).length > 0">
                     <template x-for="(refVal, key) in kpis.refImea?.detalhes">
                         <div class="flex justify-between items-center text-sm border-b border-slate-800 pb-1">
                             <span class="text-slate-300" x-text="key"></span>
                             <div class="text-right">
-                                <!-- Usar custoPorCategoriaHa para normalizar por hectare -->
                                 <span class="font-bold text-white" x-text="formatMoney(kpis.custoPorCategoriaHa[key]?.media || 0)"></span>
                                 <span class="text-xs ml-1" :class="(kpis.custoPorCategoriaHa[key]?.media || 0) > refVal ? 'text-red-400' : 'text-emerald-400'">
                                     vs <span x-text="formatNumber(refVal)"></span>
@@ -125,7 +124,9 @@
                         </div>
                     </template>
                 </div>
-                <div x-show="!kpis.refImea" class="text-xs text-slate-500 mt-2">Selecione uma cultura para ver o benchmark.</div>
+                <div x-show="!kpis.refImea || (kpis.refImea && Object.keys(kpis.refImea?.detalhes || {}).length === 0)" class="text-xs text-slate-500 mt-2">
+                    Selecione uma cultura com referência IMEA para benchmark.
+                </div>
             </div>
 
             <!-- Melhor Variedade -->
@@ -341,13 +342,13 @@
                     // Custo Total (Soma tudo)
                     const custoTotal = custos.reduce((acc, c) => acc + c.valor, 0);
                     
-                    // Custo Médio Ponderado por Categoria (para benchmark)
+                    // Custo por Categoria (agrupado)
                     const custoPorCategoria = {};
                     const custoPorCategoriaHa = {};
+                    
                     custos.forEach(c => {
-                        // Agrupa itens em categorias chave
-                        let cat = c.item; 
-                        if(c.item.includes("HERBICIDA") || c.item.includes("FUNGICIDA") || c.item.includes("INSETICIDA")) cat = "DEFENSIVOS";
+                        // Usar c.categoria diretamente
+                        let cat = c.categoria;
                         
                         if(!custoPorCategoria[cat]) custoPorCategoria[cat] = { total: 0, count: 0 };
                         if(!custoPorCategoriaHa[cat]) custoPorCategoriaHa[cat] = { total: 0, count: 0 };
@@ -355,9 +356,16 @@
                         custoPorCategoria[cat].total += c.valor;
                         custoPorCategoriaHa[cat].total += c.custo_ha;
                         custoPorCategoriaHa[cat].count += 1;
+                        
+                        // Se for INSUMO com defensivo específico, agregar em DEFENSIVOS também
+                        if(cat === "INSUMOS" && (c.item.includes("HERBICIDA") || c.item.includes("FUNGICIDA") || c.item.includes("INSETICIDA"))) {
+                            if(!custoPorCategoriaHa["DEFENSIVOS"]) custoPorCategoriaHa["DEFENSIVOS"] = { total: 0, count: 0 };
+                            custoPorCategoriaHa["DEFENSIVOS"].total += c.custo_ha;
+                            custoPorCategoriaHa["DEFENSIVOS"].count += 1;
+                        }
                     });
                     
-                    // Normalizar custoPorCategoriaHa
+                    // Calcular média por hectare
                     Object.keys(custoPorCategoriaHa).forEach(cat => {
                         if(custoPorCategoriaHa[cat].count > 0) {
                             custoPorCategoriaHa[cat].media = custoPorCategoriaHa[cat].total / custoPorCategoriaHa[cat].count;
