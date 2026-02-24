@@ -265,7 +265,10 @@
 
                 get uniqueSafras() {
                     if(!this.db) return [];
-                    const safras = new Set(this.db.produtividade.map(p => p.safra));
+                    const safras = new Set([
+                        ...this.db.custos.map(c => c.safra),
+                        ...this.db.produtividade.map(p => p.safra)
+                    ]);
                     return Array.from(safras).sort();
                 },
 
