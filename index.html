@@ -116,9 +116,9 @@
                         <div class="flex justify-between items-center text-sm border-b border-slate-800 pb-1">
                             <span class="text-slate-300" x-text="key"></span>
                             <div class="text-right">
-                                <!-- Cálculo aproximado do custo real por categoria -->
-                                <span class="font-bold text-white" x-text="formatMoney(kpis.custoPorCategoria[key]?.total / kpis.areaTotal || 0)"></span>
-                                <span class="text-xs ml-1" :class="(kpis.custoPorCategoria[key]?.total / kpis.areaTotal) > refVal ? 'text-red-400' : 'text-emerald-400'">
+                                <!-- Usar custoPorCategoriaHa para normalizar por hectare -->
+                                <span class="font-bold text-white" x-text="formatMoney(kpis.custoPorCategoriaHa[key]?.media || 0)"></span>
+                                <span class="text-xs ml-1" :class="(kpis.custoPorCategoriaHa[key]?.media || 0) > refVal ? 'text-red-400' : 'text-emerald-400'">
                                     vs <span x-text="formatNumber(refVal)"></span>
                                 </span>
                             </div>
@@ -195,7 +195,7 @@
                 <h3 class="text-lg font-bold text-white">📋 Detalhamento por Talhão</h3>
                 <input type="text" x-model="search" placeholder="Filtrar talhão..." class="bg-slate-900 border border-slate-700 rounded p-1 text-sm text-white w-48">
             </div>
-            <div class="overflow-x-auto">
+            <div x-show="filteredProd.length > 0" class="overflow-x-auto">
                 <table class="w-full text-sm text-left text-slate-300">
                     <thead class="text-xs uppercase bg-slate-800 text-slate-400">
                         <tr>
@@ -222,6 +222,9 @@
                         </template>
                     </tbody>
                 </table>
+            </div>
+            <div x-show="filteredProd.length === 0" class="text-center py-8 text-yellow-500">
+                ⚠️ Nenhum dado de produtividade registrado para <span x-text="filters.safra"></span> <span x-text="filters.cultura"></span>. Verifique a tabela de custos abaixo.
             </div>
         </div>
 
@@ -340,20 +343,38 @@
                     
                     // Custo Médio Ponderado por Categoria (para benchmark)
                     const custoPorCategoria = {};
+                    const custoPorCategoriaHa = {};
                     custos.forEach(c => {
                         // Agrupa itens em categorias chave
                         let cat = c.item; 
                         if(c.item.includes("HERBICIDA") || c.item.includes("FUNGICIDA") || c.item.includes("INSETICIDA")) cat = "DEFENSIVOS";
                         
                         if(!custoPorCategoria[cat]) custoPorCategoria[cat] = { total: 0, count: 0 };
+                        if(!custoPorCategoriaHa[cat]) custoPorCategoriaHa[cat] = { total: 0, count: 0 };
+                        
                         custoPorCategoria[cat].total += c.valor;
+                        custoPorCategoriaHa[cat].total += c.custo_ha;
+                        custoPorCategoriaHa[cat].count += 1;
+                    });
+                    
+                    // Normalizar custoPorCategoriaHa
+                    Object.keys(custoPorCategoriaHa).forEach(cat => {
+                        if(custoPorCategoriaHa[cat].count > 0) {
+                            custoPorCategoriaHa[cat].media = custoPorCategoriaHa[cat].total / custoPorCategoriaHa[cat].count;
+                        }
                     });
 
                     const prodMedia = areaTotal > 0 ? totalSc / areaTotal : 0;
                     
-                    // Custo Médio Ha = Custo Total / Area Plantada (aproximado, pois areaTotal vem de produtividade que pode ser parcial)
-                    // Melhor usar a média dos custos unitários se disponível, ou divisão bruta
-                    const custoMedioHa = areaTotal > 0 ? custoTotal / areaTotal : 0;
+                    // Custo Médio Ha
+                    let custoMedioHa = 0;
+                    if (areaTotal > 0) {
+                        // Se há produtividade, dividir custo total por área
+                        custoMedioHa = custoTotal / areaTotal;
+                    } else if (custos.length > 0) {
+                        // Se não há produtividade, calcular média dos custo_ha registrados
+                        custoMedioHa = custos.reduce((acc, c) => acc + c.custo_ha, 0) / custos.length;
+                    }
                     
                     // Margem Estimada
                     const receitaEstimada = totalSc * this.simulacao.precoSaca;
@@ -379,7 +400,7 @@
                         if(avg > bestVar.val) bestVar = { name: k, val: avg };
                     });
 
-                    return { areaTotal, prodMedia, custoMedioHa, margem, bestVariety: bestVar, refImea, custoPorCategoria };
+                    return { areaTotal, prodMedia, custoMedioHa, margem, bestVariety: bestVar, refImea, custoPorCategoria, custoPorCategoriaHa };
                 },
 
                 get paretoCustos() {
