@@ -1,585 +1,1654 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terra BI v4.0 - Deep Insight</title>
-    
-    <!-- Stack -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
-    <style>
-        body { background-color: #020617; color: #e2e8f0; font-family: 'Inter', sans-serif; }
-        .card { background-color: #0f172a; border: 1px solid #1e293b; border-radius: 0.75rem; padding: 1.5rem; position: relative; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .chart-container { position: relative; height: 300px; width: 100%; }
-        [x-cloak] { display: none !important; }
-        
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
-    </style>
-</head>
-<body class="p-4 md:p-8" x-data="app()" x-init="init()">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terra BI v5.0 — Dashboard Agrícola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <!-- Security Gate -->
-    <div x-show="!authenticated" class="fixed inset-0 bg-black/90 flex items-center justify-center z-50 transition-opacity">
-        <div class="card w-96 text-center border-emerald-900/50 shadow-[0_0_50px_rgba(16,185,129,0.2)]">
-            <h2 class="text-2xl font-bold text-emerald-400 mb-2">STARK INDUSTRIES</h2>
-            <p class="text-slate-500 text-xs uppercase tracking-widest mb-6">Terra Intelligence Division</p>
-            <input type="password" x-model="password" class="w-full bg-slate-900/50 border border-slate-700 rounded p-3 text-white mb-4 text-center focus:border-emerald-500 outline-none transition" placeholder="Autenticação">
-            <button @click="login()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded transition shadow-lg shadow-emerald-900/50">ACESSAR SISTEMA</button>
-            <p x-show="authError" class="text-red-500 text-xs mt-4">Credenciais inválidas.</p>
-        </div>
-    </div>
-
-    <!-- Main Interface -->
-    <div x-show="authenticated" x-cloak class="max-w-[1600px] mx-auto space-y-6">
-        
-        <!-- Header & Filters -->
-        <header class="bg-slate-900/50 rounded-2xl border border-slate-800 backdrop-blur-sm sticky top-0 z-40 shadow-xl transition-all duration-300">
-            <!-- Top Row: Title + Toggle -->
-            <div class="flex justify-between items-center p-4">
-                <div class="flex items-center gap-3">
-                    <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-2">
-                        🚜 TERRA BI <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-1 rounded">v4.1</span>
-                    </h1>
-                </div>
-                
-                <button @click="showFilters = !showFilters" class="text-slate-400 hover:text-white transition p-2 bg-slate-800/50 rounded-lg">
-                    <span x-text="showFilters ? '🔼 Ocultar Filtros' : '🔽 Filtros'"></span>
-                </button>
-            </div>
-            
-            <!-- Collapsible Filters Area -->
-            <div x-show="showFilters" x-collapse class="px-6 pb-6 border-t border-slate-800 pt-4 flex flex-wrap gap-4 items-center">
-                <!-- Simulador de Preço -->
-                <div class="flex items-center gap-2 bg-slate-800 p-2 rounded-lg border border-slate-700">
-                    <span class="text-xs text-slate-400 uppercase font-bold px-2">Simulador (R$/sc)</span>
-                    <input type="number" x-model="simulacao.precoSaca" @input.debounce.500ms="updateSimulacao()" class="w-24 bg-slate-900 border border-slate-600 rounded p-1 text-right text-emerald-400 font-bold outline-none">
-                </div>
-
-                <div class="h-8 w-px bg-slate-700 mx-2 hidden md:block"></div>
-
-                <!-- Filters -->
-                <select x-model="filters.safra" class="bg-slate-800 border border-slate-600 text-white rounded-lg p-2.5 text-sm hover:border-emerald-500 transition cursor-pointer">
-                    <option value="ALL">📅 Todas as Safras</option>
-                    <template x-for="s in uniqueSafras">
-                        <option :value="s" x-text="s"></option>
-                    </template>
-                </select>
-
-                <select x-model="filters.cultura" class="bg-slate-800 border border-slate-600 text-white rounded-lg p-2.5 text-sm hover:border-emerald-500 transition cursor-pointer">
-                    <option value="ALL">🌱 Todas as Culturas</option>
-                    <option value="SOJA">SOJA</option>
-                    <option value="MILHO">MILHO</option>
-                </select>
-            </div>
-        </header>
-
-        <!-- KPI Deck (High Level) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Custo -->
-            <div class="card border-l-4 border-red-500 hover:bg-slate-800/50 transition">
-                <div class="card-header">
-                    <p class="text-slate-400 text-xs uppercase tracking-wider font-bold">Custo Médio Realizado</p>
-                    <span class="text-red-500 text-lg">💰</span>
-                </div>
-                <p class="text-3xl font-bold text-white" x-text="formatMoney(kpis.custoMedioHa)"></p>
-                <p class="text-xs mt-2 text-slate-500">por hectare</p>
-            </div>
-
-            <!-- Produtividade -->
-            <div class="card border-l-4 border-emerald-500 hover:bg-slate-800/50 transition">
-                <div class="card-header">
-                    <p class="text-slate-400 text-xs uppercase tracking-wider font-bold">Produtividade Média</p>
-                    <span class="text-emerald-500 text-lg">🌾</span>
-                </div>
-                <p class="text-3xl font-bold text-white"><span x-text="formatNumber(kpis.prodMedia)"></span> <span class="text-lg text-slate-400">sc/ha</span></p>
-                <p class="text-xs mt-2" x-show="kpis.refImea" :class="kpis.prodMedia > kpis.refImea?.ref_prod_sc_ha ? 'text-emerald-400' : 'text-yellow-400'">
-                    <span x-text="kpis.prodMedia > kpis.refImea?.ref_prod_sc_ha ? '▲ Acima' : '▼ Abaixo'"></span> da ref. IMEA (<span x-text="kpis.refImea?.ref_prod_sc_ha"></span>)
-                </p>
-            </div>
-
-            <!-- Radar Competitivo (Benchmark Detalhado) -->
-            <div class="card border-l-4 border-orange-500 hover:bg-slate-800/50 transition col-span-1 md:col-span-2 lg:col-span-1">
-                <div class="card-header">
-                    <p class="text-slate-400 text-xs uppercase tracking-wider font-bold">Radar de Custos (R$/ha)</p>
-                    <span class="text-orange-500 text-lg">🎯</span>
-                </div>
-                <div class="space-y-3 mt-2" x-show="kpis.refImea && Object.keys(kpis.refImea?.detalhes || {}).length > 0">
-                    <template x-for="(refVal, key) in kpis.refImea?.detalhes">
-                        <div class="flex justify-between items-center text-sm border-b border-slate-800 pb-1">
-                            <span class="text-slate-300" x-text="key"></span>
-                            <div class="text-right">
-                                <span class="font-bold text-white" x-text="formatMoney(kpis.custoPorCategoriaHa[key]?.media || 0)"></span>
-                                <span class="text-xs ml-1" :class="(kpis.custoPorCategoriaHa[key]?.media || 0) > refVal ? 'text-red-400' : 'text-emerald-400'">
-                                    vs <span x-text="formatNumber(refVal)"></span>
-                                </span>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-                <div x-show="!kpis.refImea || (kpis.refImea && Object.keys(kpis.refImea?.detalhes || {}).length === 0)" class="text-xs text-slate-500 mt-2">
-                    Selecione uma cultura com referência IMEA para benchmark.
-                </div>
-            </div>
-
-            <!-- Melhor Variedade -->
-            <div class="card border-l-4 border-purple-500 hover:bg-slate-800/50 transition">
-                <div class="card-header">
-                    <p class="text-slate-400 text-xs uppercase tracking-wider font-bold">Variedade Campeã</p>
-                    <span class="text-purple-500 text-lg">🏆</span>
-                </div>
-                <p class="text-xl font-bold text-white truncate" x-text="kpis.bestVariety.name || '--'"></p>
-                <p class="text-xs mt-2 text-emerald-400"><span x-text="formatNumber(kpis.bestVariety.val)"></span> sc/ha média</p>
-            </div>
-        </div>
-
-        <!-- Deep Dive Charts -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- 1. Variedades (Bar Chart) -->
-            <div class="card lg:col-span-2">
-                <div class="card-header">
-                    <h3 class="text-lg font-bold text-white">🧬 Comparativo de Variedades</h3>
-                    <div class="text-xs text-slate-500">Média de Produtividade (sc/ha)</div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="varietyChart"></canvas>
-                </div>
-            </div>
-
-            <!-- 2. Pareto de Custos (Pie/List) -->
-            <div class="card lg:col-span-1">
-                <div class="card-header">
-                    <h3 class="text-lg font-bold text-white">💸 Pareto de Custos</h3>
-                    <div class="text-xs text-slate-500">Top ofensores</div>
-                </div>
-                <div class="chart-container" style="height: 200px;">
-                    <canvas id="paretoChart"></canvas>
-                </div>
-                <!-- Mini List -->
-                <div class="mt-4 space-y-2 h-24 overflow-y-auto pr-2">
-                    <template x-for="c in paretoCustos">
-                        <div class="flex justify-between text-sm border-b border-slate-800 pb-1">
-                            <span class="text-slate-300 truncate w-2/3" x-text="c.item"></span>
-                            <span class="text-white font-bold" x-text="formatMoney(c.valor)"></span>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. Talhões Scatter Plot (Advanced) -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="text-lg font-bold text-white">🗺️ Raio-X dos Talhões (Produtividade vs Área)</h3>
-                <div class="flex gap-2">
-                    <span class="text-xs flex items-center gap-1 text-slate-400"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Alta Prod.</span>
-                    <span class="text-xs flex items-center gap-1 text-slate-400"><span class="w-2 h-2 rounded-full bg-red-500"></span> Baixa Prod.</span>
-                </div>
-            </div>
-            <div class="chart-container" style="height: 400px;">
-                <canvas id="scatterChart"></canvas>
-            </div>
-            <p class="text-xs text-center text-slate-500 mt-2">Cada ponto é um talhão. Pontos mais altos = Mais produtivos. Pontos mais à direita = Talhões maiores.</p>
-        </div>
-
-        <!-- Data Grid -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="text-lg font-bold text-white">📋 Detalhamento por Talhão</h3>
-                <input type="text" x-model="search" placeholder="Filtrar talhão..." class="bg-slate-900 border border-slate-700 rounded p-1 text-sm text-white w-48">
-            </div>
-            <div x-show="filteredProd.length > 0" class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-slate-300">
-                    <thead class="text-xs uppercase bg-slate-800 text-slate-400">
-                        <tr>
-                            <th class="px-4 py-3">Safra</th>
-                            <th class="px-4 py-3">Fazenda</th>
-                            <th class="px-4 py-3">Talhão</th>
-                            <th class="px-4 py-3">Variedade</th>
-                            <th class="px-4 py-3 text-right">Área (ha)</th>
-                            <th class="px-4 py-3 text-right">Prod (sc/ha)</th>
-                            <th class="px-4 py-3 text-right">Rentabilidade (Est.)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template x-for="row in filteredProd">
-                            <tr class="border-b border-slate-800 hover:bg-slate-800/80 transition">
-                                <td class="px-4 py-2" x-text="row.safra"></td>
-                                <td class="px-4 py-2" x-text="row.fazenda"></td>
-                                <td class="px-4 py-2 font-bold text-white" x-text="row.talhao"></td>
-                                <td class="px-4 py-2 text-xs text-slate-400" x-text="row.variedade"></td>
-                                <td class="px-4 py-2 text-right" x-text="row.area.toFixed(1)"></td>
-                                <td class="px-4 py-2 text-right font-bold" :class="row.prod_sc_ha >= kpis.prodMedia ? 'text-emerald-400' : 'text-yellow-500'" x-text="row.prod_sc_ha.toFixed(1)"></td>
-                                <td class="px-4 py-2 text-right font-mono" :class="calculateMargin(row) > 0 ? 'text-blue-300' : 'text-red-400'" x-text="formatMoney(calculateMargin(row))"></td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </div>
-            <div x-show="filteredProd.length === 0" class="text-center py-8 text-yellow-500">
-                ⚠️ Nenhum dado de produtividade registrado para <span x-text="filters.safra"></span> <span x-text="filters.cultura"></span>. Verifique a tabela de custos abaixo.
-            </div>
-        </div>
-
-        <!-- Custos Detalhados -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="text-lg font-bold text-white">💸 Detalhamento de Custos</h3>
-                <div class="text-xs text-slate-500">Custos por item (filtrados por safra e cultura)</div>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left text-slate-300">
-                    <thead class="text-xs uppercase bg-slate-800 text-slate-400">
-                        <tr>
-                            <th class="px-4 py-3">Safra</th>
-                            <th class="px-4 py-3">Cultura</th>
-                            <th class="px-4 py-3">Categoria</th>
-                            <th class="px-4 py-3">Item</th>
-                            <th class="px-4 py-3 text-right">Valor (R$)</th>
-                            <th class="px-4 py-3 text-right">Custo/ha (R$)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template x-for="row in filteredCustos">
-                            <tr class="border-b border-slate-800 hover:bg-slate-800/80 transition">
-                                <td class="px-4 py-2" x-text="row.safra"></td>
-                                <td class="px-4 py-2" x-text="row.cultura"></td>
-                                <td class="px-4 py-2 text-xs bg-slate-800 px-2 py-1 rounded w-fit" x-text="row.categoria"></td>
-                                <td class="px-4 py-2 text-xs text-slate-400" x-text="row.item"></td>
-                                <td class="px-4 py-2 text-right font-bold" x-text="formatMoney(row.valor)"></td>
-                                <td class="px-4 py-2 text-right" x-text="formatMoney(row.custo_ha)"></td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </div>
-            <div x-show="filteredCustos.length === 0" class="text-center py-8 text-slate-500">
-                Nenhum custo registrado para essa combinação de safra e cultura.
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Application Logic -->
-    <script>
-        function app() {
-            return {
-                authenticated: false,
-                password: '',
-                authError: false,
-                showFilters: true, // Controle de visibilidade dos filtros
-                db: null,
-                filters: { safra: 'ALL', cultura: 'ALL' },
-                simulacao: { precoSaca: 120 }, // Default price
-                search: '',
-                charts: {},
-
-                login() {
-                    if (this.password === 'jarvis4.0') {
-                        this.authenticated = true;
-                        this.loadData();
-                    } else {
-                        this.authError = true;
-                    }
-                },
-
-                async loadData() {
-                    const res = await fetch('./data/database.json');
-                    this.db = await res.json();
-                    
-                    // Watchers
-                    this.$watch('filters', () => this.updateAllCharts());
-                    this.$watch('simulacao.precoSaca', () => {/* Reactivity handles table */});
-                    
-                    this.updateAllCharts();
-                },
-
-                // --- Getters & Computeds ---
-
-                get uniqueSafras() {
-                    if(!this.db) return [];
-                    const safras = new Set([
-                        ...this.db.custos.map(c => c.safra),
-                        ...this.db.produtividade.map(p => p.safra)
-                    ]);
-                    return Array.from(safras).sort();
-                },
-
-                get filteredProd() {
-                    if (!this.db) return [];
-                    return this.db.produtividade.filter(p => {
-                        const matchSafra = this.filters.safra === 'ALL' || p.safra === this.filters.safra;
-                        const matchCultura = this.filters.cultura === 'ALL' || p.cultura === this.filters.cultura;
-                        const matchSearch = this.search === '' || p.talhao.toLowerCase().includes(this.search.toLowerCase());
-                        return matchSafra && matchCultura && matchSearch;
-                    }).sort((a,b) => b.prod_sc_ha - a.prod_sc_ha); // Sort by best performance
-                },
-
-                get filteredCustos() {
-                    if (!this.db) return [];
-                    return this.db.custos.filter(c => {
-                        const matchSafra = this.filters.safra === 'ALL' || c.safra === this.filters.safra;
-                        const matchCultura = this.filters.cultura === 'ALL' || c.cultura === this.filters.cultura;
-                        return matchSafra && matchCultura;
-                    });
-                },
-
-                get kpis() {
-                    const prods = this.filteredProd;
-                    const custos = this.filteredCustos;
-                    
-                    const areaTotal = prods.reduce((acc, p) => acc + p.area, 0);
-                    const totalSc = prods.reduce((acc, p) => acc + p.total_sc, 0);
-                    
-                    // Custo Total (Soma tudo)
-                    const custoTotal = custos.reduce((acc, c) => acc + c.valor, 0);
-                    
-                    // Custo por Categoria (agrupado)
-                    const custoPorCategoria = {};
-                    const custoPorCategoriaHa = {};
-                    
-                    custos.forEach(c => {
-                        // Usar c.categoria diretamente
-                        let cat = c.categoria;
-                        
-                        if(!custoPorCategoria[cat]) custoPorCategoria[cat] = { total: 0, count: 0 };
-                        if(!custoPorCategoriaHa[cat]) custoPorCategoriaHa[cat] = { total: 0, count: 0 };
-                        
-                        custoPorCategoria[cat].total += c.valor;
-                        custoPorCategoriaHa[cat].total += c.custo_ha;
-                        custoPorCategoriaHa[cat].count += 1;
-                        
-                        // Se for INSUMO com defensivo específico, agregar em DEFENSIVOS também
-                        if(cat === "INSUMOS" && (c.item.includes("HERBICIDA") || c.item.includes("FUNGICIDA") || c.item.includes("INSETICIDA"))) {
-                            if(!custoPorCategoriaHa["DEFENSIVOS"]) custoPorCategoriaHa["DEFENSIVOS"] = { total: 0, count: 0 };
-                            custoPorCategoriaHa["DEFENSIVOS"].total += c.custo_ha;
-                            custoPorCategoriaHa["DEFENSIVOS"].count += 1;
-                        }
-                    });
-                    
-                    // Calcular média por hectare
-                    Object.keys(custoPorCategoriaHa).forEach(cat => {
-                        if(custoPorCategoriaHa[cat].count > 0) {
-                            custoPorCategoriaHa[cat].media = custoPorCategoriaHa[cat].total / custoPorCategoriaHa[cat].count;
-                        }
-                    });
-
-                    const prodMedia = areaTotal > 0 ? totalSc / areaTotal : 0;
-                    
-                    // Custo Médio Ha
-                    let custoMedioHa = 0;
-                    if (areaTotal > 0) {
-                        // Se há produtividade, dividir custo total por área
-                        custoMedioHa = custoTotal / areaTotal;
-                    } else if (custos.length > 0) {
-                        // Se não há produtividade, calcular média dos custo_ha registrados
-                        custoMedioHa = custos.reduce((acc, c) => acc + c.custo_ha, 0) / custos.length;
-                    }
-                    
-                    // Margem Estimada
-                    const receitaEstimada = totalSc * this.simulacao.precoSaca;
-                    const margem = areaTotal > 0 ? (receitaEstimada - custoTotal) / areaTotal : 0;
-
-                    // Reference
-                    let refImea = null;
-                    if(this.db && this.filters.cultura !== 'ALL') {
-                        refImea = this.db.referencias.find(r => r.cultura === this.filters.cultura);
-                    }
-
-                    // Best Variety
-                    const vars = {};
-                    prods.forEach(p => {
-                        if(!vars[p.variedade]) vars[p.variedade] = { totalSc: 0, totalArea: 0 };
-                        vars[p.variedade].totalSc += p.total_sc;
-                        vars[p.variedade].totalArea += p.area;
-                    });
-                    
-                    let bestVar = { name: '', val: 0 };
-                    Object.keys(vars).forEach(k => {
-                        const avg = vars[k].totalArea > 0 ? vars[k].totalSc / vars[k].totalArea : 0;
-                        if(avg > bestVar.val) bestVar = { name: k, val: avg };
-                    });
-
-                    return { areaTotal, prodMedia, custoMedioHa, margem, bestVariety: bestVar, refImea, custoPorCategoria, custoPorCategoriaHa };
-                },
-
-                get paretoCustos() {
-                    const sorted = [...this.filteredCustos].sort((a,b) => b.valor - a.valor);
-                    return sorted.slice(0, 5); // Top 5
-                },
-
-                calculateMargin(row) {
-                    // Margem = (Produtividade * Preço) - Custo Médio da Safra
-                    // Nota: Usa custo médio global da safra selecionada, pois custo por talhão não temos no PDF
-                    const receita = row.prod_sc_ha * this.simulacao.precoSaca;
-                    return receita - this.kpis.custoMedioHa;
-                },
-
-                updateSimulacao() {
-                    // Triggered by input, reactivity handles the rest in Alpine
-                },
-
-                // --- Chart Logic ---
-
-                updateAllCharts() {
-                    if (!this.db) return;
-                    this.renderVarietyChart();
-                    this.renderScatterChart();
-                    this.renderParetoChart();
-                },
-
-                renderVarietyChart() {
-                    const ctx = document.getElementById('varietyChart');
-                    if(this.charts.variety) this.charts.variety.destroy();
-
-                    // Group Data
-                    const groups = {};
-                    this.filteredProd.forEach(p => {
-                        if(!groups[p.variedade]) groups[p.variedade] = { sc: 0, ha: 0 };
-                        groups[p.variedade].sc += p.total_sc;
-                        groups[p.variedade].ha += p.area;
-                    });
-
-                    const labels = Object.keys(groups);
-                    const data = labels.map(l => groups[l].ha > 0 ? groups[l].sc / groups[l].ha : 0);
-
-                    // Colors based on performance relative to avg
-                    const avg = this.kpis.prodMedia;
-                    const colors = data.map(v => v >= avg ? '#10b981' : '#f59e0b');
-
-                    this.charts.variety = new Chart(ctx, {
-                        type: 'bar',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'Produtividade (sc/ha)',
-                                data: data,
-                                backgroundColor: colors,
-                                borderRadius: 4
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: { legend: { display: false } },
-                            scales: {
-                                y: { beginAtZero: false, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
-                                x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
-                            }
-                        }
-                    });
-                },
-
-                renderScatterChart() {
-                    const ctx = document.getElementById('scatterChart');
-                    if(this.charts.scatter) this.charts.scatter.destroy();
-
-                    const points = this.filteredProd.map(p => ({
-                        x: p.area,
-                        y: p.prod_sc_ha,
-                        talhao: p.talhao,
-                        variedade: p.variedade
-                    }));
-
-                    const avgProd = this.kpis.prodMedia;
-
-                    this.charts.scatter = new Chart(ctx, {
-                        type: 'scatter',
-                        data: {
-                            datasets: [{
-                                label: 'Talhões',
-                                data: points,
-                                backgroundColor: points.map(p => p.y >= avgProd ? '#10b981' : '#ef4444'),
-                                pointRadius: 6,
-                                pointHoverRadius: 8
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                tooltip: {
-                                    callbacks: {
-                                        label: (ctx) => {
-                                            const p = ctx.raw;
-                                            return `${p.talhao} (${p.variedade}): ${p.y.toFixed(1)} sc/ha em ${p.x.toFixed(1)} ha`;
-                                        }
-                                    }
-                                },
-                                legend: { display: false },
-                                annotation: { // Simple line for average
-                                    annotations: {
-                                        line1: {
-                                            type: 'line',
-                                            yMin: avgProd,
-                                            yMax: avgProd,
-                                            borderColor: 'rgba(255, 255, 255, 0.2)',
-                                            borderWidth: 2,
-                                            borderDash: [5, 5]
-                                        }
-                                    }
-                                }
-                            },
-                            scales: {
-                                x: { title: { display: true, text: 'Área (hectares)', color: '#64748b' }, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
-                                y: { title: { display: true, text: 'Produtividade (sc/ha)', color: '#64748b' }, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
-                            }
-                        }
-                    });
-                },
-
-                renderParetoChart() {
-                    const ctx = document.getElementById('paretoChart');
-                    if(this.charts.pareto) this.charts.pareto.destroy();
-
-                    // Group by Item (not just category)
-                    const items = {};
-                    this.filteredCustos.forEach(c => {
-                        if(!items[c.item]) items[c.item] = 0;
-                        items[c.item] += c.valor;
-                    });
-
-                    // Sort & Top 5
-                    const sortedItems = Object.entries(items).sort((a,b) => b[1] - a[1]).slice(0, 5);
-                    const labels = sortedItems.map(i => i[0].substring(0, 15) + '...');
-                    const data = sortedItems.map(i => i[1]);
-
-                    this.charts.pareto = new Chart(ctx, {
-                        type: 'doughnut',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                data: data,
-                                backgroundColor: ['#ef4444', '#f97316', '#eab308', '#3b82f6', '#6366f1'],
-                                borderWidth: 0
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { position: 'right', labels: { color: '#cbd5e1', boxWidth: 10, font: { size: 10 } } }
-                            }
-                        }
-                    });
-                },
-
-                formatMoney(val) {
-                    return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
-                },
-                formatNumber(val) {
-                    return new Intl.NumberFormat('pt-BR').format(val);
-                }
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            slate: {
+              950: '#020617',
+              900: '#0f172a',
+              800: '#1e293b',
+              700: '#334155',
+              600: '#475569',
+              500: '#64748b',
+              400: '#94a3b8',
+              300: '#cbd5e1',
+              200: '#e2e8f0',
             }
+          }
         }
-    </script>
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background: #020617;
+      color: #f1f5f9;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #020617; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* Market Ticker */
+    .ticker-wrap {
+      overflow: hidden;
+      white-space: nowrap;
+      background: #000;
+      border-bottom: 1px solid #1e293b;
+    }
+    .ticker-content {
+      display: inline-block;
+      animation: ticker-scroll 60s linear infinite;
+    }
+    .ticker-content:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Login overlay */
+    .login-bg {
+      background: radial-gradient(ellipse at center, #0f172a 0%, #020617 70%);
+    }
+
+    /* Card hover */
+    .card-hover {
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .card-hover:hover {
+      border-color: #334155 !important;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.08);
+      transform: translateY(-1px);
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      transition: width 0.8s ease;
+    }
+
+    /* Badge pulse */
+    .badge-pulse {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* Table sort arrow */
+    .sort-arrow { opacity: 0.4; }
+    .sort-active .sort-arrow { opacity: 1; }
+
+    /* Fade in animation */
+    .fade-in {
+      animation: fadeIn 0.4s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Smooth transitions for x-show */
+    [x-cloak] { display: none !important; }
+
+    /* Custom select */
+    select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    /* Gauge chart wrapper */
+    .gauge-wrap { position: relative; }
+    .gauge-center {
+      position: absolute;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    /* Section title */
+    .section-title {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #475569;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #1e293b;
+    }
+
+    /* Radar responsive */
+    .chart-container { position: relative; }
+  </style>
+</head>
+<body x-data="app()" x-cloak>
+
+  <!-- ═══════════════════════════════════════ LOGIN SCREEN ═══════════════════════════════════════ -->
+  <div x-show="!authenticated" class="login-bg fixed inset-0 z-[100] flex items-center justify-center">
+    <div class="w-full max-w-sm mx-4">
+      <!-- Logo -->
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 mb-4">
+          <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064"/>
+          </svg>
+        </div>
+        <h1 class="text-2xl font-bold text-white">Terra BI</h1>
+        <p class="text-slate-500 text-sm mt-1">Dashboard Agrícola v5.0</p>
+      </div>
+
+      <!-- Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
+        <div class="mb-5">
+          <label class="block text-xs font-medium text-slate-400 mb-2">Senha de Acesso</label>
+          <input
+            type="password"
+            x-model="loginPass"
+            @keyup.enter="doLogin()"
+            placeholder="••••••••"
+            class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 transition-colors"
+          >
+        </div>
+        <div x-show="loginError" class="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">
+          ⚠️ Senha incorreta. Tente novamente.
+        </div>
+        <button
+          @click="doLogin()"
+          class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold py-3 rounded-xl transition-all duration-200 hover:shadow-lg hover:shadow-emerald-500/20"
+        >
+          Entrar
+        </button>
+      </div>
+
+      <p class="text-center text-slate-600 text-xs mt-4">Terra BI © 2025 — Uso Interno</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ MARKET TICKER ═══════════════════════════════════════ -->
+  <div class="ticker-wrap sticky top-0 z-50 py-2" x-show="authenticated">
+    <div class="ticker-content">
+      <!-- Duplicated for seamless loop -->
+      <template x-for="item in [...tickerItems, ...tickerItems]" :key="Math.random()">
+        <span class="inline-flex items-center gap-2 px-5 text-xs font-medium">
+          <span class="text-slate-500" x-text="item.icon"></span>
+          <span class="text-slate-300 font-semibold" x-text="item.label"></span>
+          <span class="font-bold" :class="item.change >= 0 ? 'text-emerald-400' : 'text-red-400'" x-text="item.value"></span>
+          <span :class="item.change >= 0 ? 'text-emerald-500' : 'text-red-500'" x-text="item.change >= 0 ? '▲' : '▼'"></span>
+          <span x-show="item.badge" class="px-1.5 py-0.5 bg-amber-500/20 text-amber-400 rounded text-[10px] font-semibold" x-text="item.badge"></span>
+          <span class="text-slate-700 mx-2">|</span>
+        </span>
+      </template>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ MAIN APP ═══════════════════════════════════════ -->
+  <div x-show="authenticated" class="min-h-screen">
+
+    <!-- Loading overlay -->
+    <div x-show="loading" class="fixed inset-0 z-40 bg-slate-950/80 flex items-center justify-center">
+      <div class="text-center">
+        <div class="inline-block w-10 h-10 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-slate-400 text-sm">Carregando dados...</p>
+      </div>
+    </div>
+
+    <!-- Load Error -->
+    <div x-show="loadError" class="fixed inset-0 z-40 bg-slate-950/90 flex items-center justify-center">
+      <div class="text-center max-w-sm">
+        <div class="text-4xl mb-4">⚠️</div>
+        <h2 class="text-xl font-bold text-red-400 mb-2">Erro ao carregar dados</h2>
+        <p class="text-slate-400 text-sm mb-4">Não foi possível carregar database.json. Verifique se o arquivo existe no servidor.</p>
+        <button @click="loadError=false; loadData()" class="px-4 py-2 bg-emerald-500 rounded-lg text-sm font-medium">Tentar novamente</button>
+      </div>
+    </div>
+
+    <!-- ─── HEADER / FILTROS ─── -->
+    <header class="sticky top-8 z-40 bg-slate-950/95 backdrop-blur border-b border-slate-800" x-show="authenticated">
+      <div class="max-w-screen-2xl mx-auto px-4 py-3">
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Logo small -->
+          <div class="flex items-center gap-2 mr-2">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+              <span class="text-emerald-400 text-xs">🌱</span>
+            </div>
+            <span class="text-white font-bold text-sm hidden sm:block">Terra BI</span>
+          </div>
+
+          <!-- Filters -->
+          <select x-model="filters.safra" @change="applyFilters()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 pr-8">
+            <option value="">Todas as Safras</option>
+            <option value="23/24">23/24</option>
+            <option value="24/25">24/25</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+          </select>
+
+          <select x-model="filters.cultura" @change="applyFilters()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 pr-8">
+            <option value="">Todas as Culturas</option>
+            <option value="SOJA">Soja</option>
+            <option value="MILHO">Milho</option>
+          </select>
+
+          <select x-model="filters.fazenda" @change="applyFilters()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 pr-8">
+            <option value="">Todas as Fazendas</option>
+            <option value="CRISTALINA">Cristalina</option>
+            <option value="SÃO CRISTOVÃO">São Cristovão</option>
+            <option value="CALIFÓRNIA">Califórnia</option>
+          </select>
+
+          <div class="flex items-center gap-2 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
+            <span class="text-slate-500 text-xs">R$/sc</span>
+            <input
+              type="number"
+              x-model.number="filters.preco"
+              @input="applyFilters()"
+              min="50" max="300" step="1"
+              class="bg-transparent text-slate-200 text-xs w-16 focus:outline-none"
+            >
+          </div>
+
+          <button @click="resetFilters()" class="px-3 py-2 text-xs text-slate-400 hover:text-white border border-slate-700 rounded-lg hover:border-slate-600 transition-colors">
+            ↺ Reset
+          </button>
+
+          <div class="ml-auto flex items-center gap-2">
+            <span class="text-xs text-slate-600 hidden md:block" x-text="`${filteredProd.length} talhões · ${filteredCustos.length} registros`"></span>
+            <button @click="authenticated=false" class="text-xs text-slate-600 hover:text-red-400 transition-colors">Sair</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ─── MAIN CONTENT ─── -->
+    <main class="max-w-screen-2xl mx-auto px-4 py-6 space-y-8">
+
+      <!-- ══════ KPI DECK LINHA 1 ══════ -->
+      <section class="fade-in">
+        <div class="section-title">📊 Indicadores Principais</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+
+          <!-- Custo Total R$/ha -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 card-hover">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Custo Total</p>
+                <p class="text-xs text-slate-600">R$/ha realizado</p>
+              </div>
+              <div class="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400 text-lg">💰</div>
+            </div>
+            <p class="text-3xl font-bold text-white mb-2" x-text="fmt(kpi.custoHa)"></p>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500">IMEA:</span>
+              <span class="text-xs font-medium text-slate-300" x-text="fmt(kpi.imeaCustoHa)"></span>
+              <span class="ml-auto text-xs font-bold px-2 py-0.5 rounded-full"
+                :class="kpi.desvCusto <= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'"
+                x-text="(kpi.desvCusto > 0 ? '+' : '') + kpi.desvCusto.toFixed(1) + '%'">
+              </span>
+            </div>
+            <div class="mt-2 h-1 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full rounded-full progress-bar"
+                :style="`width:${Math.min(100, Math.abs(kpi.desvCusto))}%; background:${kpi.desvCusto <= 0 ? '#10b981' : '#ef4444'}`">
+              </div>
+            </div>
+          </div>
+
+          <!-- Produtividade Média -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 card-hover">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Produtividade Média</p>
+                <p class="text-xs text-slate-600">sc/ha</p>
+              </div>
+              <div class="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center text-lg">🌾</div>
+            </div>
+            <p class="text-3xl font-bold text-white mb-2" x-text="kpi.prodMedia.toFixed(1)"></p>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500">IMEA:</span>
+              <span class="text-xs font-medium text-slate-300" x-text="kpi.imeaProd.toFixed(1) + ' sc/ha'"></span>
+              <span class="ml-auto text-xs font-bold px-2 py-0.5 rounded-full"
+                :class="kpi.desvProd >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'"
+                x-text="(kpi.desvProd > 0 ? '+' : '') + kpi.desvProd.toFixed(1) + '%'">
+              </span>
+            </div>
+            <div class="mt-2 h-1 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full rounded-full progress-bar"
+                :style="`width:${Math.min(100, Math.abs(kpi.desvProd) * 2)}%; background:${kpi.desvProd >= 0 ? '#10b981' : '#ef4444'}`">
+              </div>
+            </div>
+          </div>
+
+          <!-- Receita Bruta Estimada -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 card-hover">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Receita Bruta Est.</p>
+                <p class="text-xs text-slate-600">prod × preço × área</p>
+              </div>
+              <div class="w-9 h-9 rounded-lg bg-violet-500/10 flex items-center justify-center text-lg">📈</div>
+            </div>
+            <p class="text-3xl font-bold text-white mb-2" x-text="fmtM(kpi.receitaBruta)"></p>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500">Área total:</span>
+              <span class="text-xs font-medium text-slate-300" x-text="kpi.areaTotal.toFixed(0) + ' ha'"></span>
+              <span class="ml-auto text-xs text-slate-500" x-text="fmt(kpi.receitaHa) + '/ha'"></span>
+            </div>
+          </div>
+
+          <!-- Margem Bruta -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 card-hover">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Margem Bruta</p>
+                <p class="text-xs text-slate-600">R$/ha</p>
+              </div>
+              <div class="w-9 h-9 rounded-lg flex items-center justify-center text-lg"
+                :class="kpi.margemHa >= 0 ? 'bg-emerald-500/10' : 'bg-red-500/10'">📊</div>
+            </div>
+            <p class="text-3xl font-bold mb-2"
+              :class="kpi.margemHa >= 0 ? 'text-emerald-400' : 'text-red-400'"
+              x-text="fmt(kpi.margemHa)">
+            </p>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500">Receita/ha:</span>
+              <span class="text-xs font-medium text-slate-300" x-text="fmt(kpi.receitaHa)"></span>
+              <span class="ml-auto text-xs font-semibold"
+                :class="kpi.margemHa >= 0 ? 'text-emerald-400' : 'text-red-400'"
+                x-text="kpi.margemHa >= 0 ? '✓ Positivo' : '✗ Negativo'">
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ KPI DECK LINHA 2 - RANKINGS ══════ -->
+      <section class="fade-in">
+        <div class="section-title">🏆 Rankings</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+
+          <!-- Melhor Variedade -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 card-hover">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-xl">🥇</span>
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Melhor Variedade</span>
+            </div>
+            <p class="text-base font-bold text-emerald-400 truncate" x-text="rankings.bestVar.name || '—'"></p>
+            <p class="text-2xl font-black text-white mt-1" x-text="rankings.bestVar.prod ? rankings.bestVar.prod.toFixed(1) + ' sc/ha' : '—'"></p>
+          </div>
+
+          <!-- Pior Variedade -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 card-hover">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-xl">💀</span>
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pior Variedade</span>
+            </div>
+            <p class="text-base font-bold text-red-400 truncate" x-text="rankings.worstVar.name || '—'"></p>
+            <p class="text-2xl font-black text-white mt-1" x-text="rankings.worstVar.prod ? rankings.worstVar.prod.toFixed(1) + ' sc/ha' : '—'"></p>
+          </div>
+
+          <!-- Melhor Talhão -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 card-hover">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-xl">🌟</span>
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Melhor Talhão</span>
+            </div>
+            <p class="text-base font-bold text-emerald-400 truncate" x-text="rankings.bestTalhao.talhao || '—'"></p>
+            <p class="text-xs text-slate-500 mb-1" x-text="rankings.bestTalhao.fazenda || ''"></p>
+            <p class="text-2xl font-black text-white" x-text="rankings.bestTalhao.prod ? rankings.bestTalhao.prod.toFixed(1) + ' sc/ha' : '—'"></p>
+          </div>
+
+          <!-- Pior Talhão -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 card-hover">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-xl">⚠️</span>
+              <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Pior Talhão</span>
+            </div>
+            <p class="text-base font-bold text-red-400 truncate" x-text="rankings.worstTalhao.talhao || '—'"></p>
+            <p class="text-xs text-slate-500 mb-1" x-text="rankings.worstTalhao.fazenda || ''"></p>
+            <p class="text-2xl font-black text-white" x-text="rankings.worstTalhao.prod ? rankings.worstTalhao.prod.toFixed(1) + ' sc/ha' : '—'"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ LUCRATIVIDADE ══════ -->
+      <section class="fade-in">
+        <div class="section-title">📈 Lucratividade</div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          <!-- ROI Gauge -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 card-hover">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-4">ROI (%)</p>
+            <div class="gauge-wrap" style="height:180px;">
+              <canvas id="gaugeChart"></canvas>
+              <div class="gauge-center">
+                <p class="text-2xl font-black" :class="kpi.roi >= 0 ? 'text-emerald-400' : 'text-red-400'" x-text="kpi.roi.toFixed(1) + '%'"></p>
+                <p class="text-xs text-slate-600">Retorno</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 text-center mt-2">(Receita − Custo) / Custo × 100</p>
+          </div>
+
+          <!-- Margem Líquida -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 card-hover">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-4">Margem Líquida</p>
+            <p class="text-4xl font-black mb-2" :class="kpi.margemPct >= 0 ? 'text-emerald-400' : 'text-red-400'" x-text="kpi.margemPct.toFixed(1) + '%'"></p>
+            <p class="text-xs text-slate-500 mb-4">Margem sobre a receita</p>
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                  <span>Receita</span>
+                  <span x-text="fmtM(kpi.receitaBruta)"></span>
+                </div>
+                <div class="h-2 bg-slate-800 rounded-full">
+                  <div class="h-full bg-violet-500 rounded-full progress-bar" style="width:100%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                  <span>Custos</span>
+                  <span x-text="fmtM(kpi.custoTotal)"></span>
+                </div>
+                <div class="h-2 bg-slate-800 rounded-full">
+                  <div class="h-full bg-amber-500 rounded-full progress-bar"
+                    :style="`width:${kpi.receitaBruta > 0 ? Math.min(100, kpi.custoTotal / kpi.receitaBruta * 100) : 0}%`"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                  <span>Margem</span>
+                  <span x-text="fmtM(kpi.receitaBruta - kpi.custoTotal)"></span>
+                </div>
+                <div class="h-2 bg-slate-800 rounded-full">
+                  <div class="h-full rounded-full progress-bar"
+                    :class="kpi.margemPct >= 0 ? 'bg-emerald-500' : 'bg-red-500'"
+                    :style="`width:${Math.min(100, Math.abs(kpi.margemPct))}%`"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custo por Saca -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 card-hover">
+            <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-4">Custo por Saca</p>
+            <p class="text-4xl font-black text-blue-400 mb-1" x-text="'R$ ' + kpi.custoPorSaca.toFixed(2)"></p>
+            <p class="text-xs text-slate-500 mb-6">Custo total / Produção total</p>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center py-2 border-b border-slate-800">
+                <span class="text-xs text-slate-500">Produção Total</span>
+                <span class="text-sm font-semibold text-white" x-text="kpi.producaoTotal.toFixed(0) + ' sc'"></span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-slate-800">
+                <span class="text-xs text-slate-500">Custo Total</span>
+                <span class="text-sm font-semibold text-white" x-text="fmtM(kpi.custoTotal)"></span>
+              </div>
+              <div class="flex justify-between items-center py-2">
+                <span class="text-xs text-slate-500">Área Total</span>
+                <span class="text-sm font-semibold text-white" x-text="kpi.areaTotal.toFixed(0) + ' ha'"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ CUSTOS POR APLICAÇÃO ══════ -->
+      <section class="fade-in">
+        <div class="section-title">💸 Custos por Categoria (R$/ha)</div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div class="chart-container" style="height:320px;">
+            <canvas id="custosChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ COMPARAÇÃO IMEA ══════ -->
+      <section class="fade-in">
+        <div class="section-title">🎯 Comparação IMEA</div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+          <!-- Tabela IMEA -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <p class="text-sm font-semibold text-slate-300 mb-4">Indicadores vs. Referência IMEA</p>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs">
+                <thead>
+                  <tr class="border-b border-slate-800">
+                    <th class="text-left py-2 px-2 text-slate-500 font-medium">Indicador</th>
+                    <th class="text-right py-2 px-2 text-slate-500 font-medium">Realizado</th>
+                    <th class="text-right py-2 px-2 text-slate-500 font-medium">IMEA Ref.</th>
+                    <th class="text-right py-2 px-2 text-slate-500 font-medium">Desvio</th>
+                    <th class="text-center py-2 px-2 text-slate-500 font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-slate-800/50">
+                    <td class="py-3 px-2 text-slate-300">Custo/ha</td>
+                    <td class="text-right py-3 px-2 text-white font-semibold" x-text="fmt(kpi.custoHa)"></td>
+                    <td class="text-right py-3 px-2 text-slate-400" x-text="fmt(kpi.imeaCustoHa)"></td>
+                    <td class="text-right py-3 px-2 font-bold"
+                      :class="kpi.desvCusto <= 0 ? 'text-emerald-400' : 'text-red-400'"
+                      x-text="(kpi.desvCusto > 0 ? '+' : '') + kpi.desvCusto.toFixed(1) + '%'"></td>
+                    <td class="text-center py-3 px-2">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold"
+                        :class="kpi.desvCusto <= 0 ? 'bg-emerald-500/20 text-emerald-400' : (kpi.desvCusto <= 10 ? 'bg-amber-500/20 text-amber-400' : 'bg-red-500/20 text-red-400')"
+                        x-text="kpi.desvCusto <= 0 ? 'Ótimo' : (kpi.desvCusto <= 10 ? 'Atenção' : 'Crítico')">
+                      </span>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-slate-800/50">
+                    <td class="py-3 px-2 text-slate-300">Produtividade</td>
+                    <td class="text-right py-3 px-2 text-white font-semibold" x-text="kpi.prodMedia.toFixed(1) + ' sc/ha'"></td>
+                    <td class="text-right py-3 px-2 text-slate-400" x-text="kpi.imeaProd.toFixed(1) + ' sc/ha'"></td>
+                    <td class="text-right py-3 px-2 font-bold"
+                      :class="kpi.desvProd >= 0 ? 'text-emerald-400' : 'text-red-400'"
+                      x-text="(kpi.desvProd > 0 ? '+' : '') + kpi.desvProd.toFixed(1) + '%'"></td>
+                    <td class="text-center py-3 px-2">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold"
+                        :class="kpi.desvProd >= 0 ? 'bg-emerald-500/20 text-emerald-400' : (kpi.desvProd >= -10 ? 'bg-amber-500/20 text-amber-400' : 'bg-red-500/20 text-red-400')"
+                        x-text="kpi.desvProd >= 0 ? 'Ótimo' : (kpi.desvProd >= -10 ? 'Atenção' : 'Crítico')">
+                      </span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-2 text-slate-300">Custo/saca</td>
+                    <td class="text-right py-3 px-2 text-white font-semibold" x-text="'R$ ' + kpi.custoPorSaca.toFixed(2)"></td>
+                    <td class="text-right py-3 px-2 text-slate-400" x-text="'R$ ' + kpi.imeaCustoPorSaca.toFixed(2)"></td>
+                    <td class="text-right py-3 px-2 font-bold"
+                      :class="kpi.desvCustoPorSaca <= 0 ? 'text-emerald-400' : 'text-red-400'"
+                      x-text="(kpi.desvCustoPorSaca > 0 ? '+' : '') + kpi.desvCustoPorSaca.toFixed(1) + '%'"></td>
+                    <td class="text-center py-3 px-2">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold"
+                        :class="kpi.desvCustoPorSaca <= 0 ? 'bg-emerald-500/20 text-emerald-400' : (kpi.desvCustoPorSaca <= 10 ? 'bg-amber-500/20 text-amber-400' : 'bg-red-500/20 text-red-400')"
+                        x-text="kpi.desvCustoPorSaca <= 0 ? 'Ótimo' : (kpi.desvCustoPorSaca <= 10 ? 'Atenção' : 'Crítico')">
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Radar Chart -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <p class="text-sm font-semibold text-slate-300 mb-4">Perfil Multidimensional vs. IMEA</p>
+            <div class="chart-container" style="height:250px;">
+              <canvas id="radarChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ COMPARATIVO DE VARIEDADES ══════ -->
+      <section class="fade-in">
+        <div class="section-title">🧬 Comparativo de Variedades</div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div class="chart-container" style="height:360px;">
+            <canvas id="variedadesChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ RAIO-X DOS TALHÕES ══════ -->
+      <section class="fade-in">
+        <div class="section-title">🗺️ Raio-X dos Talhões (Área × Produtividade)</div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div class="chart-container" style="height:380px;">
+            <canvas id="scatterChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ PREÇO MÉDIO DE VENDA ══════ -->
+      <section class="fade-in">
+        <div class="section-title">💵 Simulador de Preço de Venda</div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <!-- Soja input -->
+            <div class="bg-slate-800 rounded-xl p-4">
+              <label class="text-xs text-slate-500 font-medium block mb-2">🌱 Preço Soja (R$/sc)</label>
+              <input type="number" x-model.number="precoVenda.soja" @input="calcVenda()" min="50" max="300"
+                class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-500">
+            </div>
+            <!-- Milho input -->
+            <div class="bg-slate-800 rounded-xl p-4">
+              <label class="text-xs text-slate-500 font-medium block mb-2">🌽 Preço Milho (R$/sc)</label>
+              <input type="number" x-model.number="precoVenda.milho" @input="calcVenda()" min="20" max="200"
+                class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-500">
+            </div>
+            <!-- Receita Total -->
+            <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-4">
+              <p class="text-xs text-slate-500 font-medium mb-1">Receita Total</p>
+              <p class="text-2xl font-black text-emerald-400" x-text="fmtM(vendaKpi.receita)"></p>
+            </div>
+            <!-- Lucro Bruto -->
+            <div class="rounded-xl p-4" :class="vendaKpi.lucro >= 0 ? 'bg-blue-500/5 border border-blue-500/20' : 'bg-red-500/5 border border-red-500/20'">
+              <p class="text-xs text-slate-500 font-medium mb-1">Lucro Bruto</p>
+              <p class="text-2xl font-black" :class="vendaKpi.lucro >= 0 ? 'text-blue-400' : 'text-red-400'" x-text="fmtM(vendaKpi.lucro)"></p>
+              <p class="text-xs mt-1" :class="vendaKpi.lucro >= 0 ? 'text-blue-500' : 'text-red-500'" x-text="vendaKpi.margem.toFixed(1) + '% margem'"></p>
+            </div>
+          </div>
+
+          <!-- Tabela por fazenda -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-slate-800">
+                  <th class="text-left py-2 px-3 text-slate-500 font-medium">Fazenda</th>
+                  <th class="text-right py-2 px-3 text-slate-500 font-medium">Cultura</th>
+                  <th class="text-right py-2 px-3 text-slate-500 font-medium">Área (ha)</th>
+                  <th class="text-right py-2 px-3 text-slate-500 font-medium">Prod. Total (sc)</th>
+                  <th class="text-right py-2 px-3 text-slate-500 font-medium">Receita Est.</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="row in vendaTabela" :key="row.key">
+                  <tr class="border-b border-slate-800/50 hover:bg-slate-800/30">
+                    <td class="py-2 px-3 text-slate-300" x-text="row.fazenda"></td>
+                    <td class="text-right py-2 px-3">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold"
+                        :class="row.cultura === 'SOJA' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'"
+                        x-text="row.cultura"></span>
+                    </td>
+                    <td class="text-right py-2 px-3 text-slate-300" x-text="row.area.toFixed(0)"></td>
+                    <td class="text-right py-2 px-3 text-slate-300" x-text="row.totalSc.toFixed(0)"></td>
+                    <td class="text-right py-2 px-3 text-white font-semibold" x-text="fmt(row.receita)"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ TABELA DETALHAMENTO TALHÕES ══════ -->
+      <section class="fade-in">
+        <div class="section-title">📋 Detalhamento por Talhão</div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <!-- Search -->
+          <div class="flex flex-wrap gap-3 mb-4">
+            <input
+              type="text"
+              x-model="talhaoSearch"
+              placeholder="Buscar talhão ou fazenda..."
+              class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 flex-1 min-w-48"
+            >
+            <span class="text-xs text-slate-500 self-center" x-text="`${talhaoFiltered.length} talhões`"></span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-slate-800">
+                  <template x-for="col in talhaoColumns" :key="col.key">
+                    <th class="py-2 px-2 text-slate-500 font-medium cursor-pointer hover:text-slate-300 transition-colors"
+                      :class="['Área (ha)', 'Prod (sc/ha)', 'Receita Est.', 'Custo/ha', 'Margem R$/ha'].includes(col.label) ? 'text-right' : 'text-left'"
+                      @click="sortTalhao(col.key)">
+                      <span x-text="col.label"></span>
+                      <span class="sort-arrow ml-1"
+                        :class="talhaoSort.key === col.key ? 'sort-active opacity-100' : ''"
+                        x-text="talhaoSort.key === col.key ? (talhaoSort.asc ? '↑' : '↓') : ''">
+                      </span>
+                    </th>
+                  </template>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="row in talhaoFiltered.slice(0, talhaoPage * 20)" :key="row.key">
+                  <tr class="border-b border-slate-800/50 hover:bg-slate-800/30">
+                    <td class="py-2 px-2 text-slate-400" x-text="row.safra"></td>
+                    <td class="py-2 px-2 text-slate-300" x-text="row.fazenda"></td>
+                    <td class="py-2 px-2 text-slate-200 font-medium max-w-32 truncate" x-text="row.talhao"></td>
+                    <td class="py-2 px-2 text-slate-400 max-w-28 truncate" x-text="row.variedade"></td>
+                    <td class="py-2 px-2 text-right text-slate-300" x-text="row.area.toFixed(1)"></td>
+                    <td class="py-2 px-2 text-right text-white font-semibold" x-text="row.prod.toFixed(1)"></td>
+                    <td class="py-2 px-2 text-right text-slate-300" x-text="fmt(row.receita)"></td>
+                    <td class="py-2 px-2 text-right text-slate-300" x-text="fmt(row.custoHa)"></td>
+                    <td class="py-2 px-2 text-right font-bold" :class="row.margem >= 0 ? 'text-emerald-400' : 'text-red-400'" x-text="fmt(row.margem)"></td>
+                    <td class="py-2 px-2 text-center">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold"
+                        :class="{
+                          'bg-emerald-500/20 text-emerald-400': row.status === 'Excelente',
+                          'bg-blue-500/20 text-blue-400': row.status === 'Bom',
+                          'bg-amber-500/20 text-amber-400': row.status === 'Atenção',
+                          'bg-red-500/20 text-red-400': row.status === 'Crítico'
+                        }"
+                        x-text="row.status">
+                      </span>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4 text-center" x-show="talhaoFiltered.length > talhaoPage * 20">
+            <button @click="talhaoPage++" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300 transition-colors">
+              Carregar mais (+20)
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════ TABELA CUSTOS DETALHADOS ══════ -->
+      <section class="fade-in">
+        <div class="section-title">📦 Custos Detalhados</div>
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+          <!-- Filter categoria -->
+          <div class="flex flex-wrap gap-3 mb-4">
+            <select x-model="custoFilterCat" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 pr-8">
+              <option value="">Todas as Categorias</option>
+              <template x-for="cat in categorias" :key="cat">
+                <option :value="cat" x-text="cat"></option>
+              </template>
+            </select>
+            <span class="text-xs text-slate-500 self-center" x-text="`${custoFiltered.length} registros`"></span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="border-b border-slate-800">
+                  <th class="text-left py-2 px-2 text-slate-500 font-medium">Safra</th>
+                  <th class="text-left py-2 px-2 text-slate-500 font-medium">Cultura</th>
+                  <th class="text-left py-2 px-2 text-slate-500 font-medium">Fazenda</th>
+                  <th class="text-left py-2 px-2 text-slate-500 font-medium">Categoria</th>
+                  <th class="text-left py-2 px-2 text-slate-500 font-medium">Item</th>
+                  <th class="text-right py-2 px-2 text-slate-500 font-medium">Valor R$</th>
+                  <th class="text-right py-2 px-2 text-slate-500 font-medium">R$/ha</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="row in custoFiltered.slice(0, custoPage * 20)" :key="row._idx">
+                  <tr class="border-b border-slate-800/50 hover:bg-slate-800/30">
+                    <td class="py-2 px-2 text-slate-400" x-text="row.safra"></td>
+                    <td class="py-2 px-2">
+                      <span class="px-1.5 py-0.5 rounded text-[10px] font-bold"
+                        :class="row.cultura === 'SOJA' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'"
+                        x-text="row.cultura"></span>
+                    </td>
+                    <td class="py-2 px-2 text-slate-300" x-text="row.fazenda"></td>
+                    <td class="py-2 px-2">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400" x-text="row.categoria"></span>
+                    </td>
+                    <td class="py-2 px-2 text-slate-400" x-text="row.item"></td>
+                    <td class="py-2 px-2 text-right text-white font-semibold" x-text="fmt(row.valor)"></td>
+                    <td class="py-2 px-2 text-right text-slate-300" x-text="fmt(row.custo_ha)"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4 text-center" x-show="custoFiltered.length > custoPage * 20">
+            <button @click="custoPage++" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-slate-300 transition-colors">
+              Carregar mais (+20)
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="pb-12 text-center text-slate-700 text-xs">Terra BI v5.0 · Dados: database.json</div>
+    </main>
+  </div>
+
+<!-- ═══════════════════════════════════════ ALPINE.JS APP ═══════════════════════════════════════ -->
+<script>
+function app() {
+  return {
+    // ── AUTH ──
+    authenticated: false,
+    loginPass: '',
+    loginError: false,
+
+    // ── DATA ──
+    loading: false,
+    loadError: false,
+    rawCustos: [],
+    rawProd: [],
+    rawRefs: [],
+
+    // ── FILTERS ──
+    filters: { safra: '', cultura: '', fazenda: '', preco: 120 },
+    filteredCustos: [],
+    filteredProd: [],
+
+    // ── KPIs ──
+    kpi: {
+      custoHa: 0, custoTotal: 0, imeaCustoHa: 0, desvCusto: 0,
+      prodMedia: 0, imeaProd: 0, desvProd: 0,
+      receitaBruta: 0, receitaHa: 0, areaTotal: 0,
+      margemHa: 0, margemPct: 0,
+      roi: 0,
+      custoPorSaca: 0, imeaCustoPorSaca: 0, desvCustoPorSaca: 0,
+      producaoTotal: 0,
+    },
+
+    // ── RANKINGS ──
+    rankings: {
+      bestVar: { name: '', prod: 0 },
+      worstVar: { name: '', prod: 0 },
+      bestTalhao: { talhao: '', fazenda: '', prod: 0 },
+      worstTalhao: { talhao: '', fazenda: '', prod: 0 },
+    },
+
+    // ── CHARTS refs ──
+    charts: {},
+
+    // ── TICKER ──
+    tickerItems: [],
+
+    // ── TABLES ──
+    talhaoSearch: '',
+    talhaoSort: { key: 'prod', asc: false },
+    talhaoPage: 1,
+    talhaoColumns: [
+      {key:'safra',label:'Safra'},{key:'fazenda',label:'Fazenda'},{key:'talhao',label:'Talhão'},
+      {key:'variedade',label:'Variedade'},{key:'area',label:'Área (ha)'},{key:'prod',label:'Prod (sc/ha)'},
+      {key:'receita',label:'Receita Est.'},{key:'custoHa',label:'Custo/ha'},{key:'margem',label:'Margem R$/ha'},{key:'status',label:'Status'}
+    ],
+    talhaoData: [],
+    talhaoFiltered: [],
+    categorias: ['FERTILIZANTES','SEMENTES','HERBICIDA','FUNGICIDA','INSETICIDA','ADJUVANTE','MÃO DE OBRA','ARRENDAMENTO','MANUTENÇÃO'],
+    custoFilterCat: '',
+    custoPage: 1,
+    custoFiltered: [],
+
+    // ── VENDA ──
+    precoVenda: { soja: 118, milho: 58 },
+    vendaKpi: { receita: 0, lucro: 0, margem: 0 },
+    vendaTabela: [],
+
+    // ─────────────────── METHODS ───────────────────
+
+    doLogin() {
+      if (this.loginPass === 'jarvis4.0') {
+        this.authenticated = true;
+        this.loginError = false;
+        this.$nextTick(() => {
+          this.loadData();
+          this.loadTicker();
+        });
+      } else {
+        this.loginError = true;
+        this.loginPass = '';
+      }
+    },
+
+    async loadData() {
+      this.loading = true;
+      this.loadError = false;
+      try {
+        const res = await fetch('./data/database.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const db = await res.json();
+        this.rawCustos = db.custos || [];
+        this.rawProd   = db.produtividade || [];
+        this.rawRefs   = db.referencias || [];
+      } catch(e) {
+        console.warn('Usando dados mock:', e);
+        this.rawCustos = this.mockCustos();
+        this.rawProd   = this.mockProd();
+        this.rawRefs   = this.mockRefs();
+      }
+      this.loading = false;
+      this.applyFilters();
+    },
+
+    applyFilters() {
+      const f = this.filters;
+      this.filteredCustos = this.rawCustos.filter(r => {
+        if (f.safra   && r.safra   !== f.safra)   return false;
+        if (f.cultura && r.cultura !== f.cultura)  return false;
+        if (f.fazenda && r.fazenda !== f.fazenda)  return false;
+        return true;
+      });
+      this.filteredProd = this.rawProd.filter(r => {
+        if (f.safra && r.safra !== f.safra) return false;
+        if (f.cultura && r.cultura !== f.cultura) return false;
+        if (f.fazenda) {
+          const faz = r.fazenda || '';
+          if (!faz.toUpperCase().includes(f.fazenda.replace('SÃO CRISTOVÃO', 'SÃO CRISTOVÃO').replace('CALIFÓRNIA','CALIFÓRNIA'))) {
+            if (!faz.toUpperCase().includes(f.fazenda)) return false;
+          }
+        }
+        return true;
+      });
+      this.computeKPIs();
+      this.computeRankings();
+      this.buildTalhaoData();
+      this.buildCustoFiltered();
+      this.calcVenda();
+      this.$nextTick(() => this.renderAllCharts());
+    },
+
+    computeKPIs() {
+      const prod = this.filteredProd;
+      const custos = this.filteredCustos;
+      const f = this.filters;
+
+      // Área e produção
+      const areaTotal = prod.reduce((s,r) => s + (r.area||0), 0);
+      const totalSc   = prod.reduce((s,r) => s + (r.total_sc||0), 0);
+      const prodMedia = areaTotal > 0 ? totalSc / areaTotal : 0;
+
+      // Custos
+      const custoTotal = custos.reduce((s,r) => s + (r.valor||0), 0);
+      const custoHa    = areaTotal > 0 ? custoTotal / areaTotal : (custos.reduce((s,r)=>s+(r.custo_ha||0),0)/Math.max(1,custos.length));
+
+      // Receita
+      const preco = f.preco || 120;
+      const receitaBruta = totalSc * preco;
+      const receitaHa    = areaTotal > 0 ? receitaBruta / areaTotal : 0;
+      const margemHa     = receitaHa - custoHa;
+      const margemPct    = receitaBruta > 0 ? (receitaBruta - custoTotal) / receitaBruta * 100 : 0;
+      const roi          = custoTotal > 0 ? (receitaBruta - custoTotal) / custoTotal * 100 : 0;
+      const custoPorSaca = totalSc > 0 ? custoTotal / totalSc : 0;
+
+      // IMEA refs - best match
+      const imea = this.getBestRef();
+      const imeaCustoHa    = imea.ref_custo_ha   || 3800;
+      const imeaProd       = imea.ref_prod_sc_ha || 60;
+      const imeaCustoPorSaca = imeaProd > 0 ? imeaCustoHa / imeaProd : 63;
+
+      const desvCusto       = imeaCustoHa > 0    ? (custoHa - imeaCustoHa) / imeaCustoHa * 100       : 0;
+      const desvProd        = imeaProd > 0        ? (prodMedia - imeaProd) / imeaProd * 100            : 0;
+      const desvCustoPorSaca= imeaCustoPorSaca>0  ? (custoPorSaca - imeaCustoPorSaca)/imeaCustoPorSaca*100 : 0;
+
+      this.kpi = {
+        custoHa, custoTotal, imeaCustoHa, desvCusto,
+        prodMedia, imeaProd, desvProd,
+        receitaBruta, receitaHa, areaTotal,
+        margemHa, margemPct,
+        roi,
+        custoPorSaca, imeaCustoPorSaca, desvCustoPorSaca,
+        producaoTotal: totalSc,
+      };
+    },
+
+    getBestRef() {
+      const f = this.filters;
+      const refs = this.rawRefs;
+      // Try matching safra+cultura
+      let ref = refs.find(r => (!f.safra || r.safra === f.safra) && (!f.cultura || r.cultura === f.cultura));
+      if (!ref) ref = refs.find(r => !f.cultura || r.cultura === f.cultura);
+      if (!ref && refs.length) ref = refs[0];
+      return ref || {};
+    },
+
+    computeRankings() {
+      const prod = this.filteredProd;
+      if (!prod.length) {
+        this.rankings = {
+          bestVar: {name:'—',prod:0}, worstVar:{name:'—',prod:0},
+          bestTalhao:{talhao:'—',fazenda:'',prod:0}, worstTalhao:{talhao:'—',fazenda:'',prod:0}
+        };
+        return;
+      }
+
+      // Variedades
+      const varMap = {};
+      prod.forEach(r => {
+        const v = r.variedade || 'Desconhecida';
+        if (!varMap[v]) varMap[v] = [];
+        varMap[v].push(r.prod_sc_ha || 0);
+      });
+      const varArr = Object.entries(varMap).map(([name, vals]) => ({
+        name, prod: vals.reduce((s,v)=>s+v,0)/vals.length
+      })).sort((a,b) => b.prod - a.prod);
+
+      // Talhões
+      const sorted = [...prod].sort((a,b) => (b.prod_sc_ha||0) - (a.prod_sc_ha||0));
+
+      this.rankings = {
+        bestVar:  varArr[0] || {name:'—',prod:0},
+        worstVar: varArr[varArr.length-1] || {name:'—',prod:0},
+        bestTalhao:  { talhao: sorted[0]?.talhao||'—', fazenda: sorted[0]?.fazenda||'', prod: sorted[0]?.prod_sc_ha||0 },
+        worstTalhao: { talhao: sorted[sorted.length-1]?.talhao||'—', fazenda: sorted[sorted.length-1]?.fazenda||'', prod: sorted[sorted.length-1]?.prod_sc_ha||0 },
+      };
+    },
+
+    buildTalhaoData() {
+      const avgProd = this.kpi.prodMedia;
+      const custoMap = this.buildCustoHaMap();
+
+      this.talhaoData = this.filteredProd.map((r, i) => {
+        const preco = this.filters.preco || 120;
+        const receita = (r.total_sc || 0) * preco;
+        const custoHa = custoMap[r.fazenda]?.[r.safra] || this.kpi.custoHa;
+        const margem  = (r.prod_sc_ha || 0) * preco - custoHa;
+        const pct = avgProd > 0 ? (r.prod_sc_ha - avgProd) / avgProd * 100 : 0;
+        const status = pct >= 10 ? 'Excelente' : pct >= 0 ? 'Bom' : pct >= -10 ? 'Atenção' : 'Crítico';
+        return {
+          key: `t${i}`,
+          safra: r.safra,
+          fazenda: (r.fazenda||'').replace('FAZENDA ',''),
+          talhao: r.talhao,
+          variedade: r.variedade,
+          area: r.area || 0,
+          prod: r.prod_sc_ha || 0,
+          receita,
+          custoHa,
+          margem,
+          status,
+        };
+      });
+      this.sortTalhaoData();
+    },
+
+    buildCustoHaMap() {
+      // map fazenda -> safra -> custo_ha avg
+      const map = {};
+      this.filteredCustos.forEach(r => {
+        if (!map[r.fazenda]) map[r.fazenda] = {};
+        if (!map[r.fazenda][r.safra]) map[r.fazenda][r.safra] = [];
+        map[r.fazenda][r.safra].push(r.custo_ha || 0);
+      });
+      const result = {};
+      Object.entries(map).forEach(([faz,safras]) => {
+        result[faz] = {};
+        Object.entries(safras).forEach(([s,vals]) => {
+          result[faz][s] = vals.reduce((a,b)=>a+b,0)/vals.length;
+        });
+      });
+      return result;
+    },
+
+    sortTalhao(key) {
+      if (this.talhaoSort.key === key) {
+        this.talhaoSort.asc = !this.talhaoSort.asc;
+      } else {
+        this.talhaoSort.key = key;
+        this.talhaoSort.asc = false;
+      }
+      this.sortTalhaoData();
+    },
+
+    sortTalhaoData() {
+      const { key, asc } = this.talhaoSort;
+      const sorted = [...this.talhaoData].sort((a,b) => {
+        const va = a[key], vb = b[key];
+        if (typeof va === 'number') return asc ? va - vb : vb - va;
+        return asc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+      });
+      const search = this.talhaoSearch.toLowerCase();
+      this.talhaoFiltered = search
+        ? sorted.filter(r => r.talhao.toLowerCase().includes(search) || r.fazenda.toLowerCase().includes(search))
+        : sorted;
+    },
+
+    buildCustoFiltered() {
+      this.custoFiltered = this.filteredCustos
+        .filter(r => !this.custoFilterCat || r.categoria === this.custoFilterCat)
+        .map((r,i) => ({...r, _idx: i}));
+    },
+
+    calcVenda() {
+      const groups = {};
+      this.filteredProd.forEach(r => {
+        const key = `${(r.fazenda||'?').replace('FAZENDA ','')}_${r.cultura}`;
+        if (!groups[key]) groups[key] = { fazenda:(r.fazenda||'').replace('FAZENDA ',''), cultura:r.cultura, area:0, totalSc:0 };
+        groups[key].area    += r.area || 0;
+        groups[key].totalSc += r.total_sc || 0;
+      });
+
+      let totalReceita = 0;
+      this.vendaTabela = Object.entries(groups).map(([k, g]) => {
+        const preco = g.cultura === 'SOJA' ? this.precoVenda.soja : this.precoVenda.milho;
+        const receita = g.totalSc * preco;
+        totalReceita += receita;
+        return { key: k, ...g, receita };
+      }).sort((a,b) => b.receita - a.receita);
+
+      const lucro  = totalReceita - this.kpi.custoTotal;
+      const margem = totalReceita > 0 ? lucro / totalReceita * 100 : 0;
+      this.vendaKpi = { receita: totalReceita, lucro, margem };
+    },
+
+    resetFilters() {
+      this.filters = { safra: '', cultura: '', fazenda: '', preco: 120 };
+      this.applyFilters();
+    },
+
+    // ─── CHARTS ───
+
+    destroyChart(id) {
+      if (this.charts[id]) {
+        this.charts[id].destroy();
+        delete this.charts[id];
+      }
+    },
+
+    renderAllCharts() {
+      this.renderGauge();
+      this.renderCustos();
+      this.renderRadar();
+      this.renderVariedades();
+      this.renderScatter();
+    },
+
+    renderGauge() {
+      this.destroyChart('gauge');
+      const ctx = document.getElementById('gaugeChart');
+      if (!ctx) return;
+      const roi = this.kpi.roi;
+      const val = Math.min(100, Math.max(-100, roi));
+      const clampedPos = Math.max(0, val);
+      const clampedNeg = Math.max(0, -val);
+      this.charts['gauge'] = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [clampedPos, clampedNeg, 100 - clampedPos - clampedNeg],
+            backgroundColor: [
+              roi >= 0 ? '#10b981' : 'transparent',
+              roi < 0  ? '#ef4444' : 'transparent',
+              '#1e293b',
+            ],
+            borderWidth: 0,
+            circumference: 180,
+            rotation: 270,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '75%',
+          plugins: { legend:{display:false}, tooltip:{enabled:false} },
+        }
+      });
+    },
+
+    renderCustos() {
+      this.destroyChart('custos');
+      const ctx = document.getElementById('custosChart');
+      if (!ctx) return;
+
+      const cats = this.categorias;
+      const custoMap = {};
+      cats.forEach(c => custoMap[c] = []);
+
+      this.filteredCustos.forEach(r => {
+        if (custoMap[r.categoria] !== undefined) {
+          custoMap[r.categoria].push(r.custo_ha || 0);
+        }
+      });
+
+      const labels = [], values = [], colors = [], totals = [];
+      const palette = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#f97316','#ec4899','#84cc16'];
+
+      cats.forEach((cat, i) => {
+        const arr = custoMap[cat];
+        if (arr.length) {
+          const avg = arr.reduce((a,b)=>a+b,0) / arr.length;
+          labels.push(cat);
+          values.push(avg);
+          colors.push(palette[i % palette.length]);
+          totals.push(arr.reduce((a,b)=>a+b,0));
+        }
+      });
+
+      const totalCusto = values.reduce((a,b)=>a+b,0);
+
+      this.charts['custos'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'R$/ha',
+            data: values,
+            backgroundColor: colors.map(c => c + 'cc'),
+            borderColor: colors,
+            borderWidth: 1,
+            borderRadius: 6,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => {
+                  const v = ctx.parsed.x;
+                  const pct = totalCusto > 0 ? (v / totalCusto * 100).toFixed(1) : 0;
+                  return ` R$ ${v.toFixed(2)}/ha (${pct}%)`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: '#1e293b' },
+              ticks: { color: '#475569', callback: v => 'R$ ' + v.toFixed(0) }
+            },
+            y: { grid: { display: false }, ticks: { color: '#94a3b8', font:{size:11} } }
+          }
+        }
+      });
+    },
+
+    renderRadar() {
+      this.destroyChart('radar');
+      const ctx = document.getElementById('radarChart');
+      if (!ctx) return;
+
+      const kpi = this.kpi;
+      const imea = this.getBestRef();
+      const iCusto = imea.ref_custo_ha || 3800;
+      const iProd  = imea.ref_prod_sc_ha || 60;
+
+      // Normalize 0-100
+      const norm = (val, ref, lowerBetter=false) => {
+        if (!ref) return 50;
+        const ratio = val / ref;
+        return lowerBetter ? Math.max(0, Math.min(100, (2 - ratio) * 50)) : Math.max(0, Math.min(100, ratio * 50));
+      };
+
+      // Custo fertilizantes %
+      const fertCusto = this.filteredCustos.filter(r=>r.categoria==='FERTILIZANTES').reduce((s,r)=>s+r.valor,0);
+      const totalCustoVal = this.filteredCustos.reduce((s,r)=>s+r.valor,0);
+      const fertPct  = totalCustoVal > 0 ? fertCusto/totalCustoVal*100 : 0;
+
+      const defCusto = this.filteredCustos.filter(r=>['HERBICIDA','FUNGICIDA','INSETICIDA','ADJUVANTE'].includes(r.categoria)).reduce((s,r)=>s+r.valor,0);
+      const defPct   = totalCustoVal > 0 ? defCusto/totalCustoVal*100 : 0;
+
+      const eficiencia = kpi.custoTotal > 0 ? kpi.producaoTotal / kpi.custoTotal * 1000 : 0;
+      const iEficiencia = iProd > 0 && iCusto > 0 ? iProd / iCusto * 1000 : eficiencia;
+
+      const realized = [
+        norm(kpi.custoHa, iCusto, true),
+        norm(100 - fertPct, 60, false),     // lower fert % = better
+        norm(100 - defPct, 75, false),      // lower def % = better
+        norm(kpi.prodMedia, iProd, false),
+        norm(eficiencia, iEficiencia, false),
+      ];
+
+      this.charts['radar'] = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Custo Total','Fert. Efic.','Def. Efic.','Produtividade','Eficiência'],
+          datasets: [
+            {
+              label: 'Realizado',
+              data: realized,
+              backgroundColor: 'rgba(16,185,129,0.15)',
+              borderColor: '#10b981',
+              pointBackgroundColor: '#10b981',
+              borderWidth: 2,
+            },
+            {
+              label: 'IMEA Ref.',
+              data: [50, 50, 50, 50, 50],
+              backgroundColor: 'rgba(59,130,246,0.1)',
+              borderColor: '#3b82f6',
+              pointBackgroundColor: '#3b82f6',
+              borderWidth: 2,
+              borderDash: [4,4],
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color:'#94a3b8', font:{size:11} } },
+            tooltip: {}
+          },
+          scales: {
+            r: {
+              min: 0, max: 100,
+              grid: { color: '#1e293b' },
+              angleLines: { color: '#1e293b' },
+              pointLabels: { color: '#94a3b8', font:{size:10} },
+              ticks: { display: false }
+            }
+          }
+        }
+      });
+    },
+
+    renderVariedades() {
+      this.destroyChart('variedades');
+      const ctx = document.getElementById('variedadesChart');
+      if (!ctx) return;
+
+      const varMap = {};
+      this.filteredProd.forEach(r => {
+        const v = r.variedade || 'Desconhecida';
+        if (!varMap[v]) varMap[v] = { vals:[], area:0 };
+        varMap[v].vals.push(r.prod_sc_ha || 0);
+        varMap[v].area += r.area || 0;
+      });
+
+      const arr = Object.entries(varMap).map(([name,d]) => ({
+        name,
+        prod: d.vals.reduce((a,b)=>a+b,0)/d.vals.length,
+        area: d.area,
+      })).sort((a,b) => b.prod - a.prod);
+
+      const avgProd = arr.reduce((s,r)=>s+r.prod,0) / Math.max(1, arr.length);
+
+      const labels = arr.map(r => r.name.length > 20 ? r.name.substring(0,18)+'…' : r.name);
+      const data   = arr.map(r => r.prod);
+      const bgColors = arr.map(r => r.prod >= avgProd ? 'rgba(16,185,129,0.7)' : 'rgba(239,68,68,0.7)');
+      const bdColors = arr.map(r => r.prod >= avgProd ? '#10b981' : '#ef4444');
+
+      this.charts['variedades'] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'sc/ha',
+            data,
+            backgroundColor: bgColors,
+            borderColor: bdColors,
+            borderWidth: 1,
+            borderRadius: 5,
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                afterLabel: (ctx) => {
+                  const v = arr[ctx.dataIndex];
+                  return `Área: ${v.area.toFixed(0)} ha | Média geral: ${avgProd.toFixed(1)} sc/ha`;
+                }
+              }
+            },
+            annotation: {}
+          },
+          scales: {
+            x: {
+              grid: { color: '#1e293b' },
+              ticks: { color: '#475569', callback: v => v + ' sc/ha' },
+            },
+            y: { grid: { display: false }, ticks: { color: '#94a3b8', font:{size:10} } }
+          }
+        }
+      });
+    },
+
+    renderScatter() {
+      this.destroyChart('scatter');
+      const ctx = document.getElementById('scatterChart');
+      if (!ctx) return;
+
+      const avgProd = this.kpi.prodMedia;
+      const points = this.filteredProd.map(r => ({
+        x: r.area || 0,
+        y: r.prod_sc_ha || 0,
+        label: r.talhao,
+        fazenda: (r.fazenda||'').replace('FAZENDA ',''),
+        variedade: r.variedade,
+      }));
+
+      const above = points.filter(p => p.y >= avgProd);
+      const below = points.filter(p => p.y < avgProd);
+
+      this.charts['scatter'] = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [
+            {
+              label: 'Acima da Média',
+              data: above,
+              backgroundColor: 'rgba(16,185,129,0.6)',
+              borderColor: '#10b981',
+              pointRadius: 7,
+              pointHoverRadius: 10,
+            },
+            {
+              label: 'Abaixo da Média',
+              data: below,
+              backgroundColor: 'rgba(239,68,68,0.6)',
+              borderColor: '#ef4444',
+              pointRadius: 7,
+              pointHoverRadius: 10,
+            },
+            {
+              label: `Média: ${avgProd.toFixed(1)} sc/ha`,
+              data: points.length ? [
+                { x: 0, y: avgProd },
+                { x: Math.max(...points.map(p=>p.x)) * 1.1, y: avgProd }
+              ] : [],
+              type: 'line',
+              borderColor: '#f59e0b',
+              borderDash: [6,4],
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: false,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color:'#94a3b8', font:{size:11} } },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => {
+                  const pt = ctx.raw;
+                  if (pt.label) {
+                    return [
+                      `${pt.label} (${pt.fazenda})`,
+                      `Área: ${pt.x.toFixed(0)} ha | ${pt.y.toFixed(1)} sc/ha`,
+                      pt.variedade ? `Var: ${pt.variedade}` : '',
+                    ].filter(Boolean);
+                  }
+                  return `Média: ${pt.y.toFixed(1)} sc/ha`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: { display:true, text:'Área (ha)', color:'#475569' },
+              grid: { color: '#1e293b' },
+              ticks: { color: '#475569' }
+            },
+            y: {
+              title: { display:true, text:'Produtividade (sc/ha)', color:'#475569' },
+              grid: { color: '#1e293b' },
+              ticks: { color: '#475569' }
+            }
+          }
+        }
+      });
+    },
+
+    // ─── TICKER ───
+
+    async loadTicker() {
+      const mockData = [
+        { label:'USD/BRL', value:'R$ 5,85', change:0.02, icon:'💵' },
+        { label:'Soja CBOT', value:'R$ 121/sc', change:1.2, icon:'🌱' },
+        { label:'Milho CBOT', value:'R$ 62/sc', change:-0.5, icon:'🌽' },
+        { label:'Ouro', value:'R$ 18.500/kg', change:0.8, icon:'🥇' },
+        { label:'KCl', value:'R$ 1.850/t', change:0, icon:'🧪', badge:'ref.' },
+        { label:'MAP', value:'R$ 3.200/t', change:0, icon:'🧪', badge:'ref.' },
+        { label:'Ureia', value:'R$ 1.980/t', change:0, icon:'🧪', badge:'ref.' },
+      ];
+
+      // Try AwesomeAPI for USD/BRL
+      try {
+        const res = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+        if (res.ok) {
+          const d = await res.json();
+          const bid = parseFloat(d.USDBRL.bid);
+          const pct = parseFloat(d.USDBRL.pctChange);
+          mockData[0].value  = 'R$ ' + bid.toFixed(2);
+          mockData[0].change = pct;
+        }
+      } catch(e) { /* use mock */ }
+
+      // Yahoo Finance (no-cors → will fail silently, use mock)
+      // Try with cors-anywhere or direct; on CORS fail, keep mocks
+      const yahooFetch = async (symbol, mockVal) => {
+        try {
+          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1d`;
+          const res = await fetch(url);
+          if (res.ok) {
+            const d = await res.json();
+            return d.chart.result[0].meta.regularMarketPrice;
+          }
+        } catch(e) {}
+        return null;
+      };
+
+      const [sojaRaw, milhoRaw, ouroRaw] = await Promise.all([
+        yahooFetch('ZS=F', 1210),
+        yahooFetch('ZC=F', 470),
+        yahooFetch('GC=F', 3300),
+      ]);
+
+      // Convert CBOT to R$/sc approx
+      const usdBrl = parseFloat((mockData[0].value || '5.85').replace('R$ ','').replace(',','.')) || 5.85;
+      if (sojaRaw) {
+        // ZS=F in ¢/bu → R$/sc: (price/100 * 27.2155 * usdBrl / 60)
+        const sojaRsc = (sojaRaw / 100 * 27.2155 * usdBrl) / 60;
+        mockData[1].value = 'R$ ' + sojaRsc.toFixed(0) + '/sc';
+      }
+      if (milhoRaw) {
+        const milhoRsc = (milhoRaw / 100 * 25.4012 * usdBrl) / 60;
+        mockData[2].value = 'R$ ' + milhoRsc.toFixed(0) + '/sc';
+      }
+      if (ouroRaw) {
+        const ouroKg = ouroRaw * usdBrl * 32.1507 / 1000;
+        mockData[3].value = 'R$ ' + ouroKg.toFixed(0) + '/kg';
+      }
+
+      this.tickerItems = mockData;
+    },
+
+    // ─── FORMATTERS ───
+
+    fmt(v) {
+      if (v === null || v === undefined || isNaN(v)) return '—';
+      return new Intl.NumberFormat('pt-BR', { style:'currency', currency:'BRL', maximumFractionDigits:0 }).format(v);
+    },
+
+    fmtM(v) {
+      if (!v && v !== 0) return '—';
+      if (Math.abs(v) >= 1e6) return 'R$ ' + (v/1e6).toFixed(2) + 'M';
+      if (Math.abs(v) >= 1e3) return 'R$ ' + (v/1e3).toFixed(1) + 'K';
+      return this.fmt(v);
+    },
+
+    // ─── MOCK DATA ───
+
+    mockCustos() {
+      const fazendas = ['CRISTALINA','FAZENDA SÃO CRISTOVÃO','CALIFÓRNIA'];
+      const culturas = ['SOJA','MILHO'];
+      const safras   = ['23/24','24/25'];
+      const cats = [
+        {cat:'FERTILIZANTES', base:580},{cat:'SEMENTES',base:120},{cat:'HERBICIDA',base:80},
+        {cat:'FUNGICIDA',base:110},{cat:'INSETICIDA',base:60},{cat:'ADJUVANTE',base:20},
+        {cat:'MÃO DE OBRA',base:180},{cat:'ARRENDAMENTO',base:650},{cat:'MANUTENÇÃO',base:90}
+      ];
+      const rows = [];
+      fazendas.forEach(faz => {
+        culturas.forEach(cult => {
+          safras.forEach(safra => {
+            cats.forEach(({cat, base}) => {
+              const area = faz==='CRISTALINA'?4684:faz.includes('CRISTOV')?2800:1200;
+              const custo_ha = base * (0.9 + Math.random()*0.2);
+              rows.push({
+                safra, cultura:cult, categoria:cat, item:cat, fazenda:faz,
+                valor: custo_ha * area, custo_ha
+              });
+            });
+          });
+        });
+      });
+      return rows;
+    },
+
+    mockProd() {
+      const data = [];
+      const fazendas = [
+        {name:'CRISTALINA', talhoes:['T1 Norte','T2 Sul','T3 Leste','T4 Oeste','Cerradão','Baixada']},
+        {name:'FAZENDA SÃO CRISTOVÃO', talhoes:['VALDIR SC','CENTRO SC','BEIRA RIO','TALHAO 4']},
+        {name:'CALIFÓRNIA', talhoes:['CA-01','CA-02','CA-03']},
+      ];
+      const variedades_soja = ['TMG 2383 IPRO','NS 7338 IPRO','M 6410 IPRO','RK 6315 IPRO','BS 2606 IPRO'];
+      const variedades_milho = ['S DKB 360 PRO3','AG 1051 PRO3','XB 6012 PRO','STATUS VIP3','FORMULA PRO3'];
+      const safras = ['23/24','24/25'];
+      const culturas = ['SOJA','MILHO'];
+      let idx = 0;
+      fazendas.forEach(faz => {
+        faz.talhoes.forEach(talhao => {
+          culturas.forEach(cult => {
+            safras.forEach(safra => {
+              const vars = cult==='SOJA' ? variedades_soja : variedades_milho;
+              const variedade = vars[Math.floor(Math.random()*vars.length)];
+              const area = 80 + Math.random()*320;
+              const baseProd = cult==='SOJA' ? 60 : 110;
+              const prod_sc_ha = baseProd * (0.85 + Math.random()*0.4);
+              data.push({
+                safra, cultura:cult, fazenda:faz.name, talhao, variedade,
+                area, prod_sc_ha, total_sc: prod_sc_ha * area
+              });
+              idx++;
+            });
+          });
+        });
+      });
+      return data;
+    },
+
+    mockRefs() {
+      return [
+        {safra:'24/25',cultura:'SOJA',ref_custo_ha:4156.03,ref_prod_sc_ha:62.0,detalhes:{}},
+        {safra:'23/24',cultura:'SOJA',ref_custo_ha:3800.0,ref_prod_sc_ha:60.0,detalhes:{}},
+        {safra:'2025',cultura:'MILHO',ref_custo_ha:3558.08,ref_prod_sc_ha:110.0,detalhes:{}},
+        {safra:'2024',cultura:'MILHO',ref_custo_ha:3300.0,ref_prod_sc_ha:105.0,detalhes:{}},
+      ];
+    },
+
+    // Watchers for search/filter
+    init() {
+      this.$watch('talhaoSearch', () => this.sortTalhaoData());
+      this.$watch('custoFilterCat', () => { this.custoPage = 1; this.buildCustoFiltered(); });
+      this.$watch('precoVenda', () => this.calcVenda(), { deep: true });
+    },
+  };
+}
+</script>
 </body>
 </html>
