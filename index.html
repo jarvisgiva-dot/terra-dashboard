@@ -1017,12 +1017,7 @@ function app() {
       this.filteredProd = this.rawProd.filter(r => {
         if (f.safra && r.safra !== f.safra) return false;
         if (f.cultura && r.cultura !== f.cultura) return false;
-        if (f.fazenda) {
-          const faz = r.fazenda || '';
-          if (!faz.toUpperCase().includes(f.fazenda.replace('SÃO CRISTOVÃO', 'SÃO CRISTOVÃO').replace('CALIFÓRNIA','CALIFÓRNIA'))) {
-            if (!faz.toUpperCase().includes(f.fazenda)) return false;
-          }
-        }
+        if (f.fazenda && r.fazenda !== f.fazenda) return false;
         return true;
       });
       this.computeKPIs();
