@@ -229,7 +229,7 @@
       <div class="text-center max-w-sm">
         <div class="text-4xl mb-4">⚠️</div>
         <h2 class="text-xl font-bold text-red-400 mb-2">Erro ao carregar dados</h2>
-        <p class="text-slate-400 text-sm mb-4">Não foi possível carregar database.json. Verifique se o arquivo existe no servidor.</p>
+        <p class="text-slate-400 text-sm mb-4">Não foi possível carregar dados do Google Sheets. Verifique a conexão.</p>
         <button @click="loadError=false; loadData()" class="px-4 py-2 bg-emerald-500 rounded-lg text-sm font-medium">Tentar novamente</button>
       </div>
     </div>
@@ -246,11 +246,11 @@
             <span class="text-white font-bold text-sm hidden sm:block">Terra BI</span>
           </div>
 
-          <!-- Filters: CULTURA → SAFRA (dependente) → FAZENDA -->
+          <!-- Filtros: Cultura → Safra (dependente) → Fazenda (dependente) -->
           <select x-model="filters.cultura" @change="filters.safra=''; filters.fazenda=''; applyFilters()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 pr-8">
             <option value="">🌱 Todas as Culturas</option>
-            <option value="SOJA">🌿 SOJA</option>
-            <option value="MILHO">🌽 MILHO</option>
+            <option value="SOJA">🌿 Soja</option>
+            <option value="MILHO">🌽 Milho</option>
           </select>
 
           <select x-model="filters.safra" @change="filters.fazenda=''; applyFilters()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 pr-8">
@@ -260,17 +260,11 @@
             </template>
           </select>
 
-          <select x-model="filters.cultura" @change="applyFilters()" class="hidden">
-            <option value="">Todas as Culturas</option>
-            <option value="SOJA">Soja</option>
-            <option value="MILHO">Milho</option>
-          </select>
-
           <select x-model="filters.fazenda" @change="applyFilters()" class="bg-slate-800 border border-slate-700 text-slate-200 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500 pr-8">
-            <option value="">Todas as Fazendas</option>
-            <option value="CRISTALINA">Cristalina</option>
-            <option value="SÃO CRISTOVÃO">São Cristovão</option>
-            <option value="CALIFÓRNIA">Califórnia</option>
+            <option value="">🏚️ Todas as Fazendas</option>
+            <template x-for="f in fazendas" :key="f">
+              <option :value="f" x-text="f"></option>
+            </template>
           </select>
 
           <div class="flex items-center gap-2 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2">
@@ -697,42 +691,7 @@
 
       <!-- ══════ TABELA DETALHAMENTO TALHÕES ══════ -->
       <section class="fade-in">
-        
-        <!-- ══════ CONTRATOS DE VENDA ══════ -->
-        <div x-show="contratoAtual" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
-          <template x-if="contratoAtual">
-            <div class="col-span-4">
-              <h2 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <span class="text-blue-400">📄</span> Contrato de Venda
-                <span class="text-xs font-normal normal-case text-slate-600 ml-2" x-text="(filters.cultura||'') + ' ' + (filters.safra||'')"></span>
-              </h2>
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="card border-l-4 border-blue-500">
-                  <p class="text-slate-400 text-xs uppercase font-bold">Preço Médio</p>
-                  <p class="text-2xl font-bold text-blue-300 mt-1" x-text="'R$ ' + (contratoAtual.preco_medio_sc||0).toFixed(2).replace('.',',') + '/sc'"></p>
-                  <p class="text-xs text-slate-500 mt-1">média ponderada</p>
-                </div>
-                <div class="card border-l-4 border-indigo-500">
-                  <p class="text-slate-400 text-xs uppercase font-bold">Volume</p>
-                  <p class="text-2xl font-bold text-indigo-300 mt-1" x-text="new Intl.NumberFormat('pt-BR').format(Math.round(contratoAtual.volume_total_sc||0)) + ' sc'"></p>
-                  <p class="text-xs text-slate-500 mt-1">sacas contratadas</p>
-                </div>
-                <div class="card border-l-4 border-violet-500">
-                  <p class="text-slate-400 text-xs uppercase font-bold">Receita Total</p>
-                  <p class="text-2xl font-bold text-violet-300 mt-1" x-text="new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(contratoAtual.receita_total_r||0)"></p>
-                  <p class="text-xs text-slate-500 mt-1">bruto contratos</p>
-                </div>
-                <div class="card border-l-4 border-purple-500">
-                  <p class="text-slate-400 text-xs uppercase font-bold">Nº Contratos</p>
-                  <p class="text-2xl font-bold text-purple-300 mt-1" x-text="contratoAtual.num_contratos || '—'"></p>
-                  <p class="text-xs text-slate-500 mt-1">registros</p>
-                </div>
-              </div>
-            </div>
-          </template>
-        </div>
-
-<div class="section-title">📋 Detalhamento por Talhão</div>
+        <div class="section-title">📋 Detalhamento por Talhão</div>
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
           <!-- Search -->
           <div class="flex flex-wrap gap-3 mb-4">
@@ -855,7 +814,31 @@
         </div>
       </section>
 
-      <div class="pb-12 text-center text-slate-700 text-xs">Terra BI v5.0 · Dados: database.json</div>
+
+      <!-- ══════ CONTRATOS DE VENDA ══════ -->
+      <section x-show="contratoAtual" x-cloak>
+        <h2 class="section-title">📄 Contrato de Venda</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="card border-l-4 border-blue-500 hover:bg-slate-800/50 transition">
+            <p class="text-slate-400 text-xs uppercase font-bold tracking-wider">Preço Médio Contratado</p>
+            <p class="text-3xl font-bold text-blue-400 mt-2" x-text="'R$ ' + (contratoAtual?.preco_medio_sc || 0).toFixed(2) + '/sc'"></p>
+          </div>
+          <div class="card border-l-4 border-indigo-500 hover:bg-slate-800/50 transition">
+            <p class="text-slate-400 text-xs uppercase font-bold tracking-wider">Volume Contratado</p>
+            <p class="text-3xl font-bold text-indigo-400 mt-2" x-text="new Intl.NumberFormat('pt-BR').format(contratoAtual?.volume_total_sc || 0) + ' sc'"></p>
+          </div>
+          <div class="card border-l-4 border-violet-500 hover:bg-slate-800/50 transition">
+            <p class="text-slate-400 text-xs uppercase font-bold tracking-wider">Receita Total Contratos</p>
+            <p class="text-3xl font-bold text-violet-400 mt-2" x-text="new Intl.NumberFormat('pt-BR', {style:'currency',currency:'BRL'}).format(contratoAtual?.receita_total_r || 0)"></p>
+          </div>
+          <div class="card border-l-4 border-purple-500 hover:bg-slate-800/50 transition">
+            <p class="text-slate-400 text-xs uppercase font-bold tracking-wider">Contratos Registrados</p>
+            <p class="text-3xl font-bold text-purple-400 mt-2" x-text="contratoAtual?.num_contratos || '--'"></p>
+          </div>
+        </div>
+      </section>
+
+      <div class="pb-12 text-center text-slate-700 text-xs">Terra BI v5.0 · Dados: Google Sheets · <a href="https://docs.google.com/spreadsheets/d/11wQE2yT6LDb0EJbEPQQ4zMW8_ahGNN0Hm0cg4rRwYNs" target="_blank" class="text-slate-600 hover:text-slate-400">📊 Editar Planilha</a></div>
     </main>
   </div>
 
@@ -874,7 +857,6 @@ function app() {
     rawCustos: [],
     rawProd: [],
     rawRefs: [],
-    rawContratos: [],
 
     // ── FILTERS ──
     filters: { safra: '24/25', cultura: 'SOJA', fazenda: '', preco: 120 },
@@ -946,65 +928,84 @@ function app() {
     async loadData() {
       this.loading = true;
       this.loadError = false;
-      try {
-        const SHEET_ID = '11wQE2yT6LDb0EJbEPQQ4zMW8_ahGNN0Hm0cg4rRwYNs';
-        const fetchTab = async (tab) => {
-          const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${tab}&t=${Date.now()}`;
-          const res = await fetch(url);
-          const text = await res.text();
-          const json = JSON.parse(text.replace(/^[\s\S]*?setResponse\(/, '').replace(/\);?\s*$/, ''));
-          const cols = json.table.cols.map(c => c.label || c.id);
-          const NUM_COLS = ['valor','custo_ha','area','prod_sc_ha','total_sc',
-            'ref_custo_ha','ref_prod_sc_ha','preco_medio_sc','volume_total_sc','receita_total_r','num_contratos'];
-          return json.table.rows.map(row => {
-            const obj = {};
-            cols.forEach((col, i) => {
-              const cell = row.c ? row.c[i] : null;
-              obj[col] = cell ? (cell.v !== null && cell.v !== undefined ? cell.v : '') : '';
-            });
-            NUM_COLS.forEach(k => { if (obj[k] !== '') obj[k] = parseFloat(obj[k]) || 0; });
-            return obj;
+      const SHEET_ID = '11wQE2yT6LDb0EJbEPQQ4zMW8_ahGNN0Hm0cg4rRwYNs';
+      const gvizUrl = (tab) =>
+        `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${tab}`;
+
+      const parseSheet = async (tab) => {
+        const res = await fetch(gvizUrl(tab));
+        const text = await res.text();
+        // Remover wrapper JSONP: /*O_o*/\ngoogle.visualization.Query.setResponse(...)
+        const json = JSON.parse(text.replace(/^[\s\S]*?\.setResponse\(/, '').replace(/\);?\s*$/, ''));
+        const cols = json.table.cols.map(c => c.label || c.id);
+        return (json.table.rows || []).map(row => {
+          const obj = {};
+          cols.forEach((col, i) => {
+            const cell = row.c[i];
+            obj[col] = cell ? (cell.v !== null && cell.v !== undefined ? cell.v : '') : '';
           });
-        };
+          // Converter strings numéricas
+          ['valor','custo_ha','area','prod_sc_ha','total_sc',
+           'preco_medio_sc','volume_total_sc','receita_total_r',
+           'ref_custo_ha','ref_prod_sc_ha'].forEach(k => {
+            if (obj[k] !== undefined && obj[k] !== '') obj[k] = parseFloat(String(obj[k]).replace(',','.')) || 0;
+          });
+          return obj;
+        });
+      };
+
+      try {
         const [custos, prod, contratos, refs] = await Promise.all([
-          fetchTab('custos'), fetchTab('produtividade'), fetchTab('contratos'), fetchTab('referencias')
+          parseSheet('custos'),
+          parseSheet('produtividade'),
+          parseSheet('contratos'),
+          parseSheet('referencias'),
         ]);
         this.rawCustos    = custos;
         this.rawProd      = prod;
         this.rawContratos = contratos;
         this.rawRefs      = refs;
       } catch(e) {
-        console.warn('Usando dados mock:', e);
-        this.rawCustos = this.mockCustos();
-        this.rawProd   = this.mockProd();
-        this.rawRefs   = this.mockRefs();
+        console.warn('Erro ao carregar Sheets, usando mock:', e);
+        this.rawCustos    = this.mockCustos();
+        this.rawProd      = this.mockProd();
+        this.rawRefs      = this.mockRefs();
+        this.rawContratos = [];
       }
       this.loading = false;
       this.applyFilters();
     },
 
     get safrasFiltradas() {
-      const cult = this.filters.cultura;
-      const src  = cult
-        ? [...this.rawCustos.filter(r => r.cultura===cult), ...this.rawProd.filter(r => r.cultura===cult)]
-        : [...this.rawCustos, ...this.rawProd];
-      const set = [...new Set(src.map(r => r.safra))];
-      return set.sort((a,b) => {
-        const yr = s => { const m = s.match(/\d+/g); return m ? parseInt(m[m.length-1]) : 0; };
-        return yr(a) - yr(b);
-      });
+      const c = this.filters.cultura;
+      const all = new Set([
+        ...this.rawCustos.filter(r => !c || r.cultura === c).map(r => r.safra),
+        ...this.rawProd.filter(r => !c || r.cultura === c).map(r => r.safra),
+      ]);
+      return Array.from(all).sort((a,b) => b.localeCompare(a));
+    },
+
+    get fazendas() {
+      const c = this.filters.cultura;
+      const s = this.filters.safra;
+      const all = new Set(
+        this.rawProd
+          .filter(r => (!c || r.cultura === c) && (!s || r.safra === s))
+          .map(r => r.fazenda)
+      );
+      return Array.from(all).sort();
     },
 
     get contratoAtual() {
       if (!this.rawContratos || !this.rawContratos.length) return null;
-      const f = this.filters;
-      return this.rawContratos.find(c =>
-        (!f.cultura || c.cultura === f.cultura) &&
-        (!f.safra   || c.safra   === f.safra)
+      const c = this.filters.cultura;
+      const s = this.filters.safra;
+      return this.rawContratos.find(r =>
+        (!c || r.cultura === c) && (!s || r.safra === s)
       ) || null;
     },
 
-    applyFilters() {
+        applyFilters() {
       const f = this.filters;
       this.filteredCustos = this.rawCustos.filter(r => {
         if (f.safra   && r.safra   !== f.safra)   return false;
@@ -1215,7 +1216,7 @@ function app() {
     },
 
     resetFilters() {
-      this.filters = { safra: '', cultura: '', fazenda: '', preco: 120 };
+      this.filters = { safra: '24/25', cultura: 'SOJA', fazenda: '', preco: 120 };
       this.applyFilters();
     },
 
