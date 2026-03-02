@@ -874,17 +874,32 @@ function app() {
 
         const produtividade = (raw.produtividade || []).map(r => ({
           ...r,
+          safra: normSafra(r.safra),
+          safra_full: normSafra(r.safra_full || r.safra),
           area:       n(r.area),
           prod_sc_ha: n(r.prod_sc_ha),
           total_sc:   n(r.total_sc),
         }));
+        const normSafra = s => {
+          if (!s) return s;
+          // "19/20" -> "2019/2020"
+          const m = s.match(/^(\d{2})\/(\d{2})$/);
+          if (m) return `20${m[1]}/20${m[2]}`;
+          // "2019.2020" -> "2019/2020"
+          return s.replace('.','/')
+        };
+
         const custos = (raw.custos || []).map(r => ({
           ...r,
+          safra: normSafra(r.safra),
+          safra_full: normSafra(r.safra_full || r.safra),
           valor:    n(r.valor),
           custo_ha: n(r.custo_ha),
         }));
         const contratos = (raw.contratos || []).map(r => ({
           ...r,
+          safra: normSafra(r.safra),
+          safra_full: normSafra(r.safra_full || r.safra),
           quantidade_sc:      n(r.quantidade_sc),
           valor_saco:         n(r.valor_saco),
           valor_total_bruto:  n(r.valor_total_bruto),
