@@ -871,6 +871,7 @@ function app() {
 
         // Normalizar números
         const n = (v, d=0) => { const x = parseFloat(v); return isNaN(x) ? d : x; };
+        const normSafra = s => { if (!s) return s; const m = s.match(/^(\d{2})\/(\d{2})$/); if (m) return '20'+m[1]+'/20'+m[2]; return s.replace('.','/'); };
 
         const produtividade = (raw.produtividade || []).map(r => ({
           ...r,
