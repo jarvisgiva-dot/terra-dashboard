@@ -692,6 +692,7 @@ function app() {
     activeSection: 'overview',
     drillCategory: '',
     drillItems: [],
+    filteredContratos: [],
     heatmapHtml: '',
     topVariedades: [],
 
@@ -804,72 +805,69 @@ function app() {
             'Content-Type': 'application/json',
           };
 
-          // Fetch historico (produtividade real dos PDFs) + database.json (base histórica)
-          const [historicoRes, dbRes] = await Promise.all([
-            fetch(`${SUPABASE_URL}/rest/v1/historico?select=*&order=safra.desc`, { headers: sbHeaders }),
-            fetch('data/database.json'),
+          // Buscar tudo do Supabase: historico + custos + contratos
+          const [historicoRes, custosRes, contratosRes] = await Promise.all([
+            fetch(`${SUPABASE_URL}/rest/v1/historico?select=*&order=safra.desc&limit=1000`, { headers: sbHeaders }),
+            fetch(`${SUPABASE_URL}/rest/v1/custos?select=*&limit=2000`, { headers: sbHeaders }),
+            fetch(`${SUPABASE_URL}/rest/v1/contratos?select=*&limit=2000`, { headers: sbHeaders }),
           ]);
 
-          if (!historicoRes.ok || !dbRes.ok) throw new Error('Supabase ou fallback indisponível');
+          if (!historicoRes.ok) throw new Error('Supabase indisponível');
 
-          const historico = await historicoRes.json();
-          const fallbackDb = await dbRes.json();
+          const historico    = await historicoRes.json();
+          const custosRaw    = custosRes.ok    ? await custosRes.json()    : [];
+          const contratosRaw = contratosRes.ok ? await contratosRes.json() : [];
           this.loadingPct = 55;
 
-          // Map historico → produtividade format
-          // Formato do campo talhao: "NOME_TALHAO [Fazenda]" ou "NOME_TALHAO [Safra|Fazenda]"
-          const historicoMapped = historico.map(r => {
+          // Produtividade: talhao formato "NOME [Fazenda]"
+          const produtividade = historico.map(r => {
             const m = r.talhao ? r.talhao.match(/^(.+?)\s*\[(.+)\]$/) : null;
-            const talhaoNome = m ? m[1].trim() : (r.talhao || '');
-            const fazendaNome = m ? m[2].trim() : '';
-            // Inferir cultura pela safra (safras com "/" = SOJA, safras com apenas ano = MILHO)
-            const cultura = r.safra && r.safra.includes('/') ? 'SOJA' : 'MILHO';
             return {
-              safra:      r.safra,
-              safra_full: r.safra,
-              cultura:    cultura,
-              fazenda:    fazendaNome,
-              talhao:     talhaoNome,
-              variedade:  '',
-              area:       r.area || 0,
-              prod_sc_ha: r.produtividade || 0,
-              total_sc:   r.total_sc || 0,
+              safra: r.safra, safra_full: r.safra,
+              cultura: r.safra && r.safra.includes('/') ? 'SOJA' : 'MILHO',
+              fazenda: m ? m[2].trim() : '',
+              talhao:  m ? m[1].trim() : (r.talhao || ''),
+              variedade: '',
+              area: r.area || 0, prod_sc_ha: r.produtividade || 0, total_sc: r.total_sc || 0,
             };
           });
 
-          // Merge: Supabase historico records override/supplement fallback
-          const sbKeys = new Set(historicoMapped.map(r => `${r.safra_full}|${r.talhao}`));
-          const baseProd = fallbackDb.produtividade.filter(r =>
-            !sbKeys.has(`${r.safra_full || r.safra}|${r.talhao}`)
-          );
+          // Custos: formato interno { safra, cultura, fazenda, item, valor, custo_ha, custo_sc_ha }
+          const custos = custosRaw.map(r => ({
+            safra: r.safra, safra_full: r.safra,
+            cultura: r.cultura || (r.safra && r.safra.includes('/') ? 'SOJA' : 'MILHO'),
+            fazenda: r.fazenda, item: r.aplicacao,
+            valor: r.custo_reais || 0,
+            custo_ha: r.custo_reais_ha || 0,
+            custo_sc_ha: r.custo_sc_ha || 0,
+          }));
 
-          this.db = {
-            produtividade: [...baseProd, ...historicoMapped],
-            custos: fallbackDb.custos,
-          };
+          // Contratos
+          const contratos = contratosRaw.map(r => ({
+            safra: r.safra, safra_full: r.safra,
+            cultura: r.cultura || (r.safra && r.safra.includes('/') ? 'SOJA' : 'MILHO'),
+            vendedor: r.vendedor, comprador: r.comprador,
+            quantidade_sc: r.quantidade_sc || 0,
+            valor_saco: r.valor_saco || 0,
+            valor_total_bruto: r.valor_total_bruto || 0,
+            valor_total_liquido: r.valor_total_liquido || 0,
+            data_venda: r.data_venda, situacao: r.situacao,
+          }));
 
+          this.db = { produtividade, custos, contratos };
           supabaseOk = true;
-          console.info(`[Terra Dashboard] Supabase: ${historicoMapped.length} registros históricos carregados`);
+          console.info(`[Terra Dashboard] ${produtividade.length} talhões · ${custos.length} custos · ${contratos.length} contratos`);
         } catch (sbErr) {
-          console.warn('[Terra Dashboard] Supabase indisponível, usando fallback:', sbErr.message);
+          console.warn('[Terra Dashboard] Erro Supabase:', sbErr.message);
         }
 
-        // ── FALLBACK: database.json local ───────────────────────────────────
-        if (!supabaseOk) {
-          this.loadingStatus = 'Carregando data/database.json (fallback)...';
-          this.loadingPct = 25;
-          const res = await fetch('data/database.json');
-          this.loadingPct = 50;
-          if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText} — Arquivo não encontrado ou servidor offline.`);
-          this.loadingStatus = 'Processando registros...';
-          this.db = await res.json();
-        }
+        if (!supabaseOk) throw new Error('Não foi possível conectar ao Supabase. Verifique sua conexão.');
 
         this.loadingPct = 70;
 
-        // Validate structure
-        if (!Array.isArray(this.db.produtividade)) throw new Error('Campo "produtividade" ausente ou inválido no JSON.');
-        if (!Array.isArray(this.db.custos)) throw new Error('Campo "custos" ausente ou inválido no JSON.');
+        // Validate
+        if (!Array.isArray(this.db.produtividade)) throw new Error('Dados de produtividade inválidos.');
+        if (!Array.isArray(this.db.custos)) this.db.custos = [];
 
         // Extract unique safras (sorted descending)
         const safraSet = new Set(this.db.produtividade.map(r => r.safra_full || r.safra).filter(Boolean));
@@ -908,24 +906,28 @@ function app() {
     // ─── FILTERS ─────────────────────────────────
     applyFilters() {
       if (!this.db) return;
-      let prod   = [...this.db.produtividade];
-      let custos = [...this.db.custos];
+      let prod      = [...this.db.produtividade];
+      let custos    = [...this.db.custos];
+      let contratos = [...(this.db.contratos || [])];
 
       if (this.filters.cultura) {
-        prod   = prod.filter(r => r.cultura === this.filters.cultura);
-        custos = custos.filter(r => r.cultura === this.filters.cultura);
+        prod      = prod.filter(r => r.cultura === this.filters.cultura);
+        custos    = custos.filter(r => r.cultura === this.filters.cultura);
+        contratos = contratos.filter(r => r.cultura === this.filters.cultura);
       }
       if (this.filters.safra) {
-        prod   = prod.filter(r => (r.safra_full || r.safra) === this.filters.safra);
-        custos = custos.filter(r => (r.safra_full || r.safra) === this.filters.safra);
+        prod      = prod.filter(r => (r.safra_full || r.safra) === this.filters.safra);
+        custos    = custos.filter(r => (r.safra_full || r.safra) === this.filters.safra);
+        contratos = contratos.filter(r => (r.safra_full || r.safra) === this.filters.safra);
       }
       if (this.filters.fazenda) {
         prod   = prod.filter(r => r.fazenda === this.filters.fazenda);
         custos = custos.filter(r => r.fazenda === this.filters.fazenda);
       }
 
-      this.filteredProd   = prod;
-      this.filteredCustos = custos;
+      this.filteredProd      = prod;
+      this.filteredCustos    = custos;
+      this.filteredContratos = contratos;
 
       this.calcKPIs();
       this.buildHeatmap();
@@ -961,9 +963,11 @@ function app() {
       const totalCusto = custos.reduce((s,r) => s + (r.valor||0), 0);
       const custoHa    = totalArea > 0 ? totalCusto / totalArea : 0;
 
-      // Revenue & margins using simulator price
+      // Receita real dos contratos; se não houver, usa preço do simulador
+      const contratosData = this.filteredContratos || [];
+      const receitaContratos = contratosData.reduce((s,r) => s + (r.valor_total_liquido || r.valor_total_bruto || 0), 0);
       const preco  = parseFloat(this.simPreco) || refPreco;
-      const receita = totalSc * preco;
+      const receita = receitaContratos > 0 ? receitaContratos : totalSc * preco;
       const lucro   = receita - totalCusto;
       const roi     = totalCusto > 0 ? lucro / totalCusto * 100 : 0;
       const margem  = receita > 0 ? lucro / receita * 100 : 0;
@@ -1308,7 +1312,7 @@ function app() {
       const ctx = document.getElementById('custosChart'); if (!ctx) return;
       const byCat = {};
       this.filteredCustos.forEach(r => {
-        const c = r.categoria||'OUTROS';
+        const c = r.item || r.categoria || r.aplicacao || 'OUTROS';
         byCat[c] = (byCat[c]||0) + (r.valor||0);
       });
       const sorted = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
@@ -1333,7 +1337,7 @@ function app() {
             if (!elems.length) return;
             const cat = labels[elems[0].index];
             this.drillCategory = cat;
-            this.drillItems = this.filteredCustos.filter(r=>r.categoria===cat).sort((a,b)=>(b.valor||0)-(a.valor||0)).slice(0,15);
+            this.drillItems = this.filteredCustos.filter(r=>(r.item||r.categoria||r.aplicacao||'OUTROS')===cat).sort((a,b)=>(b.valor||0)-(a.valor||0)).slice(0,15);
           },
           onHover: (_,elems) => { ctx.style.cursor = elems.length?'pointer':'default'; }
         }
