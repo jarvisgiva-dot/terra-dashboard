@@ -817,17 +817,25 @@ function app() {
           this.loadingPct = 55;
 
           // Map historico → produtividade format
-          const historicoMapped = historico.map(r => ({
-            safra:      r.safra,
-            safra_full: r.safra,
-            cultura:    'SOJA',  // historico é majoritariamente soja; campo não existe na tabela
-            fazenda:    r.talhao && r.talhao.includes('[') ? r.talhao.match(/\[(.+)\]/)?.[1] || '' : '',
-            talhao:     r.talhao && r.talhao.includes('[') ? r.talhao.split('[')[0].trim() : r.talhao,
-            variedade:  '',
-            area:       r.area,
-            prod_sc_ha: r.produtividade,
-            total_sc:   r.total_sc,
-          }));
+          // Formato do campo talhao: "NOME_TALHAO [Fazenda]" ou "NOME_TALHAO [Safra|Fazenda]"
+          const historicoMapped = historico.map(r => {
+            const m = r.talhao ? r.talhao.match(/^(.+?)\s*\[(.+)\]$/) : null;
+            const talhaoNome = m ? m[1].trim() : (r.talhao || '');
+            const fazendaNome = m ? m[2].trim() : '';
+            // Inferir cultura pela safra (safras com "/" = SOJA, safras com apenas ano = MILHO)
+            const cultura = r.safra && r.safra.includes('/') ? 'SOJA' : 'MILHO';
+            return {
+              safra:      r.safra,
+              safra_full: r.safra,
+              cultura:    cultura,
+              fazenda:    fazendaNome,
+              talhao:     talhaoNome,
+              variedade:  '',
+              area:       r.area || 0,
+              prod_sc_ha: r.produtividade || 0,
+              total_sc:   r.total_sc || 0,
+            };
+          });
 
           // Merge: Supabase historico records override/supplement fallback
           const sbKeys = new Set(historicoMapped.map(r => `${r.safra_full}|${r.talhao}`));
