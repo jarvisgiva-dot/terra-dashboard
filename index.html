@@ -865,85 +865,13 @@ function app() {
 
     // ─── LOAD DATA ───────────────────────────────
     async loadData() {
-      this.loadingStatus = 'Carregando dados...';
-      this.db = null;
-      try {
-        const res = await fetch('data/database.json');
-        if (!res.ok) throw new Error('Arquivo database.json não encontrado.');
-        const raw = await res.json();
-
-        // Normalizar números
-        const n = (v, d=0) => { const x = parseFloat(v); return isNaN(x) ? d : x; };
-        const normSafra = s => { if (!s) return s; const m = s.match(/^(\d{2})\/(\d{2})$/); if (m) return '20'+m[1]+'/20'+m[2]; return s.replace('.','/'); };
-
-        const produtividade = (raw.produtividade || []).map(r => ({
-          ...r,
-          safra: normSafra(r.safra),
-          safra_full: normSafra(r.safra_full || r.safra),
-          area:       n(r.area),
-          prod_sc_ha: n(r.prod_sc_ha),
-          total_sc:   n(r.total_sc),
-        }));
-        const normSafra = s => {
-          if (!s) return s;
-          // "19/20" -> "2019/2020"
-          const m = s.match(/^(\d{2})\/(\d{2})$/);
-          if (m) return `20${m[1]}/20${m[2]}`;
-          // "2019.2020" -> "2019/2020"
-          return s.replace('.','/')
-        };
-
-        const custos = (raw.custos || []).map(r => ({
-          ...r,
-          safra: normSafra(r.safra),
-          safra_full: normSafra(r.safra_full || r.safra),
-          valor:    n(r.valor),
-          custo_ha: n(r.custo_ha),
-        }));
-        const contratos = (raw.contratos || []).map(r => ({
-          ...r,
-          safra: normSafra(r.safra),
-          safra_full: normSafra(r.safra_full || r.safra),
-          quantidade_sc:      n(r.quantidade_sc),
-          valor_saco:         n(r.valor_saco),
-          valor_total_bruto:  n(r.valor_total_bruto),
-          valor_total_liquido:n(r.valor_total_liquido),
-        }));
-        const referencias = (raw.referencias || []).map(r => ({
-          ...r,
-          produtividade_media_sc_ha: n(r.produtividade_media_sc_ha, 60),
-          preco_medio_r_sc: n(r.preco_medio_r_sc, 120),
-          custo_ha: n(r.custo_ha),
-        }));
-
-        this.db = { produtividade, custos, contratos, referencias };
-        console.info(`[Terra Dashboard] ${produtividade.length} talhões · ${custos.length} custos · ${contratos.length} contratos`);
-
-        // Safras disponíveis
-        const safraSet = new Set(produtividade.map(r => r.safra_full || r.safra).filter(Boolean));
-        this.availableSafras = [...safraSet].sort((a,b) => b.localeCompare(a));
-
-        // Filtro padrão: SOJA + safra mais recente
-        this.filters.cultura = 'SOJA';
-        this.filters.safra   = this.availableSafras[0] || '';
-
-        this.applyFilters();
-        this.loadingStatus = '';
-        this.loading = false;
-      } catch(err) {
-        console.error(err);
-        this.loadError = true;
-        this.loadErrorMsg = err.message;
-        this.loading = false;
-      }
-    },    async loadData() {
       this.loading = true;
       this.loadingStatus = 'Conectando ao servidor...';
       this.loadingPct = 10;
       await this.sleep(150);
 
       try {
-        // ── PRIMARY: Supabase (historico + database.json) ────────────────────
+        // ── PRIMARY: Supabase ────────────────────
         let supabaseOk = false;
         try {
           this.loadingStatus = 'Buscando dados do Supabase...';
@@ -955,10 +883,9 @@ function app() {
             'Content-Type': 'application/json',
           };
 
-          // Buscar tudo do Supabase: historico + custos + contratos
           const [historicoRes, custosRes, contratosRes] = await Promise.all([
-            fetch(`${SUPABASE_URL}/rest/v1/historico?select=*&order=safra.desc&limit=1000`, { headers: sbHeaders }),
-            fetch(`${SUPABASE_URL}/rest/v1/custos?select=*&limit=2000`, { headers: sbHeaders }),
+            fetch(`${SUPABASE_URL}/rest/v1/historico?select=*&order=safra.desc&limit=2000`, { headers: sbHeaders }),
+            fetch(`${SUPABASE_URL}/rest/v1/custos?select=*&limit=3000`, { headers: sbHeaders }),
             fetch(`${SUPABASE_URL}/rest/v1/contratos?select=*&limit=2000`, { headers: sbHeaders }),
           ]);
 
@@ -969,39 +896,41 @@ function app() {
           const contratosRaw = contratosRes.ok ? await contratosRes.json() : [];
           this.loadingPct = 55;
 
-          // Produtividade: talhao formato "NOME [Fazenda]"
           const produtividade = historico.map(r => {
             const m = r.talhao ? r.talhao.match(/^(.+?)\s*\[(.+)\]$/) : null;
             return {
               safra: r.safra, safra_full: r.safra,
-              cultura: r.safra && r.safra.includes('/') ? 'SOJA' : 'MILHO',
-              fazenda: m ? m[2].trim() : '',
+              cultura: r.cultura || (r.safra && r.safra.includes('/') ? 'SOJA' : 'MILHO'),
+              fazenda: m ? m[2].trim() : (r.fazenda || 'Desconhecida'),
               talhao:  m ? m[1].trim() : (r.talhao || ''),
-              variedade: '',
-              area: r.area || 0, prod_sc_ha: r.produtividade || 0, total_sc: r.total_sc || 0,
+              variedade: r.variedade || 'N/D',
+              area: parseFloat(r.area || 0),
+              prod_sc_ha: parseFloat(r.produtividade || 0),
+              total_sc: parseFloat(r.total_sc || 0),
             };
           });
 
-          // Custos: formato interno { safra, cultura, fazenda, item, valor, custo_ha, custo_sc_ha }
           const custos = custosRaw.map(r => ({
             safra: r.safra, safra_full: r.safra,
             cultura: r.cultura || (r.safra && r.safra.includes('/') ? 'SOJA' : 'MILHO'),
-            fazenda: r.fazenda, item: r.aplicacao,
-            valor: r.custo_reais || 0,
-            custo_ha: r.custo_reais_ha || 0,
-            custo_sc_ha: r.custo_sc_ha || 0,
+            fazenda: r.fazenda,
+            item: r.aplicacao || r.item || 'Outros',
+            valor: parseFloat(r.custo_reais || r.valor || 0),
+            custo_ha: parseFloat(r.custo_reais_ha || r.custo_ha || 0),
+            custo_sc_ha: parseFloat(r.custo_sc_ha || 0),
           }));
 
-          // Contratos
           const contratos = contratosRaw.map(r => ({
             safra: r.safra, safra_full: r.safra,
             cultura: r.cultura || (r.safra && r.safra.includes('/') ? 'SOJA' : 'MILHO'),
-            vendedor: r.vendedor, comprador: r.comprador,
-            quantidade_sc: r.quantidade_sc || 0,
-            valor_saco: r.valor_saco || 0,
-            valor_total_bruto: r.valor_total_bruto || 0,
-            valor_total_liquido: r.valor_total_liquido || 0,
-            data_venda: r.data_venda, situacao: r.situacao,
+            vendedor: r.vendedor,
+            comprador: r.comprador,
+            quantidade_sc: parseFloat(r.quantidade_sc || 0),
+            valor_saco: parseFloat(r.valor_saco || 0),
+            valor_total_bruto: parseFloat(r.valor_total_bruto || 0),
+            valor_total_liquido: parseFloat(r.valor_total_liquido || 0),
+            data_venda: r.data_venda,
+            situacao: r.situacao,
           }));
 
           this.db = { produtividade, custos, contratos };
@@ -1011,17 +940,29 @@ function app() {
           console.warn('[Terra Dashboard] Erro Supabase:', sbErr.message);
         }
 
-        if (!supabaseOk) throw new Error('Não foi possível conectar ao Supabase. Verifique sua conexão.');
+        if (!supabaseOk) {
+            this.loadingStatus = 'Supabase falhou. Tentando backup local...';
+            const res = await fetch('data/database.json');
+            if (!res.ok) throw new Error('Supabase indisponível e backup local não encontrado.');
+            const raw = await res.json();
+            const normSafra = s => { if (!s) return s; const m = s.match(/^(\d{2})\/(\d{2})$/); if (m) return '20'+m[1]+'/20'+m[2]; return s.replace('.','/'); };
+            this.db = {
+                produtividade: (raw.produtividade||[]).map(r => ({...r, safra: normSafra(r.safra), safra_full: normSafra(r.safra)})),
+                custos: (raw.custos||[]).map(r => ({...r, safra: normSafra(r.safra), safra_full: normSafra(r.safra)})),
+                contratos: (raw.contratos||[]).map(r => ({...r, safra: normSafra(r.safra), safra_full: normSafra(r.safra)}))
+            };
+        }
 
         this.loadingPct = 70;
 
-        // Validate
         if (!Array.isArray(this.db.produtividade)) throw new Error('Dados de produtividade inválidos.');
         if (!Array.isArray(this.db.custos)) this.db.custos = [];
 
-        // Extract unique safras (sorted descending)
         const safraSet = new Set(this.db.produtividade.map(r => r.safra_full || r.safra).filter(Boolean));
         this.availableSafras = [...safraSet].sort((a, b) => b.localeCompare(a));
+
+        if (!this.filters.cultura) this.filters.cultura = 'SOJA';
+        if (!this.filters.safra) this.filters.safra = this.availableSafras[0] || '';
 
         this.loadingStatus = 'Calculando KPIs...';
         this.loadingPct = 80;
@@ -1037,10 +978,9 @@ function app() {
         await this.$nextTick();
         this.initParticles();
         this.renderAllCharts();
-        // Init slider style
-        this.updateSlider(document.querySelector('input[type="range"]'));
+        const slider = document.querySelector('input[type="range"]');
+        if(slider) this.updateSlider(slider);
 
-        // Stagger section animations
         document.querySelectorAll('.section-animate').forEach((el, i) => {
           setTimeout(() => el.classList.add('visible'), i * 70);
         });
