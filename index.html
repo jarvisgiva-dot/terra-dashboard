@@ -565,15 +565,15 @@
           </div>
           <div class="glass p-3 rounded-xl text-center">
             <div class="text-xs mb-1" style="color:#64748b;">Volume Total</div>
-            <div class="text-lg font-bold" style="color:#10b981;" x-text="filteredContratos.reduce((s,r)=>s+(r.volume_sc||0),0).toLocaleString('pt-BR') + ' sc'"></div>
+            <div class="text-lg font-bold" style="color:#10b981;" x-text="filteredContratos.reduce((s,r)=>s+(r.quantidade_sc||0),0).toLocaleString('pt-BR') + ' sc'"></div>
           </div>
           <div class="glass p-3 rounded-xl text-center">
             <div class="text-xs mb-1" style="color:#64748b;">Receita Total</div>
-            <div class="text-lg font-bold" style="color:#f59e0b;" x-text="'R$ ' + filteredContratos.reduce((s,r)=>s+(r.total_reais||0),0).toLocaleString('pt-BR',{maximumFractionDigits:0})"></div>
+            <div class="text-lg font-bold" style="color:#f59e0b;" x-text="'R$ ' + filteredContratos.reduce((s,r)=>s+(r.valor_total_liquido||r.valor_total_bruto||0),0).toLocaleString('pt-BR',{maximumFractionDigits:0})"></div>
           </div>
           <div class="glass p-3 rounded-xl text-center">
             <div class="text-xs mb-1" style="color:#64748b;">Preço Médio</div>
-            <div class="text-lg font-bold text-white" x-text="filteredContratos.length ? 'R$ ' + (filteredContratos.reduce((s,r)=>s+(r.preco_sc||0),0)/filteredContratos.length).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—'"></div>
+            <div class="text-lg font-bold text-white" x-text="filteredContratos.length ? 'R$ ' + (filteredContratos.reduce((s,r)=>s+(r.valor_saco||0),0)/filteredContratos.length).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}) : '—'"></div>
           </div>
         </div>
 
@@ -603,9 +603,9 @@
                       x-text="c.cultura"></span>
                   </td>
                   <td class="py-2 px-3 text-white" x-text="c.comprador || '—'"></td>
-                  <td class="py-2 px-3 text-right" style="color:#94a3b8;" x-text="(c.volume_sc||0).toLocaleString('pt-BR')"></td>
-                  <td class="py-2 px-3 text-right" style="color:#94a3b8;" x-text="'R$ ' + (c.preco_sc||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})"></td>
-                  <td class="py-2 px-3 text-right font-medium" style="color:#10b981;" x-text="'R$ ' + (c.total_reais||0).toLocaleString('pt-BR',{maximumFractionDigits:0})"></td>
+                  <td class="py-2 px-3 text-right" style="color:#94a3b8;" x-text="(c.quantidade_sc||0).toLocaleString('pt-BR')"></td>
+                  <td class="py-2 px-3 text-right" style="color:#94a3b8;" x-text="'R$ ' + (c.valor_saco||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})"></td>
+                  <td class="py-2 px-3 text-right font-medium" style="color:#10b981;" x-text="'R$ ' + (c.valor_total_liquido||c.valor_total_bruto||0).toLocaleString('pt-BR',{maximumFractionDigits:0})"></td>
                 </tr>
               </template>
             </tbody>
@@ -862,6 +862,62 @@ function app() {
 
     // ─── LOAD DATA ───────────────────────────────
     async loadData() {
+      this.loadingStatus = 'Carregando dados...';
+      this.db = null;
+      try {
+        const res = await fetch('data/database.json');
+        if (!res.ok) throw new Error('Arquivo database.json não encontrado.');
+        const raw = await res.json();
+
+        // Normalizar números
+        const n = (v, d=0) => { const x = parseFloat(v); return isNaN(x) ? d : x; };
+
+        const produtividade = (raw.produtividade || []).map(r => ({
+          ...r,
+          area:       n(r.area),
+          prod_sc_ha: n(r.prod_sc_ha),
+          total_sc:   n(r.total_sc),
+        }));
+        const custos = (raw.custos || []).map(r => ({
+          ...r,
+          valor:    n(r.valor),
+          custo_ha: n(r.custo_ha),
+        }));
+        const contratos = (raw.contratos || []).map(r => ({
+          ...r,
+          quantidade_sc:      n(r.quantidade_sc),
+          valor_saco:         n(r.valor_saco),
+          valor_total_bruto:  n(r.valor_total_bruto),
+          valor_total_liquido:n(r.valor_total_liquido),
+        }));
+        const referencias = (raw.referencias || []).map(r => ({
+          ...r,
+          produtividade_media_sc_ha: n(r.produtividade_media_sc_ha, 60),
+          preco_medio_r_sc: n(r.preco_medio_r_sc, 120),
+          custo_ha: n(r.custo_ha),
+        }));
+
+        this.db = { produtividade, custos, contratos, referencias };
+        console.info(`[Terra Dashboard] ${produtividade.length} talhões · ${custos.length} custos · ${contratos.length} contratos`);
+
+        // Safras disponíveis
+        const safraSet = new Set(produtividade.map(r => r.safra_full || r.safra).filter(Boolean));
+        this.availableSafras = [...safraSet].sort((a,b) => b.localeCompare(a));
+
+        // Filtro padrão: SOJA + safra mais recente
+        this.filters.cultura = 'SOJA';
+        this.filters.safra   = this.availableSafras[0] || '';
+
+        this.applyFilters();
+        this.loadingStatus = '';
+        this.loading = false;
+      } catch(err) {
+        console.error(err);
+        this.loadError = true;
+        this.loadErrorMsg = err.message;
+        this.loading = false;
+      }
+    },    async loadData() {
       this.loading = true;
       this.loadingStatus = 'Conectando ao servidor...';
       this.loadingPct = 10;
