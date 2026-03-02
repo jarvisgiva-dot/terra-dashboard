@@ -9,6 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
     body { background: #030712; color: #f1f5f9; overflow-x: hidden; }
@@ -192,19 +193,28 @@
 
     <div class="space-y-4">
       <div>
-        <label class="block text-xs font-medium mb-2" style="color: #94a3b8; letter-spacing: 0.05em;">SENHA DE ACESSO</label>
+        <label class="block text-xs font-medium mb-2" style="color: #94a3b8; letter-spacing: 0.05em;">E-MAIL</label>
+        <input type="email" x-model="loginEmail" @keydown.enter="doLogin()"
+          placeholder="seu@email.com"
+          class="w-full px-4 py-3 rounded-xl text-white placeholder-gray-600 outline-none transition-all"
+          style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);"
+        />
+      </div>
+      <div>
+        <label class="block text-xs font-medium mb-2" style="color: #94a3b8; letter-spacing: 0.05em;">SENHA</label>
         <input type="password" x-model="loginPassword" @keydown.enter="doLogin()"
           placeholder="••••••••••"
           class="w-full px-4 py-3 rounded-xl text-white placeholder-gray-600 outline-none transition-all"
           style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);"
           :style="loginError ? 'border-color: #ef4444;' : ''"
         />
-        <p x-show="loginError" x-transition class="text-xs mt-2" style="color: #ef4444;">Senha incorreta. Tente novamente.</p>
+        <p x-show="loginError" x-transition class="text-xs mt-2" style="color: #ef4444;" x-text="loginErrorMsg"></p>
       </div>
-      <button @click="doLogin()"
+      <button @click="doLogin()" :disabled="loginLoading"
         class="w-full py-3 rounded-xl font-semibold text-white transition-all duration-200 hover:opacity-90 active:scale-95"
         style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 20px rgba(16,185,129,0.3);">
-        Entrar no Sistema
+        <span x-show="!loginLoading">Entrar no Sistema</span>
+        <span x-show="loginLoading">Autenticando...</span>
       </button>
     </div>
     <p class="text-center text-xs mt-6" style="color: #475569;">Terra Dashboard v6.0 · SEXTA-FEIRA AI</p>
@@ -282,7 +292,7 @@
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
         Export CSV
       </button>
-      <button @click="loggedIn=false" class="nav-link w-full text-left">
+      <button @click="doLogout()" class="nav-link w-full text-left">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
         Sair
       </button>
@@ -633,6 +643,11 @@
 </nav>
 
 <script>
+// ── Supabase ──────────────────────────────────────────────
+const SUPABASE_URL = 'https://kmqhzumoqptrmwbntcoc.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_saEH5BWbHMruW-cswenQyw_2mIT4Zsc';
+const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 Chart.defaults.color = '#64748b';
 Chart.defaults.borderColor = 'rgba(255,255,255,0.05)';
 Chart.defaults.font.family = 'Inter';
@@ -641,8 +656,11 @@ function app() {
   return {
     // Auth
     loggedIn: false,
+    loginEmail: '',
     loginPassword: '',
     loginError: false,
+    loginErrorMsg: 'Credenciais inválidas. Tente novamente.',
+    loginLoading: false,
 
     // Loading state
     loading: false,
@@ -704,19 +722,49 @@ function app() {
     ],
 
     // ─────────────────────────────────────────────
-    doLogin() {
-      if (this.loginPassword === 'terra2025') {
+    async doLogin() {
+      if (!this.loginEmail || !this.loginPassword) {
+        this.loginErrorMsg = 'Preencha e-mail e senha.';
+        this.loginError = true;
+        setTimeout(() => this.loginError = false, 3000);
+        return;
+      }
+      this.loginLoading = true;
+      this.loginError = false;
+      const { data, error } = await _supabase.auth.signInWithPassword({
+        email: this.loginEmail,
+        password: this.loginPassword
+      });
+      this.loginLoading = false;
+      if (error) {
+        this.loginErrorMsg = error.message === 'Invalid login credentials'
+          ? 'E-mail ou senha incorretos. Tente novamente.'
+          : error.message;
+        this.loginError = true;
+        this.loginPassword = '';
+        setTimeout(() => this.loginError = false, 4000);
+      } else {
         this.loginError = false;
         this.loggedIn = true;
         this.$nextTick(() => this.loadData());
-      } else {
-        this.loginError = true;
-        this.loginPassword = '';
-        setTimeout(() => this.loginError = false, 3000);
       }
     },
 
+    async doLogout() {
+      await _supabase.auth.signOut();
+      this.loggedIn = false;
+      this.loginEmail = '';
+      this.loginPassword = '';
+    },
+
     async init() {
+      // Check existing Supabase session
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (session) {
+        this.loggedIn = true;
+        this.$nextTick(() => this.loadData());
+      }
+
       // Intersection observer for section animations + active nav
       const io = new IntersectionObserver((entries) => {
         entries.forEach(e => {
